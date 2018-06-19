@@ -4,8 +4,6 @@ import javafx.animation.AnimationTimer;
 import javafx.scene.layout.*;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.scene.control.Button;
