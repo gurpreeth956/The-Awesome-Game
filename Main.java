@@ -35,7 +35,6 @@ public class Main extends Application {
     
     @Override
     public void start(Stage primaryStage) {
-       
         //Menu Scene
         Text title = new Text("The Awesome Game");
         title.setFont(Font.font("Arial", 40));
@@ -43,17 +42,19 @@ public class Main extends Application {
         vbox.setAlignment(Pos.CENTER);
 
         BorderPane bp = new BorderPane();
+	bp.setId("menu");
         bp.setCenter(vbox);
         bp.setTop(title);
         bp.setAlignment(title, Pos.CENTER);
         menuScene = new Scene(bp, 850, 650, Color.BLACK);
+	menuScene.getStylesheets().addAll(this.getClass().getResource("Menu.css").toExternalForm());
         
         //Game Scene
         root = new Pane();
         root.setId("backgroundtrial");
         root.getChildren().addAll(player);
         gameScene = new Scene(root, 850, 650);
-        gameScene.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
+        gameScene.getStylesheets().addAll(this.getClass().getResource("Style.css").toExternalForm());
         
         gameScene.setOnKeyPressed(e -> keys.put(e.getCode(), true));
         gameScene.setOnKeyReleased(e -> keys.put(e.getCode(), false));
@@ -64,10 +65,12 @@ public class Main extends Application {
         VBox optionsBox = addOptionButtons(primaryStage);
         optionsBox.setAlignment(Pos.CENTER);
         BorderPane opPane = new BorderPane();
+	opPane.setId("menu");
         opPane.setCenter(optionsBox);
         opPane.setTop(opTitle);
         opPane.setAlignment(opTitle, Pos.CENTER);
         optionScene = new Scene(opPane, 850, 650);
+	optionScene.getStylesheets().addAll(this.getClass().getResource("Menu.css").toExternalForm());
         
         
         if (gamePlay) {
@@ -188,8 +191,13 @@ public class Main extends Application {
         musicBox.setOnAction(e->{
             
         });
+	
+	Button backBtn = new Button("Back to Menu");
+	backBtn.setOnAction(e->{
+	    pStage.setScene(menuScene);
+	});
         
-        vbox.getChildren().addAll(fullBox, musicBox);
+        vbox.getChildren().addAll(fullBox, musicBox, backBtn);
         return vbox;
     }
 
