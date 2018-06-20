@@ -1,11 +1,10 @@
 //package pkg2dsidescroll; //(Ray's Package)
 
+import java.util.HashMap;
 import javafx.animation.AnimationTimer;
 import javafx.scene.layout.*;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.scene.control.Button;
@@ -15,6 +14,9 @@ import javafx.geometry.Pos;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 
 public class Main extends Application {
     
@@ -22,7 +24,14 @@ public class Main extends Application {
     Scene gameScene;
     Scene optionScene;
     
-    boolean gamePlay = false;
+    static Pane root;
+    
+    private HashMap<KeyCode, Boolean> keys = new HashMap();
+    Image charImage = new Image("file:src/Greenies.png"); //depends on where image is placed
+    ImageView charIV = new ImageView(charImage);
+    Character player = new Character(charIV, 200, 200);
+    
+    boolean gamePlay = true;
     
     @Override
     public void start(Stage primaryStage) {
@@ -40,8 +49,14 @@ public class Main extends Application {
         menuScene = new Scene(bp, 850, 650, Color.BLACK);
         
         //Game Scene
-        Pane root = new Pane();
+        root = new Pane();
+        root.setId("backgroundtrial");
+        root.getChildren().addAll(player);
         gameScene = new Scene(root, 850, 650);
+        gameScene.getStylesheets().addAll(this.getClass().getResource("style.css").toExternalForm());
+        
+        gameScene.setOnKeyPressed(e -> keys.put(e.getCode(), true));
+        gameScene.setOnKeyReleased(e -> keys.put(e.getCode(), false));
         
         //Options Scene
         Text opTitle = new Text("Options");
@@ -54,11 +69,12 @@ public class Main extends Application {
         opPane.setAlignment(opTitle, Pos.CENTER);
         optionScene = new Scene(opPane, 850, 650);
         
+        
         if (gamePlay) {
             AnimationTimer timer = new AnimationTimer() {
                 @Override
                 public void handle(long now) {
-                
+                    update();
                 } 
             };
             timer.start();
@@ -75,11 +91,55 @@ public class Main extends Application {
             if (close) Platform.exit();
         });
     }
+    
     //This is where we will update the gameplay 
+    int shootingOffsetY;
+    
     public void update() {
-        
+        if (isPressed(KeyCode.UP)) {
+            player.setCharacterView(0, 183);
+            player.moveY(-2);
+            shootingOffsetY = 183;
+            
+            if (isPressed(KeyCode.SPACE)) {
+                player.setCharacterView(128, 183);
+            }
+        } else if (isPressed(KeyCode.DOWN)) {
+            player.setCharacterView(0, 0);
+            player.moveY(2);
+            shootingOffsetY = 0;
+            
+            if (isPressed(KeyCode.SPACE)) {
+                player.setCharacterView(128, 0);
+            }
+        } else if (isPressed(KeyCode.LEFT)) {
+            player.setCharacterView(0, 123);
+            player.moveX(-2);
+            shootingOffsetY = 123;
+            
+            if (isPressed(KeyCode.SPACE)) {
+                player.setCharacterView(128, 123);
+            }
+        } else if (isPressed(KeyCode.RIGHT)) {
+            player.setCharacterView(0, 61);
+            player.moveX(2);
+            shootingOffsetY = 61;
+            
+            if (isPressed(KeyCode.SPACE)) {
+                player.setCharacterView(128, 61);
+            }
+        } else if (isPressed(KeyCode.SPACE)) {
+            player.setCharacterView(128, shootingOffsetY);
+        } else if (!isPressed(KeyCode.SPACE)) {
+            player.setCharacterView(0, shootingOffsetY);
+        }
     }
     
+    public boolean isPressed(KeyCode key) {
+        return keys.getOrDefault(key, false);
+    }
+    
+    //Button Layouts
     public VBox addMenuButtons(Stage pStage){
         VBox vbox = new VBox();
         vbox.setPadding(new Insets(15));
@@ -111,6 +171,7 @@ public class Main extends Application {
         VBox vbox = new VBox();
         vbox.setPadding(new Insets(15));
         vbox.setSpacing(10);
+        
         CheckBox fullBox = new CheckBox("FullScreen");
         fullBox.setSelected(false);
         fullBox.setOnAction(e->{
@@ -121,8 +182,13 @@ public class Main extends Application {
                 pStage.setFullScreen(false);
             }
         });
+        
         CheckBox musicBox = new CheckBox("Music");
         musicBox.setSelected(false);
+        musicBox.setOnAction(e->{
+            
+        });
+        
         vbox.getChildren().addAll(fullBox, musicBox);
         return vbox;
     }
@@ -130,5 +196,4 @@ public class Main extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-    
 }
