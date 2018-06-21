@@ -1,3 +1,5 @@
+
+
 //package pkg2dsidescroll; //(Ray's Package)
 
 import java.util.HashMap;
@@ -101,7 +103,7 @@ public class Main extends Application {
     public void update() {
         if (isPressed(KeyCode.UP)) {
             player.setCharacterView(0, 183);
-            player.moveY(-2);
+            player.moveY(-2, gameScene.getHeight());
             shootingOffsetY = 183;
             
             if (isPressed(KeyCode.SPACE)) {
@@ -109,7 +111,7 @@ public class Main extends Application {
             }
         } else if (isPressed(KeyCode.DOWN)) {
             player.setCharacterView(0, 0);
-            player.moveY(2);
+            player.moveY(2, gameScene.getHeight());
             shootingOffsetY = 0;
             
             if (isPressed(KeyCode.SPACE)) {
@@ -117,7 +119,7 @@ public class Main extends Application {
             }
         } else if (isPressed(KeyCode.LEFT)) {
             player.setCharacterView(0, 123);
-            player.moveX(-2);
+            player.moveX(-2, gameScene.getWidth());
             shootingOffsetY = 123;
             
             if (isPressed(KeyCode.SPACE)) {
@@ -125,7 +127,7 @@ public class Main extends Application {
             }
         } else if (isPressed(KeyCode.RIGHT)) {
             player.setCharacterView(0, 61);
-            player.moveX(2);
+            player.moveX(2, gameScene.getWidth());
             shootingOffsetY = 61;
             
             if (isPressed(KeyCode.SPACE)) {
