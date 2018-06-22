@@ -95,7 +95,7 @@ public class Main extends Application {
         });
     }
     
-    //This is where we will update the gameplay 
+    //This is where we update the gameplay 
     public void update() {
         if (isPressed(KeyCode.W)) {
             player.setCharacterView(0, 183);
