@@ -100,18 +100,22 @@ public class Main extends Application {
         if (isPressed(KeyCode.W)) {
             player.setCharacterView(0, 183);
             player.moveY(-2, gameScene.getHeight());
+            player.setOffsetY(183);
             characterShooting();
         } else if (isPressed(KeyCode.S)) {
             player.setCharacterView(0, 0);
             player.moveY(2, gameScene.getHeight());
+            player.setOffsetY(0);
             characterShooting();
         } else if (isPressed(KeyCode.A)) {
             player.setCharacterView(0, 123);
             player.moveX(-2, gameScene.getWidth());
+            player.setOffsetY(123);
             characterShooting();
         } else if (isPressed(KeyCode.D)) {
             player.setCharacterView(0, 61);
             player.moveX(2, gameScene.getWidth());
+            player.setOffsetY(61);
             characterShooting();
         } else {
             player.setCharacterView(0, player.getOffsetY());
