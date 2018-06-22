@@ -87,4 +87,12 @@ public class Character extends Pane {
     public int getOffsetY() {
         return offsetY;
     }
+    
+    public int getX(){
+	return x;
+    }
+    
+    public int getY(){
+	return y;
+    }
 }
