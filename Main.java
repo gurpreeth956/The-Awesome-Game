@@ -1,5 +1,3 @@
-
-
 //package pkg2dsidescroll; //(Ray's Package)
 
 import java.util.HashMap;
@@ -98,45 +96,42 @@ public class Main extends Application {
     }
     
     //This is where we will update the gameplay 
-    int shootingOffsetY;
-    
     public void update() {
-        if (isPressed(KeyCode.UP)) {
+        if (isPressed(KeyCode.W)) {
             player.setCharacterView(0, 183);
             player.moveY(-2, gameScene.getHeight());
-            shootingOffsetY = 183;
-            
-            if (isPressed(KeyCode.SPACE)) {
-                player.setCharacterView(128, 183);
-            }
-        } else if (isPressed(KeyCode.DOWN)) {
+            characterShooting();
+        } else if (isPressed(KeyCode.S)) {
             player.setCharacterView(0, 0);
             player.moveY(2, gameScene.getHeight());
-            shootingOffsetY = 0;
-            
-            if (isPressed(KeyCode.SPACE)) {
-                player.setCharacterView(128, 0);
-            }
-        } else if (isPressed(KeyCode.LEFT)) {
+            characterShooting();
+        } else if (isPressed(KeyCode.A)) {
             player.setCharacterView(0, 123);
             player.moveX(-2, gameScene.getWidth());
-            shootingOffsetY = 123;
-            
-            if (isPressed(KeyCode.SPACE)) {
-                player.setCharacterView(128, 123);
-            }
-        } else if (isPressed(KeyCode.RIGHT)) {
+            characterShooting();
+        } else if (isPressed(KeyCode.D)) {
             player.setCharacterView(0, 61);
             player.moveX(2, gameScene.getWidth());
-            shootingOffsetY = 61;
-            
-            if (isPressed(KeyCode.SPACE)) {
-                player.setCharacterView(128, 61);
-            }
-        } else if (isPressed(KeyCode.SPACE)) {
-            player.setCharacterView(128, shootingOffsetY);
-        } else if (!isPressed(KeyCode.SPACE)) {
-            player.setCharacterView(0, shootingOffsetY);
+            characterShooting();
+        } else {
+            player.setCharacterView(0, player.getOffsetY());
+            characterShooting();
+        }
+    }
+    
+    public void characterShooting() {
+        if (isPressed(KeyCode.UP)) {
+            player.setCharacterView(128, 183);
+            player.setOffsetY(183);
+        } else if (isPressed(KeyCode.DOWN)) {
+            player.setCharacterView(128, 0);
+            player.setOffsetY(0);
+        } else if (isPressed(KeyCode.LEFT)) {
+            player.setCharacterView(128, 123);
+            player.setOffsetY(123);
+        } else if (isPressed(KeyCode.RIGHT)) {
+            player.setCharacterView(128, 61);
+            player.setOffsetY(61);
         }
     }
     
