@@ -36,6 +36,7 @@ public class Main extends Application {
     boolean gamePlay = true;
     
     private List<Projectile> projectiles = new ArrayList<>();
+    long timeOfLastProjectile = 0;
     
     @Override
     public void start(Stage primaryStage) {
@@ -133,33 +134,46 @@ public class Main extends Application {
     }
     
     public void characterShooting() {
+	long timeNow = System.currentTimeMillis();
+	long time = timeNow-timeOfLastProjectile;
 	if (isPressed(KeyCode.UP)) {
             player.setCharacterView(128, 183);
             player.setOffsetY(183);
-	    createProjectile(0, -8);
+	    if(time<0||time>500){
+		createProjectile(0, -8);
+		timeOfLastProjectile = timeNow;
+	    }
             
         } else if (isPressed(KeyCode.DOWN)) {
             player.setCharacterView(128, 0);
             player.setOffsetY(0);
-            createProjectile(0, 8);
+	    if(time<0||time>500){
+		createProjectile(0, 8);
+		timeOfLastProjectile = timeNow;
+	    }
             
         } else if (isPressed(KeyCode.LEFT)) {
             player.setCharacterView(128, 123);
             player.setOffsetY(123);
-            createProjectile(-8, 0);
+	    if(time<0||time>500){
+		createProjectile(-8, 0);
+		timeOfLastProjectile = timeNow;
+	    }
             
         } else if (isPressed(KeyCode.RIGHT)) {
             player.setCharacterView(128, 61);
             player.setOffsetY(61);
-            createProjectile(8, 0);
-            
+	    if(time<0||time>500){
+		createProjectile(8, 0);
+		timeOfLastProjectile = timeNow;
+	    }        
         }
     }
     
     public void createProjectile(int x, int y) {
         Image image = new Image("file:src/shot.png");
         ImageView iv = new ImageView(image);
-        Projectile proj = new Projectile(iv, player.getX(), player.getY());
+        Projectile proj = new Projectile(iv, player.getX()+25, player.getY()+10);
         proj.setVelocityX(x);
         proj.setVelocityY(y);
         
@@ -170,6 +184,16 @@ public class Main extends Application {
     public void updateProj(Projectile proj) {
         proj.setTranslateX(proj.getTranslateX() + proj.getVelocityX());
         proj.setTranslateY(proj.getTranslateY() + proj.getVelocityY());
+	if(proj.getTranslateX()<=0||proj.getTranslateX()>=gameScene.getWidth()){
+	    proj.alive=false;
+	}
+	else if(proj.getTranslateY()<=0||proj.getTranslateY()>=gameScene.getHeight()){
+	    proj.alive=false;
+	}
+	if(!proj.isAlive()){
+	    root.getChildren().remove(proj);
+	    projectiles.remove(proj);
+	}
     }
     
     public boolean isPressed(KeyCode key) {
