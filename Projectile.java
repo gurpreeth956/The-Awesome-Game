@@ -28,50 +28,6 @@ public class Projectile extends Pane{
         this.getChildren().addAll(iv);
     }
     
-    /*public void shootX(int x, double width) {
-        boolean right = x > 0;
-        for (int i = 0; i < Math.abs(x); i++) {
-            if (right) {
-                if(this.x > width - this.width)
-                    this.setTranslateX(width - this.width);
-                else {
-                    this.setTranslateX(this.getTranslateX() + 3);
-                    this.x++;
-                }
-            }
-            else  {
-                if(this.x < 0)
-                    this.setTranslateX(0);
-                else {
-                    this.setTranslateX(this.getTranslateX() - 3);
-                    this.x--;
-                }
-            }
-        }
-    }*/
-    
-    /*public void shootY(int y, double height) {
-        boolean down = y > 0;
-        for (int i = 0; i < Math.abs(y); i++) {
-            if (down) {
-                if(this.y > height - this.height)
-                    this.setTranslateY(height - this.height);
-                else {
-                    this.setTranslateY(this.getTranslateY() + 3);
-                    this.y++;
-                }
-            }
-            else {
-                if(this.y < 0)
-                    this.setTranslateY(0);
-                else {
-                    this.setTranslateY(this.getTranslateY() - 3);
-                    this.y--;
-                }
-            }
-        }
-    }*/
-    
     public int getVelocityX() {
         return velocityX;
     }
