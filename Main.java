@@ -30,7 +30,7 @@ public class Main extends Application {
     Image charImage = new Image("file:src/Greenies.png"); //depends on where image is placed
     ImageView charIV = new ImageView(charImage);
     Character player = new Character(charIV, 200, 200);
-    
+   
     boolean gamePlay = true;
     
     @Override
@@ -124,18 +124,29 @@ public class Main extends Application {
     }
     
     public void characterShooting() {
+	Image bImg = new Image("file:src/Shot.png");
+	ImageView bullImg = new ImageView(bImg);
+	Projectile bullet = new Projectile(bullImg, player.getX()+25, player.getY()+10);
         if (isPressed(KeyCode.UP)) {
             player.setCharacterView(128, 183);
             player.setOffsetY(183);
+	    bullet.shootY(-2,gameScene.getHeight());
+	    root.getChildren().add(bullet);
         } else if (isPressed(KeyCode.DOWN)) {
             player.setCharacterView(128, 0);
             player.setOffsetY(0);
+	    bullet.shootY(2,gameScene.getHeight());
+	    root.getChildren().add(bullet);
         } else if (isPressed(KeyCode.LEFT)) {
             player.setCharacterView(128, 123);
             player.setOffsetY(123);
+	    bullet.shootX(-2,gameScene.getWidth());
+	    root.getChildren().add(bullet);
         } else if (isPressed(KeyCode.RIGHT)) {
             player.setCharacterView(128, 61);
             player.setOffsetY(61);
+	    bullet.shootX(2,gameScene.getWidth());
+	    root.getChildren().add(bullet);
         }
     }
     
