@@ -3,7 +3,6 @@
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
 
 public class Character extends Pane {
 
@@ -12,8 +11,8 @@ public class Character extends Pane {
     int offsetY = 0;
     int width = 66;
     int height = 33;
-    int x;
-    int y;
+    int x; //Character xPos
+    int y; //Character yPos
     
     public Character(ImageView iv, int posX, int posY) {
         this.iv = iv;
@@ -32,22 +31,18 @@ public class Character extends Pane {
     public void moveX(int x, double width) {
         boolean right = x > 0;
         for (int i = 0; i < Math.abs(x); i++) {
-            if (right)
-            {
+            if (right) {
                 if(this.x > width - this.width)
                     this.setTranslateX(width - this.width);
-                else
-                {
+                else {
                     this.setTranslateX(this.getTranslateX() + 1);
                     this.x++;
                 }
             }
-            else 
-            {
+            else  {
                 if(this.x < 0)
                     this.setTranslateX(0);
-                else
-                {
+                else {
                     this.setTranslateX(this.getTranslateX() - 1);
                     this.x--;
                 }
@@ -58,26 +53,46 @@ public class Character extends Pane {
     public void moveY(int y, double height) {
         boolean down = y > 0;
         for (int i = 0; i < Math.abs(y); i++) {
-            if (down)
-            {
+            if (down) {
                 if(this.y > height - this.height)
                     this.setTranslateY(height - this.height);
-                else
-                {
+                else {
                     this.setTranslateY(this.getTranslateY() + 1);
                     this.y++;
                 }
             }
-            else 
-            {
+            else {
                 if(this.y < 0)
                     this.setTranslateY(0);
-                else
-                {
+                else {
                     this.setTranslateY(this.getTranslateY() - 1);
                     this.y--;
                 }
             }
         }
+    }
+
+    public void setOffsetX(int offsetX) {
+        this.offsetX = offsetX;
+    }
+
+    public void setOffsetY(int offsetY) {
+        this.offsetY = offsetY;
+    }
+
+    public int getOffsetX() {
+        return offsetX;
+    }
+
+    public int getOffsetY() {
+        return offsetY;
+    }
+    
+    public int getX(){
+	return x;
+    }
+    
+    public int getY(){
+	return y;
     }
 }

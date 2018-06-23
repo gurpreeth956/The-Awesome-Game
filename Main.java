@@ -1,8 +1,8 @@
-
-
 //package pkg2dsidescroll; //(Ray's Package)
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import javafx.animation.AnimationTimer;
 import javafx.scene.layout.*;
 import javafx.application.Application;
@@ -32,8 +32,11 @@ public class Main extends Application {
     Image charImage = new Image("file:src/Greenies.png"); //depends on where image is placed
     ImageView charIV = new ImageView(charImage);
     Character player = new Character(charIV, 200, 200);
-    
+   
     boolean gamePlay = true;
+    
+    private List<Projectile> projectiles = new ArrayList<>();
+    long timeOfLastProjectile = 0;
     
     @Override
     public void start(Stage primaryStage) {
@@ -89,55 +92,108 @@ public class Main extends Application {
         primaryStage.setScene(menuScene);
         primaryStage.show();
         
-        primaryStage.setOnCloseRequest(e -> {
+        //Made this a comment for now cause it was annoying clicking yes every time
+        /*primaryStage.setOnCloseRequest(e -> {
             e.consume();
             
             boolean close = AlertBox.exitDisplay("Exit Game", "Are you sure you want to exit?");
             if (close) Platform.exit();
-        });
+        });*/
     }
     
-    //This is where we will update the gameplay 
-    int shootingOffsetY;
-    
+    //This is where we update the gameplay 
     public void update() {
-        if (isPressed(KeyCode.UP)) {
+        if (isPressed(KeyCode.W)) {
             player.setCharacterView(0, 183);
             player.moveY(-2, gameScene.getHeight());
-            shootingOffsetY = 183;
-            
-            if (isPressed(KeyCode.SPACE)) {
-                player.setCharacterView(128, 183);
-            }
-        } else if (isPressed(KeyCode.DOWN)) {
+            player.setOffsetY(183);
+            characterShooting();
+        } else if (isPressed(KeyCode.S)) {
             player.setCharacterView(0, 0);
             player.moveY(2, gameScene.getHeight());
-            shootingOffsetY = 0;
-            
-            if (isPressed(KeyCode.SPACE)) {
-                player.setCharacterView(128, 0);
-            }
-        } else if (isPressed(KeyCode.LEFT)) {
+            player.setOffsetY(0);
+            characterShooting();
+        } else if (isPressed(KeyCode.A)) {
             player.setCharacterView(0, 123);
             player.moveX(-2, gameScene.getWidth());
-            shootingOffsetY = 123;
-            
-            if (isPressed(KeyCode.SPACE)) {
-                player.setCharacterView(128, 123);
-            }
-        } else if (isPressed(KeyCode.RIGHT)) {
+            player.setOffsetY(123);
+            characterShooting();
+        } else if (isPressed(KeyCode.D)) {
             player.setCharacterView(0, 61);
             player.moveX(2, gameScene.getWidth());
-            shootingOffsetY = 61;
-            
-            if (isPressed(KeyCode.SPACE)) {
-                player.setCharacterView(128, 61);
-            }
-        } else if (isPressed(KeyCode.SPACE)) {
-            player.setCharacterView(128, shootingOffsetY);
-        } else if (!isPressed(KeyCode.SPACE)) {
-            player.setCharacterView(0, shootingOffsetY);
+            player.setOffsetY(61);
+            characterShooting();
+        } else {
+            player.setCharacterView(0, player.getOffsetY());
+            characterShooting();
         }
+        
+        for (Projectile proj : projectiles) {
+            updateProj(proj);
+        }
+    }
+    
+    public void characterShooting() {
+	long timeNow = System.currentTimeMillis();
+	long time = timeNow-timeOfLastProjectile;
+	if (isPressed(KeyCode.UP)) {
+            player.setCharacterView(128, 183);
+            player.setOffsetY(183);
+	    if(time<0||time>500){
+		createProjectile(0, -8);
+		timeOfLastProjectile = timeNow;
+	    }
+            
+        } else if (isPressed(KeyCode.DOWN)) {
+            player.setCharacterView(128, 0);
+            player.setOffsetY(0);
+	    if(time<0||time>500){
+		createProjectile(0, 8);
+		timeOfLastProjectile = timeNow;
+	    }
+            
+        } else if (isPressed(KeyCode.LEFT)) {
+            player.setCharacterView(128, 123);
+            player.setOffsetY(123);
+	    if(time<0||time>500){
+		createProjectile(-8, 0);
+		timeOfLastProjectile = timeNow;
+	    }
+            
+        } else if (isPressed(KeyCode.RIGHT)) {
+            player.setCharacterView(128, 61);
+            player.setOffsetY(61);
+	    if(time<0||time>500){
+		createProjectile(8, 0);
+		timeOfLastProjectile = timeNow;
+	    }        
+        }
+    }
+    
+    public void createProjectile(int x, int y) {
+        Image image = new Image("file:src/shot.png");
+        ImageView iv = new ImageView(image);
+        Projectile proj = new Projectile(iv, player.getX()+25, player.getY()+10);
+        proj.setVelocityX(x);
+        proj.setVelocityY(y);
+        
+        root.getChildren().addAll(proj);
+        projectiles.add(proj);
+    }
+    
+    public void updateProj(Projectile proj) {
+        proj.setTranslateX(proj.getTranslateX() + proj.getVelocityX());
+        proj.setTranslateY(proj.getTranslateY() + proj.getVelocityY());
+	if(proj.getTranslateX()<=0||proj.getTranslateX()>=gameScene.getWidth()){
+	    proj.alive=false;
+	}
+	else if(proj.getTranslateY()<=0||proj.getTranslateY()>=gameScene.getHeight()){
+	    proj.alive=false;
+	}
+	if(!proj.isAlive()){
+	    root.getChildren().remove(proj);
+	    projectiles.remove(proj);
+	}
     }
     
     public boolean isPressed(KeyCode key) {
