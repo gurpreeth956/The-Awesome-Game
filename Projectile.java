@@ -8,10 +8,14 @@ public class Projectile extends Pane{
     ImageView iv;
     int width = 13;
     int height = 13;
+    int offsetX = 8;
+    int offsetY = 8;
     int x;
     int y;
-    int offsetX=8;
-    int offsetY=8;
+    
+    int velocityX = 0;
+    int velocityY = 0;
+    boolean isAlive = true;
 	    
     
     public Projectile(ImageView iv, int posX, int posY) {
@@ -24,7 +28,7 @@ public class Projectile extends Pane{
         this.getChildren().addAll(iv);
     }
     
-    public void shootX(int x, double width) {
+    /*public void shootX(int x, double width) {
         boolean right = x > 0;
         for (int i = 0; i < Math.abs(x); i++) {
             if (right) {
@@ -44,9 +48,9 @@ public class Projectile extends Pane{
                 }
             }
         }
-    }
+    }*/
     
-    public void shootY(int y, double height) {
+    /*public void shootY(int y, double height) {
         boolean down = y > 0;
         for (int i = 0; i < Math.abs(y); i++) {
             if (down) {
@@ -66,7 +70,25 @@ public class Projectile extends Pane{
                 }
             }
         }
+    }*/
+    
+    public int getVelocityX() {
+        return velocityX;
     }
     
+    public int getVelocityY() {
+        return velocityY;
+    }
     
+    public void setVelocityX(int velocityX) {
+        this.velocityX = velocityX;
+    }
+    
+    public void setVelocityY(int velocityY) {
+        this.velocityY = velocityY;
+    }
+    
+    public boolean isAlive() {
+        return isAlive;
+    }
 }
