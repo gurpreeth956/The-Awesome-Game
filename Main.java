@@ -133,18 +133,10 @@ public class Main extends Application {
     }
     
     public void characterShooting() {
-	//Image bImg = new Image("file:src/Shot.png");
-	//ImageView bullImg = new ImageView(bImg);
-	//Projectile bullet = new Projectile(bullImg, player.getX()+25, player.getY()+10);
-        if (isPressed(KeyCode.UP)) {
+	if (isPressed(KeyCode.UP)) {
             player.setCharacterView(128, 183);
             player.setOffsetY(183);
-	    
-
-            //bullet.shootY(-2,gameScene.getHeight());
-	    //root.getChildren().add(bullet);
-            
-            createProjectile(0, -8);
+	    createProjectile(0, -8);
             
         } else if (isPressed(KeyCode.DOWN)) {
             player.setCharacterView(128, 0);
