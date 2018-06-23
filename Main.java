@@ -1,6 +1,8 @@
 //package pkg2dsidescroll; //(Ray's Package)
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import javafx.animation.AnimationTimer;
 import javafx.scene.layout.*;
 import javafx.application.Application;
@@ -32,6 +34,8 @@ public class Main extends Application {
     Character player = new Character(charIV, 200, 200);
    
     boolean gamePlay = true;
+    
+    private List<Projectile> projectiles = new ArrayList<>();
     
     @Override
     public void start(Stage primaryStage) {
@@ -87,12 +91,13 @@ public class Main extends Application {
         primaryStage.setScene(menuScene);
         primaryStage.show();
         
-        primaryStage.setOnCloseRequest(e -> {
+        //Made this a comment for now cause it was annoying clicking yes every time
+        /*primaryStage.setOnCloseRequest(e -> {
             e.consume();
             
             boolean close = AlertBox.exitDisplay("Exit Game", "Are you sure you want to exit?");
             if (close) Platform.exit();
-        });
+        });*/
     }
     
     //This is where we update the gameplay 
@@ -121,33 +126,50 @@ public class Main extends Application {
             player.setCharacterView(0, player.getOffsetY());
             characterShooting();
         }
+        
+        for (Projectile proj : projectiles) {
+            updateProj(proj);
+        }
     }
     
     public void characterShooting() {
-	Image bImg = new Image("file:src/Shot.png");
-	ImageView bullImg = new ImageView(bImg);
-	Projectile bullet = new Projectile(bullImg, player.getX()+25, player.getY()+10);
-        if (isPressed(KeyCode.UP)) {
+	if (isPressed(KeyCode.UP)) {
             player.setCharacterView(128, 183);
             player.setOffsetY(183);
-	    bullet.shootY(-2,gameScene.getHeight());
-	    root.getChildren().add(bullet);
+	    createProjectile(0, -8);
+            
         } else if (isPressed(KeyCode.DOWN)) {
             player.setCharacterView(128, 0);
             player.setOffsetY(0);
-	    bullet.shootY(2,gameScene.getHeight());
-	    root.getChildren().add(bullet);
+            createProjectile(0, 8);
+            
         } else if (isPressed(KeyCode.LEFT)) {
             player.setCharacterView(128, 123);
             player.setOffsetY(123);
-	    bullet.shootX(-2,gameScene.getWidth());
-	    root.getChildren().add(bullet);
+            createProjectile(-8, 0);
+            
         } else if (isPressed(KeyCode.RIGHT)) {
             player.setCharacterView(128, 61);
             player.setOffsetY(61);
-	    bullet.shootX(2,gameScene.getWidth());
-	    root.getChildren().add(bullet);
+            createProjectile(8, 0);
+            
         }
+    }
+    
+    public void createProjectile(int x, int y) {
+        Image image = new Image("file:src/shot.png");
+        ImageView iv = new ImageView(image);
+        Projectile proj = new Projectile(iv, player.getX(), player.getY());
+        proj.setVelocityX(x);
+        proj.setVelocityY(y);
+        
+        root.getChildren().addAll(proj);
+        projectiles.add(proj);
+    }
+    
+    public void updateProj(Projectile proj) {
+        proj.setTranslateX(proj.getTranslateX() + proj.getVelocityX());
+        proj.setTranslateY(proj.getTranslateY() + proj.getVelocityY());
     }
     
     public boolean isPressed(KeyCode key) {
