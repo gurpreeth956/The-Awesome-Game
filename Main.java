@@ -30,12 +30,11 @@ public class Main extends Application {
     Image charImage = new Image("file:src/Greenies.png"); //depends on where image is placed
     ImageView charIV = new ImageView(charImage);
     Character player = new Character(charIV, 200, 200);
-   
-    boolean gamePlay = true;
     
     private List<Projectile> projectiles = new ArrayList<>();
     private List<Projectile> projToRemove = new ArrayList<>();
     long timeOfLastProjectile = 0;
+    
     
     @Override
     public void start(Stage primaryStage) {
@@ -75,18 +74,16 @@ public class Main extends Application {
         opPane.setAlignment(opTitle, Pos.CENTER);
         optionScene = new Scene(opPane, 850, 650);
 	optionScene.getStylesheets().addAll(this.getClass().getResource("Menu.css").toExternalForm());
+      
         
-        
-        if (gamePlay) {
-            AnimationTimer timer = new AnimationTimer() {
-                @Override
-                public void handle(long now) {
-                    update();
-                } 
-            };
-            timer.start();
-        }
-        
+        AnimationTimer timer = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                update();
+            } 
+        };
+        timer.start();
+
         primaryStage.setTitle("The Awesome Game");
         primaryStage.setScene(menuScene);
         primaryStage.show();
@@ -99,6 +96,7 @@ public class Main extends Application {
             if (close) Platform.exit();
         });*/
     }
+    
     
     //This is where we update the gameplay 
     public void update() {
@@ -195,8 +193,7 @@ public class Main extends Application {
     }
     
     public void updateProj(Projectile proj) {
-        proj.setTranslateX(proj.getTranslateX() + proj.getVelocityX());
-        proj.setTranslateY(proj.getTranslateY() + proj.getVelocityY());
+        proj.move();
 	
         if(proj.getTranslateX()<=0 || proj.getTranslateX()>=gameScene.getWidth()){
 	    proj.setAlive(false);
@@ -215,6 +212,7 @@ public class Main extends Application {
         return keys.getOrDefault(key, false);
     }
     
+    
     //Button Layouts
     public VBox addMenuButtons(Stage pStage){
         VBox vbox = new VBox();
@@ -224,7 +222,6 @@ public class Main extends Application {
         Button startBtn = new Button("Start");
         startBtn.setOnAction(e -> {
             pStage.setScene(gameScene);
-            gamePlay = true;
         });
         
         Button optionsBtn = new Button("Options");
