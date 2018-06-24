@@ -36,6 +36,8 @@ public class Main extends Application {
     long timeOfLastProjectile = 0;
     
     
+    private List<Enemy> enemies = new ArrayList();
+    
     @Override
     public void start(Stage primaryStage) {
         //Menu Scene
@@ -133,10 +135,17 @@ public class Main extends Application {
             characterShooting();
             player.toFront();
         }
+	if(Math.random()<0.01){
+	    createEnemy();
+	}
         
         for (Projectile proj : projectiles) {
             updateProj(proj);
         }
+	
+	for(Enemy enemy:enemies){
+	    updateEnemy(enemy);
+	}
             
         projectiles.removeAll(projToRemove);
         projToRemove.clear();
@@ -145,7 +154,7 @@ public class Main extends Application {
     public void characterShooting() {
 	long timeNow = System.currentTimeMillis();
 	long time = timeNow-timeOfLastProjectile;
-        
+	
 	if (isPressed(KeyCode.UP)) {
             player.setCharacterView(128, 183);
             player.setOffsetY(183);
@@ -206,6 +215,20 @@ public class Main extends Application {
 	    root.getChildren().remove(proj);
             projToRemove.add(proj);
 	}
+    }
+    
+    public void createEnemy(){
+	Image image = new Image("file:src/Redies.png");
+	ImageView iv = new ImageView(image);
+	Enemy enemy = new Enemy(iv,(int)(Math.random()*gameScene.getWidth()),(int)(Math.random()*gameScene.getHeight()));
+	
+	root.getChildren().add(enemy);
+	enemies.add(enemy);
+    }
+    
+    public void updateEnemy(Enemy enemy){
+	enemy.playerPos(player.x,player.y);
+	enemy.followPlayer(gameScene.getWidth(),gameScene.getHeight());
     }
     
     public boolean isPressed(KeyCode key) {
