@@ -1,5 +1,3 @@
-//package pkg2dsidescroll; //(Ray's Package)
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -36,6 +34,7 @@ public class Main extends Application {
     boolean gamePlay = true;
     
     private List<Projectile> projectiles = new ArrayList<>();
+    private List<Projectile> projToRemove = new ArrayList<>();
     long timeOfLastProjectile = 0;
     
     @Override
@@ -108,34 +107,47 @@ public class Main extends Application {
             player.moveY(-2, gameScene.getHeight());
             player.setOffsetY(183);
             characterShooting();
+            player.toFront();
+            
         } else if (isPressed(KeyCode.S)) {
             player.setCharacterView(0, 0);
             player.moveY(2, gameScene.getHeight());
             player.setOffsetY(0);
             characterShooting();
+            player.toFront();
+            
         } else if (isPressed(KeyCode.A)) {
             player.setCharacterView(0, 123);
             player.moveX(-2, gameScene.getWidth());
             player.setOffsetY(123);
             characterShooting();
+            player.toFront();
+            
         } else if (isPressed(KeyCode.D)) {
             player.setCharacterView(0, 61);
             player.moveX(2, gameScene.getWidth());
             player.setOffsetY(61);
             characterShooting();
+            player.toFront();
+            
         } else {
             player.setCharacterView(0, player.getOffsetY());
             characterShooting();
+            player.toFront();
         }
         
         for (Projectile proj : projectiles) {
             updateProj(proj);
         }
+            
+        projectiles.removeAll(projToRemove);
+        projToRemove.clear();
     }
     
     public void characterShooting() {
 	long timeNow = System.currentTimeMillis();
 	long time = timeNow-timeOfLastProjectile;
+        
 	if (isPressed(KeyCode.UP)) {
             player.setCharacterView(128, 183);
             player.setOffsetY(183);
@@ -173,26 +185,29 @@ public class Main extends Application {
     public void createProjectile(int x, int y) {
         Image image = new Image("file:src/shot.png");
         ImageView iv = new ImageView(image);
-        Projectile proj = new Projectile(iv, player.getX()+25, player.getY()+10);
+        Projectile proj = new Projectile(iv, player.getX()+28, player.getY()+16);
         proj.setVelocityX(x);
         proj.setVelocityY(y);
         
         root.getChildren().addAll(proj);
+        proj.toBack();
         projectiles.add(proj);
     }
     
     public void updateProj(Projectile proj) {
         proj.setTranslateX(proj.getTranslateX() + proj.getVelocityX());
         proj.setTranslateY(proj.getTranslateY() + proj.getVelocityY());
-	if(proj.getTranslateX()<=0||proj.getTranslateX()>=gameScene.getWidth()){
-	    proj.alive=false;
+	
+        if(proj.getTranslateX()<=0 || proj.getTranslateX()>=gameScene.getWidth()){
+	    proj.setAlive(false);
 	}
-	else if(proj.getTranslateY()<=0||proj.getTranslateY()>=gameScene.getHeight()){
-	    proj.alive=false;
+	else if(proj.getTranslateY()<=0 || proj.getTranslateY()>=gameScene.getHeight()){
+	    proj.setAlive(false);
 	}
+        
 	if(!proj.isAlive()){
 	    root.getChildren().remove(proj);
-	    projectiles.remove(proj);
+            projToRemove.add(proj);
 	}
     }
     

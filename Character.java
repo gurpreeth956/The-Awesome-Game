@@ -1,5 +1,3 @@
-//package pkg2dsidescroll; //(Ray's Package)
-
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -86,6 +84,14 @@ public class Character extends Pane {
 
     public int getOffsetY() {
         return offsetY;
+    }
+    
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
     }
     
     public int getX(){

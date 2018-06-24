@@ -1,5 +1,3 @@
-//package pkg2dsidescroll; //(Ray's Package)
-
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;

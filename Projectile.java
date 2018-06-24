@@ -1,9 +1,8 @@
-
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 
-public class Projectile extends Pane{
+public class Projectile extends Pane {
     
     ImageView iv;
     int width = 13;
@@ -16,7 +15,6 @@ public class Projectile extends Pane{
     int velocityX = 0;
     int velocityY = 0;
     boolean isAlive = true;
-	    
     
     public Projectile(ImageView iv, int posX, int posY) {
         this.iv = iv;
@@ -46,5 +44,9 @@ public class Projectile extends Pane{
     
     public boolean isAlive() {
         return isAlive;
+    }
+    
+    public void setAlive(boolean i) {
+        isAlive = i;
     }
 }
