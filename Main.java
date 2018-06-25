@@ -17,6 +17,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.shape.Rectangle;
 
 public class Main extends Application {
     
@@ -27,7 +28,7 @@ public class Main extends Application {
     static Pane root;
     
     private HashMap<KeyCode, Boolean> keys = new HashMap();
-    Image charImage = new Image("file:src/Greenies.png"); //depends on where image is placed
+    Image charImage = new Image("file:src/Greenies.png");
     ImageView charIV = new ImageView(charImage);
     Character player = new Character(charIV, 200, 200);
     
@@ -35,10 +36,13 @@ public class Main extends Application {
     private List<Projectile> projToRemove = new ArrayList<>();
     long timeOfLastProjectile = 0;
     
-    
     private List<Enemy> enemies = new ArrayList();
     private List<Enemy> enemToRemove = new ArrayList();
     long hitTime = 0;
+    
+    Rectangle healthBarOutline;
+    Rectangle actualHealth;
+    Rectangle lostHealth;
     
     @Override
     public void start(Stage primaryStage) {
@@ -59,7 +63,25 @@ public class Main extends Application {
         //Game Scene
         root = new Pane();
         root.setId("backgroundtrial");
-        root.getChildren().addAll(player);
+        
+        Label healthLabel = new Label("Health: ");
+        healthLabel.setFont(new Font("Arial", 20));
+        healthLabel.toFront();
+        healthBarOutline = new Rectangle(79,9,101,22);
+        healthBarOutline.setFill(Color.TRANSPARENT);
+        healthBarOutline.setStroke(Color.BLACK);
+        lostHealth = new Rectangle(80,10,99,20);
+        lostHealth.setFill(Color.RED);
+        actualHealth = new Rectangle(80,10,99,20);
+        actualHealth.setFill(Color.GREEN);
+        actualHealth.toFront();
+        
+        VBox health = new VBox(10);
+        health.getChildren().addAll(healthLabel);
+        health.setTranslateX(10);
+        health.setTranslateY(10);
+        
+        root.getChildren().addAll(player, health, healthBarOutline, lostHealth, actualHealth);
         gameScene = new Scene(root, 850, 650);
         gameScene.getStylesheets().addAll(this.getClass().getResource("Style.css").toExternalForm());
         
@@ -106,49 +128,44 @@ public class Main extends Application {
 	if(player.getHealth()==0){
 	   Platform.exit();
 	}
+        
 	if (isPressed(KeyCode.W)) {
             player.setCharacterView(0, 183);
             player.moveY(-2, gameScene.getHeight());
             player.setOffsetY(183);
             characterShooting();
-            player.toFront();
             
         } else if (isPressed(KeyCode.S)) {
             player.setCharacterView(0, 0);
             player.moveY(2, gameScene.getHeight());
             player.setOffsetY(0);
             characterShooting();
-            player.toFront();
             
         } else if (isPressed(KeyCode.A)) {
             player.setCharacterView(0, 123);
             player.moveX(-2, gameScene.getWidth());
             player.setOffsetY(123);
             characterShooting();
-            player.toFront();
             
         } else if (isPressed(KeyCode.D)) {
             player.setCharacterView(0, 61);
             player.moveX(2, gameScene.getWidth());
             player.setOffsetY(61);
             characterShooting();
-            player.toFront();
             
         } else {
             player.setCharacterView(0, player.getOffsetY());
             characterShooting();
-            player.toFront();
         }
+        
         
 	if(Math.random()<0.01){
 	    createEnemy();
 	}
-        
         for (Projectile proj : projectiles) {
             updateProj(proj);
         }
-	
-	for(Enemy enemy:enemies){
+	for(Enemy enemy : enemies) {
 	    updateEnemy(enemy);
 	}
             
@@ -158,7 +175,13 @@ public class Main extends Application {
 	enemies.removeAll(enemToRemove);
 	enemToRemove.clear();
         
-        //enemies.clear();
+        //to clear enemies
+        if (isPressed(KeyCode.P)) {
+            for (Enemy enemy : enemies) {
+                root.getChildren().removeAll(enemy);
+            }
+            enemies.clear();
+        }
     }
     
     public void characterShooting() {
@@ -213,12 +236,14 @@ public class Main extends Application {
     
     public void updateProj(Projectile proj) {
         proj.move();
+        
 	for(Enemy enemy:enemies){
 	    if(proj.isColliding(enemy)){
 		enemy.hit();
 		proj.setAlive(false);
 	    }
 	}
+        
 	if(proj.getTranslateX()<=0 || proj.getTranslateX()>=gameScene.getWidth()){
 	    proj.setAlive(false);
 	}
@@ -248,9 +273,15 @@ public class Main extends Application {
 	if(time<0||time>1000){
 	    if(player.isColliding(enemy)){
 		player.hit();
+                
+                root.getChildren().remove(actualHealth);
+                actualHealth = new Rectangle(80,10,player.getHealth()*20,20);
+                actualHealth.setFill(Color.GREEN);
+                root.getChildren().add(actualHealth);
 	    }
 	    hitTime = timeNow;
 	}
+        
         if(player.getX() > enemy.getX() && player.getY() == enemy.getY()) { //right
             enemy.setCharacterView(0, 61);
 	    enemy.moveX(1, gameScene.getWidth());
@@ -288,6 +319,7 @@ public class Main extends Application {
 	    enemy.moveX(-1, gameScene.getWidth());
             enemy.moveY(1, gameScene.getHeight());
 	}
+        
 	if(enemy.getHealth()==0){
 	    enemy.setAlive(false);
 	}

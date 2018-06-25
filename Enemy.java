@@ -11,11 +11,11 @@ public class Enemy extends Pane {
     int height = 33;
     int x; //Enemy xPos
     int y; //Enemy yPos
-    int health=3;
     
     //int characterXpos;
     //int characterYpos;
     boolean alive = true;
+    int health = 3;
 
     public Enemy(ImageView iv, int posX, int posY) {
         this.iv = iv;
