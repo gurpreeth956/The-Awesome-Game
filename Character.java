@@ -1,5 +1,3 @@
-//package pkg2dsidescroll; //(Ray's Package)
-
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -13,6 +11,7 @@ public class Character extends Pane {
     int height = 33;
     int x; //Character xPos
     int y; //Character yPos
+    int health = 5;
     
     public Character(ImageView iv, int posX, int posY) {
         this.iv = iv;
@@ -88,11 +87,31 @@ public class Character extends Pane {
         return offsetY;
     }
     
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+    
     public int getX(){
 	return x;
     }
     
     public int getY(){
 	return y;
+    }
+    
+    public boolean isColliding(Enemy enemy) {
+        return this.getBoundsInParent().intersects(enemy.getBoundsInParent());
+    }
+    
+    public void hit(){
+	health--;
+    }
+    
+    public int getHealth(){
+	return health;
     }
 }
