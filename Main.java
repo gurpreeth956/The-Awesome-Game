@@ -27,14 +27,13 @@ public class Main extends Application {
     static Pane root;
     
     private HashMap<KeyCode, Boolean> keys = new HashMap();
-    Image charImage = new Image("file:src/Greenies.png"); //depends on where image is placed
+    Image charImage = new Image("file:src/Greenies.png");
     ImageView charIV = new ImageView(charImage);
     Character player = new Character(charIV, 200, 200);
     
     private List<Projectile> projectiles = new ArrayList<>();
     private List<Projectile> projToRemove = new ArrayList<>();
     long timeOfLastProjectile = 0;
-    
     
     private List<Enemy> enemies = new ArrayList();
     
@@ -136,14 +135,13 @@ public class Main extends Application {
             player.toFront();
         }
         
+        
 	if(Math.random()<0.01){
 	    createEnemy();
 	}
-        
         for (Projectile proj : projectiles) {
             updateProj(proj);
         }
-	
 	for(Enemy enemy : enemies) {
 	    updateEnemy(enemy);
 	}
@@ -151,14 +149,12 @@ public class Main extends Application {
         projectiles.removeAll(projToRemove);
         projToRemove.clear();
         
-        
         //to clear enemies
         if (isPressed(KeyCode.P)) {
-            enemies.clear();
-            
             for (Enemy enemy : enemies) {
                 root.getChildren().removeAll(enemy);
             }
+            enemies.clear();
         }
     }
     
