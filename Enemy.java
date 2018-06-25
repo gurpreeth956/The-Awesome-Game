@@ -30,46 +30,7 @@ public class Enemy extends Pane {
         this.iv.setViewport(new Rectangle2D(offsetX,offsetY,width,height));
     }
     
-    /*public void playerPos(int playerX, int playerY) {
-        characterXpos = playerX;
-        characterYpos = playerY;
-    }*/
-    
-    /*public void followPlayer(double width, double height) {
-        if(this.characterXpos<this.x && this.characterYpos<this.y){
-	    this.setCharacterView(0,123);
-	    this.moveY(-1,height);//up 
-	    this.offsetY=183;
-	    this.moveX(-1,width);//left
-	    this.offsetY=123;
-	}
-	if(this.characterXpos>this.x&&this.characterYpos<this.y){
-	    this.setCharacterView(0,61);
-	    this.moveY(-1,height);//up 
-	    this.offsetY=183;
-	    this.moveX(1,width);//right
-	    this.offsetY=61;
-	}
-	if(this.characterYpos>this.y){
-	    this.setCharacterView(0,123);
-	    this.moveY(1,height);//down
-	    this.offsetY=123;
-	    this.moveX(-1,width);//left
-	    this.offsetY=123;
-	}
-	if(this.characterYpos>this.y){
-	    this.setCharacterView(0,61);
-	    this.moveY(1, height);//down
-	    this.offsetY=61;
-	    this.moveX(1,width);//right
-	    this.offsetY=61;
-	}
-	//else{
-	    this.setCharacterView(0,offsetY);
-	//}
-    }*/
-    
-       public void moveX(int x, double width) {
+    public void moveX(int x, double width) {
         boolean right = x > 0;
         for (int i = 0; i < Math.abs(x); i++) {
             if (right) {
