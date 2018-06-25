@@ -11,6 +11,7 @@ public class Character extends Pane {
     int height = 33;
     int x; //Character xPos
     int y; //Character yPos
+    int health = 5;
     
     public Character(ImageView iv, int posX, int posY) {
         this.iv = iv;
@@ -100,5 +101,17 @@ public class Character extends Pane {
     
     public int getY(){
 	return y;
+    }
+    
+    public boolean isColliding(Enemy enemy) {
+        return this.getBoundsInParent().intersects(enemy.getBoundsInParent());
+    }
+    
+    public void hit(){
+	health--;
+    }
+    
+    public int getHealth(){
+	return health;
     }
 }

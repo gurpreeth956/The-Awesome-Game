@@ -14,7 +14,8 @@ public class Enemy extends Pane {
     
     //int characterXpos;
     //int characterYpos;
-    boolean alive;
+    boolean alive = true;
+    int health = 3;
 
     public Enemy(ImageView iv, int posX, int posY) {
         this.iv = iv;
@@ -88,5 +89,21 @@ public class Enemy extends Pane {
 
     public void setY(int y) {
         this.y = y;
+    }
+    
+    public void setAlive(boolean alive){
+	this.alive = alive;
+    }
+    
+    public boolean isAlive(){
+	return alive;
+    }
+    
+    public void hit(){
+	health--;
+    }
+    
+    public int getHealth(){
+	return health;
     }
 }
