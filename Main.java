@@ -37,6 +37,7 @@ public class Main extends Application {
     
     
     private List<Enemy> enemies = new ArrayList();
+    private List<Enemy> enemToRemove = new ArrayList();
     
     @Override
     public void start(Stage primaryStage) {
@@ -76,7 +77,6 @@ public class Main extends Application {
         opPane.setAlignment(opTitle, Pos.CENTER);
         optionScene = new Scene(opPane, 850, 650);
 	optionScene.getStylesheets().addAll(this.getClass().getResource("Menu.css").toExternalForm());
-      
         
         AnimationTimer timer = new AnimationTimer() {
             @Override
@@ -102,7 +102,7 @@ public class Main extends Application {
     
     //This is where we update the gameplay 
     public void update() {
-        if (isPressed(KeyCode.W)) {
+	if (isPressed(KeyCode.W)) {
             player.setCharacterView(0, 183);
             player.moveY(-2, gameScene.getHeight());
             player.setOffsetY(183);
@@ -150,6 +150,9 @@ public class Main extends Application {
             
         projectiles.removeAll(projToRemove);
         projToRemove.clear();
+	
+	enemies.removeAll(enemToRemove);
+	enemToRemove.clear();
         
         //enemies.clear();
     }
@@ -206,8 +209,13 @@ public class Main extends Application {
     
     public void updateProj(Projectile proj) {
         proj.move();
-	
-        if(proj.getTranslateX()<=0 || proj.getTranslateX()>=gameScene.getWidth()){
+	for(Enemy enemy:enemies){
+	    if(proj.isColliding(enemy)){
+		enemy.hit();
+		proj.setAlive(false);
+	    }
+	}
+	if(proj.getTranslateX()<=0 || proj.getTranslateX()>=gameScene.getWidth()){
 	    proj.setAlive(false);
 	}
 	else if(proj.getTranslateY()<=0 || proj.getTranslateY()>=gameScene.getHeight()){
@@ -269,11 +277,13 @@ public class Main extends Application {
 	    enemy.moveX(-1, gameScene.getWidth());
             enemy.moveY(1, gameScene.getHeight());
 	}
-        
-        
-        //else{
-	  //  this.setCharacterView(0,offsetY);
-	//}
+	if(enemy.getHealth()==0){
+	    enemy.setAlive(false);
+	}
+	if(!enemy.isAlive()){
+	    enemToRemove.add(enemy);
+	    root.getChildren().remove(enemy);
+	}
     }
     
     public boolean isPressed(KeyCode key) {
