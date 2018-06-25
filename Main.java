@@ -17,6 +17,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.shape.Rectangle;
 
 public class Main extends Application {
     
@@ -39,6 +40,10 @@ public class Main extends Application {
     private List<Enemy> enemToRemove = new ArrayList();
     long hitTime = 0;
     
+    Rectangle healthBarOutline;
+    Rectangle actualHealth;
+    Rectangle lostHealth;
+    
     @Override
     public void start(Stage primaryStage) {
         //Menu Scene
@@ -58,7 +63,25 @@ public class Main extends Application {
         //Game Scene
         root = new Pane();
         root.setId("backgroundtrial");
-        root.getChildren().addAll(player);
+        
+        Label healthLabel = new Label("Health: ");
+        healthLabel.setFont(new Font("Arial", 20));
+        healthLabel.toFront();
+        healthBarOutline = new Rectangle(79,9,101,22);
+        healthBarOutline.setFill(Color.TRANSPARENT);
+        healthBarOutline.setStroke(Color.BLACK);
+        lostHealth = new Rectangle(80,10,99,20);
+        lostHealth.setFill(Color.RED);
+        actualHealth = new Rectangle(80,10,99,20);
+        actualHealth.setFill(Color.GREEN);
+        actualHealth.toFront();
+        
+        VBox health = new VBox(10);
+        health.getChildren().addAll(healthLabel);
+        health.setTranslateX(10);
+        health.setTranslateY(10);
+        
+        root.getChildren().addAll(player, health, healthBarOutline, lostHealth, actualHealth);
         gameScene = new Scene(root, 850, 650);
         gameScene.getStylesheets().addAll(this.getClass().getResource("Style.css").toExternalForm());
         
@@ -105,38 +128,34 @@ public class Main extends Application {
 	if(player.getHealth()==0){
 	   Platform.exit();
 	}
+        
 	if (isPressed(KeyCode.W)) {
             player.setCharacterView(0, 183);
             player.moveY(-2, gameScene.getHeight());
             player.setOffsetY(183);
             characterShooting();
-            player.toFront();
             
         } else if (isPressed(KeyCode.S)) {
             player.setCharacterView(0, 0);
             player.moveY(2, gameScene.getHeight());
             player.setOffsetY(0);
             characterShooting();
-            player.toFront();
             
         } else if (isPressed(KeyCode.A)) {
             player.setCharacterView(0, 123);
             player.moveX(-2, gameScene.getWidth());
             player.setOffsetY(123);
             characterShooting();
-            player.toFront();
             
         } else if (isPressed(KeyCode.D)) {
             player.setCharacterView(0, 61);
             player.moveX(2, gameScene.getWidth());
             player.setOffsetY(61);
             characterShooting();
-            player.toFront();
             
         } else {
             player.setCharacterView(0, player.getOffsetY());
             characterShooting();
-            player.toFront();
         }
         
         
@@ -217,12 +236,14 @@ public class Main extends Application {
     
     public void updateProj(Projectile proj) {
         proj.move();
+        
 	for(Enemy enemy:enemies){
 	    if(proj.isColliding(enemy)){
 		enemy.hit();
 		proj.setAlive(false);
 	    }
 	}
+        
 	if(proj.getTranslateX()<=0 || proj.getTranslateX()>=gameScene.getWidth()){
 	    proj.setAlive(false);
 	}
@@ -252,6 +273,11 @@ public class Main extends Application {
 	if(time<0||time>1000){
 	    if(player.isColliding(enemy)){
 		player.hit();
+                
+                root.getChildren().remove(actualHealth);
+                actualHealth = new Rectangle(80,10,player.getHealth()*20,20);
+                actualHealth.setFill(Color.GREEN);
+                root.getChildren().add(actualHealth);
 	    }
 	    hitTime = timeNow;
 	}
