@@ -135,6 +135,7 @@ public class Main extends Application {
             characterShooting();
             player.toFront();
         }
+        
 	if(Math.random()<0.01){
 	    createEnemy();
 	}
@@ -149,6 +150,8 @@ public class Main extends Application {
             
         projectiles.removeAll(projToRemove);
         projToRemove.clear();
+        
+        //enemies.clear();
     }
     
     public void characterShooting() {
@@ -220,15 +223,57 @@ public class Main extends Application {
     public void createEnemy(){
 	Image image = new Image("file:src/Redies.png");
 	ImageView iv = new ImageView(image);
-	Enemy enemy = new Enemy(iv,(int)(Math.random()*gameScene.getWidth()),(int)(Math.random()*gameScene.getHeight()));
+	Enemy enemy = new Enemy(iv,(int)(Math.random()*gameScene.getWidth()),
+                               (int)(Math.random()*gameScene.getHeight()));
 	
 	root.getChildren().add(enemy);
 	enemies.add(enemy);
     }
     
-    public void updateEnemy(Enemy enemy){
-	enemy.playerPos(player.x,player.y);
-	enemy.followPlayer(gameScene.getWidth(),gameScene.getHeight());
+    public void updateEnemy(Enemy enemy) {
+        
+        if(player.getX() > enemy.getX() && player.getY() == enemy.getY()) { //right
+            enemy.setCharacterView(0, 61);
+	    enemy.moveX(1, gameScene.getWidth());
+	}
+	if(player.getX() < enemy.getX() && player.getY() == enemy.getY()) { //left
+            enemy.setCharacterView(0,123);
+	    enemy.moveX(-1, gameScene.getWidth());
+	}
+	if(player.getX() == enemy.getX() && player.getY() > enemy.getY()) { //down
+            enemy.setCharacterView(0,0);
+            enemy.moveY(1, gameScene.getHeight());
+	}
+	if(player.getX() == enemy.getX() && player.getY() < enemy.getY()) { //up
+            enemy.setCharacterView(0,183);
+            enemy.moveY(-1, gameScene.getHeight());
+	}
+        
+	if(player.getX() > enemy.getX() && player.getY() < enemy.getY()) { //quadrant1
+            enemy.setCharacterView(0,61);
+	    enemy.moveX(1, gameScene.getWidth());
+            enemy.moveY(-1, gameScene.getHeight());
+	}
+	if(player.getX() < enemy.getX() && player.getY() < enemy.getY()) { //quadrant2
+            enemy.setCharacterView(0,123);
+	    enemy.moveX(-1, gameScene.getWidth());
+            enemy.moveY(-1, gameScene.getHeight());
+	}
+	if(player.getX() > enemy.getX() && player.getY() > enemy.getY()) { //quadrant3
+            enemy.setCharacterView(0,61);
+	    enemy.moveX(1, gameScene.getWidth());
+            enemy.moveY(1, gameScene.getHeight());
+	}
+	if(player.getX() < enemy.getX() && player.getY() > enemy.getY()) { //quadrant4
+            enemy.setCharacterView(0,123);
+	    enemy.moveX(-1, gameScene.getWidth());
+            enemy.moveY(1, gameScene.getHeight());
+	}
+        
+        
+        //else{
+	  //  this.setCharacterView(0,offsetY);
+	//}
     }
     
     public boolean isPressed(KeyCode key) {

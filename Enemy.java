@@ -12,8 +12,8 @@ public class Enemy extends Pane {
     int x; //Enemy xPos
     int y; //Enemy yPos
     
-    int characterXpos;
-    int characterYpos;
+    //int characterXpos;
+    //int characterYpos;
     boolean alive;
 
     public Enemy(ImageView iv, int posX, int posY) {
@@ -30,44 +30,44 @@ public class Enemy extends Pane {
         this.iv.setViewport(new Rectangle2D(offsetX,offsetY,width,height));
     }
     
-    public void playerPos(int playerX, int playerY) {
+    /*public void playerPos(int playerX, int playerY) {
         characterXpos = playerX;
         characterYpos = playerY;
-    }
+    }*/
     
-    public void followPlayer(double width, double height) {
-        if(this.characterXpos<this.x&&this.characterYpos<this.y){
+    /*public void followPlayer(double width, double height) {
+        if(this.characterXpos<this.x && this.characterYpos<this.y){
 	    this.setCharacterView(0,123);
-	    this.moveY(-2,height);//up 
+	    this.moveY(-1,height);//up 
 	    this.offsetY=183;
-	    this.moveX(-2,width);//left
+	    this.moveX(-1,width);//left
 	    this.offsetY=123;
 	}
-	else if(this.characterXpos>this.x&&this.characterYpos<this.y){
+	if(this.characterXpos>this.x&&this.characterYpos<this.y){
 	    this.setCharacterView(0,61);
-	    this.moveY(-2,height);//up 
+	    this.moveY(-1,height);//up 
 	    this.offsetY=183;
-	    this.moveX(2,width);//right
+	    this.moveX(1,width);//right
 	    this.offsetY=61;
 	}
-	else if(this.characterYpos>this.y){
+	if(this.characterYpos>this.y){
 	    this.setCharacterView(0,123);
-	    this.moveY(2,height);//down
+	    this.moveY(1,height);//down
 	    this.offsetY=123;
-	    this.moveX(-2,width);//left
+	    this.moveX(-1,width);//left
 	    this.offsetY=123;
 	}
-	else if(this.characterYpos>this.y){
+	if(this.characterYpos>this.y){
 	    this.setCharacterView(0,61);
-	    this.moveY(2, height);//down
+	    this.moveY(1, height);//down
 	    this.offsetY=61;
-	    this.moveX(2,width);//right
+	    this.moveX(1,width);//right
 	    this.offsetY=61;
 	}
-	else{
+	//else{
 	    this.setCharacterView(0,offsetY);
-	}
-    }
+	//}
+    }*/
     
        public void moveX(int x, double width) {
         boolean right = x > 0;
@@ -113,4 +113,19 @@ public class Enemy extends Pane {
         }
     }
 
+    public int getX() {
+        return x;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
 }
