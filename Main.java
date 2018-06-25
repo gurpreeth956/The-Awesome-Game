@@ -38,6 +38,7 @@ public class Main extends Application {
     
     private List<Enemy> enemies = new ArrayList();
     private List<Enemy> enemToRemove = new ArrayList();
+    long hitTime = 0;
     
     @Override
     public void start(Stage primaryStage) {
@@ -102,6 +103,9 @@ public class Main extends Application {
     
     //This is where we update the gameplay 
     public void update() {
+	if(player.getHealth()==0){
+	   Platform.exit();
+	}
 	if (isPressed(KeyCode.W)) {
             player.setCharacterView(0, 183);
             player.moveY(-2, gameScene.getHeight());
@@ -239,7 +243,14 @@ public class Main extends Application {
     }
     
     public void updateEnemy(Enemy enemy) {
-        
+	long timeNow = System.currentTimeMillis();
+	long time = timeNow-hitTime;
+	if(time<0||time>1000){
+	    if(player.isColliding(enemy)){
+		player.hit();
+	    }
+	    hitTime = timeNow;
+	}
         if(player.getX() > enemy.getX() && player.getY() == enemy.getY()) { //right
             enemy.setCharacterView(0, 61);
 	    enemy.moveX(1, gameScene.getWidth());
