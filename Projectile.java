@@ -26,6 +26,11 @@ public class Projectile extends Pane {
         this.getChildren().addAll(iv);
     }
     
+    public void move() {
+        this.setTranslateX(this.getTranslateX() + this.getVelocityX());
+        this.setTranslateY(this.getTranslateY() + this.getVelocityY());
+    }
+    
     public int getVelocityX() {
         return velocityX;
     }
