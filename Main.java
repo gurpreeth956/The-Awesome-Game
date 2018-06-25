@@ -144,14 +144,22 @@ public class Main extends Application {
             updateProj(proj);
         }
 	
-	for(Enemy enemy:enemies){
+	for(Enemy enemy : enemies) {
 	    updateEnemy(enemy);
 	}
             
         projectiles.removeAll(projToRemove);
         projToRemove.clear();
         
-        //enemies.clear();
+        
+        //to clear enemies
+        if (isPressed(KeyCode.P)) {
+            enemies.clear();
+            
+            for (Enemy enemy : enemies) {
+                root.getChildren().removeAll(enemy);
+            }
+        }
     }
     
     public void characterShooting() {
@@ -269,11 +277,6 @@ public class Main extends Application {
 	    enemy.moveX(-1, gameScene.getWidth());
             enemy.moveY(1, gameScene.getHeight());
 	}
-        
-        
-        //else{
-	  //  this.setCharacterView(0,offsetY);
-	//}
     }
     
     public boolean isPressed(KeyCode key) {
