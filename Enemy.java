@@ -1,3 +1,5 @@
+
+import java.util.List;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -106,4 +108,20 @@ public class Enemy extends Pane {
     public int getHealth(){
 	return health;
     }
+    
+    public boolean playerColliding(Character player) {
+        return this.getBoundsInParent().intersects(player.getBoundsInParent());
+    }
+    
+    public boolean enemyColliding(List<Enemy> enemies){
+	boolean colliding = false;
+	for(Enemy enemy:enemies){
+	    if(this.x==enemy.x&&this.y==enemy.y) continue;
+	    if(this.getBoundsInParent().intersects(enemy.getBoundsInParent())){
+		colliding = true;
+	    }
+	}
+	return colliding;
+    }
+    
 }
