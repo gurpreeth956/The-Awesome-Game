@@ -12,6 +12,7 @@ import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.control.*;
@@ -19,6 +20,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Screen;
 
 public class Main extends Application {
 
@@ -44,7 +46,8 @@ public class Main extends Application {
     Rectangle healthBarOutline;
     Rectangle actualHealth;
     Rectangle lostHealth;
-
+    Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
+    
     @Override
     public void start(Stage primaryStage) {
 	//Menu Scene
@@ -58,7 +61,7 @@ public class Main extends Application {
 	bp.setCenter(vbox);
 	bp.setTop(title);
 	bp.setAlignment(title, Pos.CENTER);
-	menuScene = new Scene(bp, 850, 650, Color.BLACK);
+	menuScene = new Scene(bp, screenSize.getWidth(), screenSize.getHeight());
 	menuScene.getStylesheets().addAll(this.getClass().getResource("Menu.css").toExternalForm());
 
 	//Game Scene
@@ -83,7 +86,7 @@ public class Main extends Application {
 	health.setTranslateY(10);
 
 	root.getChildren().addAll(player, health, healthBarOutline, lostHealth, actualHealth);
-	gameScene = new Scene(root, 850, 650);
+	gameScene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
 	gameScene.getStylesheets().addAll(this.getClass().getResource("Style.css").toExternalForm());
 
 	gameScene.setOnKeyPressed(e -> keys.put(e.getCode(), true));
@@ -99,7 +102,7 @@ public class Main extends Application {
 	opPane.setCenter(optionsBox);
 	opPane.setTop(opTitle);
 	opPane.setAlignment(opTitle, Pos.CENTER);
-	optionScene = new Scene(opPane, 850, 650);
+	optionScene = new Scene(opPane, screenSize.getWidth(), screenSize.getHeight());
 	optionScene.getStylesheets().addAll(this.getClass().getResource("Menu.css").toExternalForm());
 
 	AnimationTimer timer = new AnimationTimer() {
@@ -109,7 +112,8 @@ public class Main extends Application {
 	    }
 	};
 	timer.start();
-
+	
+	primaryStage.setMaximized(true);
 	primaryStage.setTitle("The Awesome Game");
 	primaryStage.setScene(menuScene);
 	primaryStage.show();
