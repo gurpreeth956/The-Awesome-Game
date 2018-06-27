@@ -116,9 +116,9 @@ public class Main extends Application {
         };
         timer.start();
 	
-	//primaryStage.setMaximized(true);
 	primaryStage.setTitle("The Awesome Game");
         //primaryStage.setFullScreen(true);
+	primaryStage.setResizable(false);
 	primaryStage.setScene(menuScene);
 	primaryStage.show();
 
@@ -139,7 +139,6 @@ public class Main extends Application {
             
             pause = false;
         });
-	
     }
 
     //This is where we update the gameplay 
@@ -282,8 +281,8 @@ public class Main extends Application {
     public void createEnemy() {
 	Image image = new Image("file:src/Redies.png");
 	ImageView iv = new ImageView(image);
-	Enemy enemy = new Enemy(iv, (int) (Math.random() * gameScene.getWidth()),
-		(int) (Math.random() * gameScene.getHeight()));
+	Enemy enemy = new Enemy(iv, (int)(Math.random() * (gameScene.getWidth() - player.width)),
+                                (int)(Math.random() * gameScene.getHeight()));
 
 	root.getChildren().addAll(enemy,enemy.healthBarOutline,enemy.lostHealth,enemy.actualHealth);
 	enemies.add(enemy);
@@ -303,6 +302,7 @@ public class Main extends Application {
 	    }
 	    hitTime = timeNow;
 	}
+        
 	//if (!enemy.playerColliding(player)&&!enemy.enemyColliding(enemies)) {
 	    if (player.getX() > enemy.getX() && player.getY() == enemy.getY()) { //right
 		enemy.setCharacterView(0, 61);
