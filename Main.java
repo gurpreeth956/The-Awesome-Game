@@ -139,6 +139,7 @@ public class Main extends Application {
             
             pause = false;
         });
+	
     }
 
     //This is where we update the gameplay 
@@ -260,6 +261,8 @@ public class Main extends Application {
 	for (Enemy enemy : enemies) {
 	    if (proj.isColliding(enemy)) {
 		enemy.hit();
+		root.getChildren().remove(enemy.actualHealth);
+		root.getChildren().add(enemy.updateHealth());
 		proj.setAlive(false);
 	    }
 	}
@@ -282,7 +285,7 @@ public class Main extends Application {
 	Enemy enemy = new Enemy(iv, (int) (Math.random() * gameScene.getWidth()),
 		(int) (Math.random() * gameScene.getHeight()));
 
-	root.getChildren().add(enemy);
+	root.getChildren().addAll(enemy,enemy.healthBarOutline,enemy.lostHealth,enemy.actualHealth);
 	enemies.add(enemy);
     }
 
@@ -344,7 +347,7 @@ public class Main extends Application {
 	}
 	if (!enemy.isAlive()) {
 	    enemToRemove.add(enemy);
-	    root.getChildren().remove(enemy);
+	    root.getChildren().removeAll(enemy,enemy.actualHealth,enemy.lostHealth,enemy.healthBarOutline);
 	}
     }
 
