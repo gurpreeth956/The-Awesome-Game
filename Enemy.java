@@ -30,12 +30,12 @@ public class Enemy extends Pane {
         this.y = posY;
         this.getChildren().addAll(iv);
         
-	healthBarOutline = new Rectangle(x-1,y-6,68,4);
+	healthBarOutline = new Rectangle(x - 1, y - 6, 68, 4);
 	healthBarOutline.setFill(Color.TRANSPARENT);
 	healthBarOutline.setStroke(Color.BLACK);
-	lostHealth = new Rectangle(x,y-5,66,3);
+	lostHealth = new Rectangle(x, y - 5, 66, 3);
 	lostHealth.setFill(Color.RED);
-	actualHealth = new Rectangle(x,y-5,66,3);
+	actualHealth = new Rectangle(x, y - 5, 66, 3);
 	actualHealth.setFill(Color.GREEN);
 	actualHealth.toFront();
     }
@@ -145,10 +145,10 @@ public class Enemy extends Pane {
     
     public void healthPos(){
 	actualHealth.setX(this.x);
-	actualHealth.setY(this.y-5);
+	actualHealth.setY(this.y - 5);
 	lostHealth.setX(this.x);
-	lostHealth.setY(this.y-5);
-	healthBarOutline.setX(this.x-1);
-	healthBarOutline.setY(this.y-6);
+	lostHealth.setY(this.y - 5);
+	healthBarOutline.setX(this.x - 1);
+	healthBarOutline.setY(this.y - 6);
     }
 }

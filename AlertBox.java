@@ -19,6 +19,7 @@ public class AlertBox {
         stage.setTitle(title);
         stage.setWidth(250);
         stage.setHeight(100);
+        stage.setResizable(false);
         
         Label label = new Label();
         label.setText(message);

@@ -114,8 +114,7 @@ public class Character extends Pane {
     }
     
     public boolean isAlive() {
-        if (health == 0) alive = false;
-        else alive = true;
+        alive = health != 0;
         return alive;
     }
     
