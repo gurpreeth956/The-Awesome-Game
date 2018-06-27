@@ -1,4 +1,3 @@
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -46,7 +45,11 @@ public class Main extends Application {
     Rectangle healthBarOutline;
     Rectangle actualHealth;
     Rectangle lostHealth;
-    Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
+    
+    static Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
+    
+    boolean gameplay = false;
+    boolean pause = false;
     
     @Override
     public void start(Stage primaryStage) {
@@ -104,87 +107,101 @@ public class Main extends Application {
 	opPane.setAlignment(opTitle, Pos.CENTER);
 	optionScene = new Scene(opPane, screenSize.getWidth(), screenSize.getHeight());
 	optionScene.getStylesheets().addAll(this.getClass().getResource("Menu.css").toExternalForm());
-
-	AnimationTimer timer = new AnimationTimer() {
-	    @Override
-	    public void handle(long now) {
-		update();
-	    }
-	};
-	timer.start();
+        
+        AnimationTimer timer = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                update();
+            }
+        };
+        timer.start();
 	
-	primaryStage.setMaximized(true);
+	//primaryStage.setMaximized(true);
 	primaryStage.setTitle("The Awesome Game");
+        //primaryStage.setFullScreen(true);
 	primaryStage.setScene(menuScene);
 	primaryStage.show();
 
-	//Made this a comment for now cause it was annoying clicking yes every time
-	/*primaryStage.setOnCloseRequest(e -> {
+	primaryStage.setOnCloseRequest(e -> {
             e.consume();
+            pause = true;
             
             boolean close = AlertBox.exitDisplay("Exit Game", "Are you sure you want to exit?");
-            if (close) Platform.exit();
-        });*/
+            if (close) {
+                Platform.exit();
+                gameplay = false;
+                
+                for (Enemy enemy : enemies) {
+                    root.getChildren().removeAll(enemy);
+                }
+                enemies.clear();
+            }
+            
+            pause = false;
+        });
     }
 
     //This is where we update the gameplay 
     public void update() {
-	if (player.getHealth() == 0) {
-	    Platform.exit();
-	}
+        if (gameplay && !pause) {
+            if (player.getHealth() == 0) {
+                Platform.exit();
+            }
 
-	if (isPressed(KeyCode.W)) {
-	    player.setCharacterView(0, 183);
-	    player.moveY(-2, gameScene.getHeight());
-	    player.setOffsetY(183);
-	    characterShooting();
+            if (isPressed(KeyCode.W)) {
+                player.setCharacterView(0, 183);
+                player.moveY(-2, gameScene.getHeight());
+                player.setOffsetY(183);
+                characterShooting();
 
-	} else if (isPressed(KeyCode.S)) {
-	    player.setCharacterView(0, 0);
-	    player.moveY(2, gameScene.getHeight());
-	    player.setOffsetY(0);
-	    characterShooting();
+            } else if (isPressed(KeyCode.S)) {
+                player.setCharacterView(0, 0);
+                player.moveY(2, gameScene.getHeight());
+                player.setOffsetY(0);
+                characterShooting();
 
-	} else if (isPressed(KeyCode.A)) {
-	    player.setCharacterView(0, 123);
-	    player.moveX(-2, gameScene.getWidth());
-	    player.setOffsetY(123);
-	    characterShooting();
+            } else if (isPressed(KeyCode.A)) {
+                player.setCharacterView(0, 123);
+                player.moveX(-2, gameScene.getWidth());
+                player.setOffsetY(123);
+                characterShooting();
 
-	} else if (isPressed(KeyCode.D)) {
-	    player.setCharacterView(0, 61);
-	    player.moveX(2, gameScene.getWidth());
-	    player.setOffsetY(61);
-	    characterShooting();
+            } else if (isPressed(KeyCode.D)) {
+                player.setCharacterView(0, 61);
+                player.moveX(2, gameScene.getWidth());
+                player.setOffsetY(61);
+                characterShooting();
 
-	} else {
-	    player.setCharacterView(0, player.getOffsetY());
-	    characterShooting();
-	}
+            } else {
+                player.setCharacterView(0, player.getOffsetY());
+                characterShooting();
+            }
 
-	if (Math.random() < 0.01) {
-	    createEnemy();
-	}
-	for (Projectile proj : projectiles) {
-	    updateProj(proj);
-	}
-	for (Enemy enemy : enemies) {
-	    updateEnemy(enemy);
-	}
+            if (Math.random() < 0.01) {
+                createEnemy();
+            }
+            
+            for (Projectile proj : projectiles) {
+                updateProj(proj);
+            }
+            for (Enemy enemy : enemies) {
+                updateEnemy(enemy);
+            }
 
-	projectiles.removeAll(projToRemove);
-	projToRemove.clear();
+            projectiles.removeAll(projToRemove);
+            projToRemove.clear();
 
-	enemies.removeAll(enemToRemove);
-	enemToRemove.clear();
+            enemies.removeAll(enemToRemove);
+            enemToRemove.clear();
 
-	//to clear enemies
-	if (isPressed(KeyCode.P)) {
-	    for (Enemy enemy : enemies) {
-		root.getChildren().removeAll(enemy);
-	    }
-	    enemies.clear();
-	}
+            //to clear enemies (temporary)
+            if (isPressed(KeyCode.P)) {
+                for (Enemy enemy : enemies) {
+                    root.getChildren().removeAll(enemy);
+                }
+                enemies.clear();
+            }
+        }
     }
 
     public void characterShooting() {
@@ -283,7 +300,7 @@ public class Main extends Application {
 	    }
 	    hitTime = timeNow;
 	}
-	if (!enemy.playerColliding(player)&&!enemy.enemyColliding(enemies)) {
+	//if (!enemy.playerColliding(player)&&!enemy.enemyColliding(enemies)) {
 	    if (player.getX() > enemy.getX() && player.getY() == enemy.getY()) { //right
 		enemy.setCharacterView(0, 61);
 		enemy.moveX(1, gameScene.getWidth());
@@ -321,7 +338,7 @@ public class Main extends Application {
 		enemy.moveX(-1, gameScene.getWidth());
 		enemy.moveY(1, gameScene.getHeight());
 	    }
-	}
+	//}
 	if (enemy.getHealth() == 0) {
 	    enemy.setAlive(false);
 	}
@@ -344,11 +361,14 @@ public class Main extends Application {
 	Button startBtn = new Button("Start");
 	startBtn.setOnAction(e -> {
 	    pStage.setScene(gameScene);
+            //pStage.setFullScreen(true);
+            gameplay = true;
 	});
 
 	Button optionsBtn = new Button("Options");
 	optionsBtn.setOnAction(e -> {
 	    pStage.setScene(optionScene);
+            //pStage.setFullScreen(true);
 	});
 
 	Button exitBtn = new Button("Exit");
@@ -388,6 +408,7 @@ public class Main extends Application {
 	Button backBtn = new Button("Back to Menu");
 	backBtn.setOnAction(e -> {
 	    pStage.setScene(menuScene);
+            //pStage.setFullScreen(true);
 	});
 
 	vbox.getChildren().addAll(fullBox, musicBox, backBtn);
