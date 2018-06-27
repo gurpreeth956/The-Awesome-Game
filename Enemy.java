@@ -1,4 +1,3 @@
-
 import java.util.List;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.ImageView;
@@ -14,8 +13,6 @@ public class Enemy extends Pane {
     int x; //Enemy xPos
     int y; //Enemy yPos
     
-    //int characterXpos;
-    //int characterYpos;
     boolean alive = true;
     int health = 3;
 
@@ -93,12 +90,12 @@ public class Enemy extends Pane {
         this.y = y;
     }
     
-    public void setAlive(boolean alive){
-	this.alive = alive;
-    }
-    
     public boolean isAlive(){
 	return alive;
+    }
+    
+    public void setAlive(boolean alive){
+	this.alive = alive;
     }
     
     public void hit(){
@@ -123,5 +120,4 @@ public class Enemy extends Pane {
 	}
 	return colliding;
     }
-    
 }
