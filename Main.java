@@ -1,3 +1,4 @@
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,9 +30,8 @@ public class Main extends Application {
     //Scene gameScene;
     //Scene optionScene;
     //static Pane root;
-    
     Scene scene;
-    
+
     static Pane gameRoot;
     static BorderPane menuRoot;
     static BorderPane optionsRoot;
@@ -42,7 +42,7 @@ public class Main extends Application {
     private HashMap<KeyCode, Boolean> keys = new HashMap();
     Image charImage = new Image("file:src/Greenies.png");
     ImageView charIV = new ImageView(charImage);
-    Character player = new Character(charIV, 200, 200);
+    Character player = new Character(charIV, 500, 500);
 
     private List<Projectile> projectiles = new ArrayList<>();
     private List<Projectile> projToRemove = new ArrayList<>();
@@ -55,15 +55,17 @@ public class Main extends Application {
     Rectangle healthBarOutline;
     Rectangle actualHealth;
     Rectangle lostHealth;
-    
+    VBox health;
+
     static Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
-    
+
     boolean gameplay = false;
     boolean pause = false;
-    
+    long pauseTime = 0;
+
     @Override
     public void start(Stage primaryStage) {
-        
+
 	//Menu Root
 	Text title = new Text("The Awesome Game");
 	title.setFont(Font.font("Arial", 40));
@@ -76,8 +78,8 @@ public class Main extends Application {
 	menuRoot.setTop(title);
 	menuRoot.setAlignment(title, Pos.CENTER);
 	menuRoot.getStylesheets().addAll(this.getClass().getResource("Menu.css").toExternalForm());
-        
-        scene = new Scene(menuRoot, screenSize.getWidth(), screenSize.getHeight());
+
+	scene = new Scene(menuRoot, screenSize.getWidth(), screenSize.getHeight());
 
 	//Game Root
 	gameRoot = new Pane();
@@ -95,7 +97,7 @@ public class Main extends Application {
 	actualHealth.setFill(Color.GREEN);
 	actualHealth.toFront();
 
-	VBox health = new VBox(10);
+	health = new VBox(10);
 	health.getChildren().addAll(healthLabel);
 	health.setTranslateX(10);
 	health.setTranslateY(10);
@@ -103,7 +105,7 @@ public class Main extends Application {
 	gameRoot.getChildren().addAll(player, health, healthBarOutline, lostHealth, actualHealth);
 	gameRoot.getStylesheets().addAll(this.getClass().getResource("Style.css").toExternalForm());
 
-        //Options Root
+	//Options Root
 	Text opTitle = new Text("Options");
 	opTitle.setFont(Font.font("Arial", 40));
 	VBox optionsBox = addOptionButtons(primaryStage);
@@ -114,122 +116,139 @@ public class Main extends Application {
 	optionsRoot.setTop(opTitle);
 	optionsRoot.setAlignment(opTitle, Pos.CENTER);
 	optionsRoot.getStylesheets().addAll(this.getClass().getResource("Menu.css").toExternalForm());
-        
-        //Exit Root
-        exitRoot = new VBox(20);
-        Label exitString = new Label("Are you sure you want to exit?");
-        HBox buttons = new HBox(10);
-        buttons.getChildren().addAll(yes, no);
-        buttons.setAlignment(Pos.CENTER);
-        exitRoot.getChildren().addAll(exitString, buttons);
-        exitRoot.setId("menu");
-        exitRoot.setAlignment(Pos.CENTER);
-        exitRoot.getStylesheets().addAll(this.getClass().getResource("Menu.css").toExternalForm());
-        
-        //Gameplay
+
+	//Exit Root
+	exitRoot = new VBox(20);
+	Label exitString = new Label("Are you sure you want to exit?");
+	exitString.setFont(Font.font("Arial", 25));
+	HBox buttons = new HBox(10);
+	buttons.getChildren().addAll(yes, no);
+	buttons.setAlignment(Pos.CENTER);
+	exitRoot.getChildren().addAll(exitString, buttons);
+	exitRoot.setId("menu");
+	exitRoot.setAlignment(Pos.CENTER);
+	exitRoot.getStylesheets().addAll(this.getClass().getResource("Menu.css").toExternalForm());
+
+	//Gameplay
 	scene.setOnKeyPressed(e -> keys.put(e.getCode(), true));
 	scene.setOnKeyReleased(e -> keys.put(e.getCode(), false));
-        
-        AnimationTimer timer = new AnimationTimer() {
-            @Override
-            public void handle(long now) {
-                update();
-            }
-        };
-        timer.start();
-	
-        //Stage
+
+	AnimationTimer timer = new AnimationTimer() {
+	    @Override
+	    public void handle(long now) {
+		update(primaryStage);
+	    }
+	};
+	timer.start();
+
+	//Stage
 	primaryStage.setTitle("The Awesome Game");
-        primaryStage.setFullScreen(true);
-        primaryStage.setFullScreenExitHint("");
-        primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
-        primaryStage.initStyle(StageStyle.UTILITY);
+	primaryStage.setFullScreen(true);
+	primaryStage.setFullScreenExitHint("");
+	primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
+	primaryStage.initStyle(StageStyle.UTILITY);
 	primaryStage.setResizable(false);
 	primaryStage.setScene(scene);
 	primaryStage.show();
 
 	primaryStage.setOnCloseRequest(e -> {
-            e.consume();
-            pause = true;
-            primaryStage.getScene().setRoot(exitRoot);
-            
-            yes.setOnAction(eY -> {
-                Platform.exit();
-                gameplay = false;
-                
-                for (Enemy enemy : enemies) {
-                    gameRoot.getChildren().removeAll(enemy);
-                }
-                enemies.clear();
-            });
-            no.setOnAction(eN -> {
-                primaryStage.getScene().setRoot(gameRoot);
-                pause = false;
-            });
-        });
+	    e.consume();
+	    pause = true;
+	    primaryStage.getScene().setRoot(exitRoot);
+
+	    yes.setOnAction(eY -> {
+		Platform.exit();
+		gameplay = false;
+
+		for (Enemy enemy : enemies) {
+		    gameRoot.getChildren().removeAll(enemy);
+		}
+		enemies.clear();
+	    });
+	    no.setOnAction(eN -> {
+		primaryStage.getScene().setRoot(gameRoot);
+		pause = false;
+	    });
+	});
     }
 
     //This is where the gameplay is updated 
-    public void update() {
-        if (gameplay && !pause) {
-            if (player.getHealth() == 0) {
-                Platform.exit();
-            }
+    public void update(Stage pStage) {
+	long timeNow = System.currentTimeMillis();
+	long time = timeNow - pauseTime;
+	if (gameplay && !pause) {
+	    if (player.getHealth() == 0) {
+		Platform.exit();
+	    }
 
-            if (isPressed(KeyCode.W)) {
-                player.setCharacterView(0, 183);
-                player.moveY(-2, scene.getHeight());
-                player.setOffsetY(183);
-                characterShooting();
+	    if (isPressed(KeyCode.W)) {
+		player.setCharacterView(0, 183);
+		player.moveY(-2, scene.getHeight());
+		player.setOffsetY(183);
+		characterShooting();
 
-            } else if (isPressed(KeyCode.S)) {
-                player.setCharacterView(0, 0);
-                player.moveY(2, scene.getHeight());
-                player.setOffsetY(0);
-                characterShooting();
+	    } else if (isPressed(KeyCode.S)) {
+		player.setCharacterView(0, 0);
+		player.moveY(2, scene.getHeight());
+		player.setOffsetY(0);
+		characterShooting();
 
-            } else if (isPressed(KeyCode.A)) {
-                player.setCharacterView(0, 123);
-                player.moveX(-2, scene.getWidth());
-                player.setOffsetY(123);
-                characterShooting();
+	    } else if (isPressed(KeyCode.A)) {
+		player.setCharacterView(0, 123);
+		player.moveX(-2, scene.getWidth());
+		player.setOffsetY(123);
+		characterShooting();
 
-            } else if (isPressed(KeyCode.D)) {
-                player.setCharacterView(0, 61);
-                player.moveX(2, scene.getWidth());
-                player.setOffsetY(61);
-                characterShooting();
+	    } else if (isPressed(KeyCode.D)) {
+		player.setCharacterView(0, 61);
+		player.moveX(2, scene.getWidth());
+		player.setOffsetY(61);
+		characterShooting();
 
-            } else {
-                player.setCharacterView(0, player.getOffsetY());
-                characterShooting();
-            }
+	    } else {
+		player.setCharacterView(0, player.getOffsetY());
+		characterShooting();
+	    }
 
-            if (Math.random() < 0.01) {
-                createEnemy();
-            }
-            
-            for (Projectile proj : projectiles) {
-                updateProj(proj);
-            }
-            for (Enemy enemy : enemies) {
-                updateEnemy(enemy);
-            }
+	    if (Math.random() < 0.01) {
+		createEnemy();
+	    }
+	    if (time < 0 || time > 150) {
+		if (isPressed(KeyCode.ESCAPE)) {
+		    pause = true;
+		    pStage.getScene().setRoot(optionsRoot);
+		}
+		pauseTime = timeNow;
+	    }
+	    for (Projectile proj : projectiles) {
+		updateProj(proj);
+	    }
+	    for (Enemy enemy : enemies) {
+		updateEnemy(enemy);
+	    }
 
-            projectiles.removeAll(projToRemove);
-            projToRemove.clear();
+	    projectiles.removeAll(projToRemove);
+	    projToRemove.clear();
 
-            enemies.removeAll(enemToRemove);
-            enemToRemove.clear();
+	    enemies.removeAll(enemToRemove);
+	    enemToRemove.clear();
 
-            //to clear enemies (temporary)
-            if (isPressed(KeyCode.P)) {
-                for (Enemy enemy : enemies) {
-                    gameRoot.getChildren().removeAll(enemy);
-                }
-                enemies.clear();
-            }
-        }
+	    //to clear enemies (temporary)
+	    if (isPressed(KeyCode.P)) {
+		for (Enemy enemy : enemies) {
+		    gameRoot.getChildren().removeAll(enemy);
+		}
+		enemies.clear();
+	    }
+	} else if (pause) {
+	    if (time < 0 || time > 150) {
+		if (isPressed(KeyCode.ESCAPE)) {
+		    pause = false;
+		    pStage.getScene().setRoot(gameRoot);
+		}
+		pauseTime = timeNow;
+	    }
+	}
     }
 
     public void characterShooting() {
@@ -309,10 +328,10 @@ public class Main extends Application {
     public void createEnemy() {
 	Image image = new Image("file:src/Redies.png");
 	ImageView iv = new ImageView(image);
-	Enemy enemy = new Enemy(iv, (int)(Math.random() * (scene.getWidth() - player.width)),
-                                (int)(Math.random() * scene.getHeight()));
+	Enemy enemy = new Enemy(iv, (int) (Math.random() * (scene.getWidth() - player.width)),
+		(int) (Math.random() * scene.getHeight()));
 
-	gameRoot.getChildren().addAll(enemy,enemy.healthBarOutline,enemy.lostHealth,enemy.actualHealth);
+	gameRoot.getChildren().addAll(enemy, enemy.healthBarOutline, enemy.lostHealth, enemy.actualHealth);
 	enemies.add(enemy);
     }
 
@@ -330,52 +349,52 @@ public class Main extends Application {
 	    }
 	    hitTime = timeNow;
 	}
-        
-	//if (!enemy.playerColliding(player)&&!enemy.enemyColliding(enemies)) {
-	    if (player.getX() > enemy.getX() && player.getY() == enemy.getY()) { //right
-		enemy.setCharacterView(0, 61);
-		enemy.moveX(1, scene.getWidth());
-	    }
-	    if (player.getX() < enemy.getX() && player.getY() == enemy.getY()) { //left
-		enemy.setCharacterView(0, 123);
-		enemy.moveX(-1, scene.getWidth());
-	    }
-	    if (player.getX() == enemy.getX() && player.getY() > enemy.getY()) { //down
-		enemy.setCharacterView(0, 0);
-		enemy.moveY(1, scene.getHeight());
-	    }
-	    if (player.getX() == enemy.getX() && player.getY() < enemy.getY()) { //up
-		enemy.setCharacterView(0, 183);
-		enemy.moveY(-1, scene.getHeight());
-	    }
 
-	    if (player.getX() > enemy.getX() && player.getY() < enemy.getY()) { //quadrant1
-		enemy.setCharacterView(0, 61);
-		enemy.moveX(1, scene.getWidth());
-		enemy.moveY(-1, scene.getHeight());
-	    }
-	    if (player.getX() < enemy.getX() && player.getY() < enemy.getY()) { //quadrant2
-		enemy.setCharacterView(0, 123);
-		enemy.moveX(-1, scene.getWidth());
-		enemy.moveY(-1, scene.getHeight());
-	    }
-	    if (player.getX() > enemy.getX() && player.getY() > enemy.getY()) { //quadrant3
-		enemy.setCharacterView(0, 61);
-		enemy.moveX(1, scene.getWidth());
-		enemy.moveY(1, scene.getHeight());
-	    }
-	    if (player.getX() < enemy.getX() && player.getY() > enemy.getY()) { //quadrant4
-		enemy.setCharacterView(0, 123);
-		enemy.moveX(-1, scene.getWidth());
-		enemy.moveY(1, scene.getHeight());
-	    }
+	//if (!enemy.playerColliding(player)&&!enemy.enemyColliding(enemies)) {
+	if (player.getX() > enemy.getX() && player.getY() == enemy.getY()) { //right
+	    enemy.setCharacterView(0, 61);
+	    enemy.moveX(1, scene.getWidth());
+	}
+	if (player.getX() < enemy.getX() && player.getY() == enemy.getY()) { //left
+	    enemy.setCharacterView(0, 123);
+	    enemy.moveX(-1, scene.getWidth());
+	}
+	if (player.getX() == enemy.getX() && player.getY() > enemy.getY()) { //down
+	    enemy.setCharacterView(0, 0);
+	    enemy.moveY(1, scene.getHeight());
+	}
+	if (player.getX() == enemy.getX() && player.getY() < enemy.getY()) { //up
+	    enemy.setCharacterView(0, 183);
+	    enemy.moveY(-1, scene.getHeight());
+	}
+
+	if (player.getX() > enemy.getX() && player.getY() < enemy.getY()) { //quadrant1
+	    enemy.setCharacterView(0, 61);
+	    enemy.moveX(1, scene.getWidth());
+	    enemy.moveY(-1, scene.getHeight());
+	}
+	if (player.getX() < enemy.getX() && player.getY() < enemy.getY()) { //quadrant2
+	    enemy.setCharacterView(0, 123);
+	    enemy.moveX(-1, scene.getWidth());
+	    enemy.moveY(-1, scene.getHeight());
+	}
+	if (player.getX() > enemy.getX() && player.getY() > enemy.getY()) { //quadrant3
+	    enemy.setCharacterView(0, 61);
+	    enemy.moveX(1, scene.getWidth());
+	    enemy.moveY(1, scene.getHeight());
+	}
+	if (player.getX() < enemy.getX() && player.getY() > enemy.getY()) { //quadrant4
+	    enemy.setCharacterView(0, 123);
+	    enemy.moveX(-1, scene.getWidth());
+	    enemy.moveY(1, scene.getHeight());
+	}
 	//}
 	if (enemy.getHealth() == 0) {
 	    enemy.setAlive(false);
 	}
 	if (!enemy.isAlive()) {
 	    enemToRemove.add(enemy);
-	    gameRoot.getChildren().removeAll(enemy,enemy.actualHealth,enemy.lostHealth,enemy.healthBarOutline);
+	    gameRoot.getChildren().removeAll(enemy, enemy.actualHealth, enemy.lostHealth, enemy.healthBarOutline);
 	}
     }
 
@@ -391,33 +410,34 @@ public class Main extends Application {
 
 	Button startBtn = new Button("Start");
 	startBtn.setOnAction(e -> {
-            pStage.getScene().setRoot(gameRoot);
-            gameplay = true;
+	    pStage.getScene().setRoot(gameRoot);
+	    gameplay = true;
 	});
 
 	Button optionsBtn = new Button("Options");
 	optionsBtn.setOnAction(e -> {
-            pStage.getScene().setRoot(optionsRoot);
+	    pStage.getScene().setRoot(optionsRoot);
 	});
 
 	Button exitBtn = new Button("Exit");
 	exitBtn.setOnAction(e -> {
 	    pause = true;
-            pStage.getScene().setRoot(exitRoot);
-            
-            yes.setOnAction(eY -> {
-                Platform.exit();
-                gameplay = false;
-                
-                for (Enemy enemy : enemies) {
-                    gameRoot.getChildren().removeAll(enemy);
-                }
-                enemies.clear();
-            });
-            no.setOnAction(eN -> {
-                pStage.getScene().setRoot(gameRoot);
-                pause = false;
-            });
+	    pStage.getScene().setRoot(exitRoot);
+
+	    yes.setOnAction(eY -> {
+		Platform.exit();
+		gameplay = false;
+
+		for (Enemy enemy : enemies) {
+		    gameRoot.getChildren().removeAll(enemy);
+		}
+		enemies.clear();
+	    });
+	    no.setOnAction(eN -> {
+		pStage.getScene().setRoot(gameRoot);
+		pause = false;
+		gameplay = true;
+	    });
 	});
 
 	vbox.getChildren().addAll(startBtn, optionsBtn, exitBtn);
@@ -437,13 +457,21 @@ public class Main extends Application {
 
 	Button backBtn = new Button("Back to Menu");
 	backBtn.setOnAction(e -> {
-            pStage.getScene().setRoot(menuRoot);
+	    pStage.getScene().setRoot(menuRoot);
+	    projectiles.clear();
+	    projToRemove.clear();
+	    enemies.clear();
+	    enemToRemove.clear();
+	    gameRoot.getChildren().clear();
+	    gameRoot.getChildren().addAll(player, health, healthBarOutline, lostHealth, actualHealth);
+	    pause = false;
+	    gameplay = false;
 	});
 
 	vbox.getChildren().addAll(musicBox, backBtn);
 	return vbox;
     }
-    
+
     public static void main(String[] args) {
 	launch(args);
     }
