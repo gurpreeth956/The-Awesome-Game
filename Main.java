@@ -35,6 +35,9 @@ public class Main extends Application {
     static Pane gameRoot;
     static BorderPane menuRoot;
     static BorderPane optionsRoot;
+    static VBox exitRoot;
+    Button yes = new Button("Yes");
+    Button no = new Button("No");
 
     private HashMap<KeyCode, Boolean> keys = new HashMap();
     Image charImage = new Image("file:src/Greenies.png");
@@ -112,6 +115,17 @@ public class Main extends Application {
 	optionsRoot.setAlignment(opTitle, Pos.CENTER);
 	optionsRoot.getStylesheets().addAll(this.getClass().getResource("Menu.css").toExternalForm());
         
+        //Exit Root
+        exitRoot = new VBox(20);
+        Label exitString = new Label("Are you sure you want to exit?");
+        HBox buttons = new HBox(10);
+        buttons.getChildren().addAll(yes, no);
+        buttons.setAlignment(Pos.CENTER);
+        exitRoot.getChildren().addAll(exitString, buttons);
+        exitRoot.setId("menu");
+        exitRoot.setAlignment(Pos.CENTER);
+        exitRoot.getStylesheets().addAll(this.getClass().getResource("Menu.css").toExternalForm());
+        
         //Gameplay
 	scene.setOnKeyPressed(e -> keys.put(e.getCode(), true));
 	scene.setOnKeyReleased(e -> keys.put(e.getCode(), false));
@@ -129,6 +143,7 @@ public class Main extends Application {
         primaryStage.setFullScreen(true);
         primaryStage.setFullScreenExitHint("");
         primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
+        primaryStage.initStyle(StageStyle.UTILITY);
 	primaryStage.setResizable(false);
 	primaryStage.setScene(scene);
 	primaryStage.show();
@@ -136,9 +151,9 @@ public class Main extends Application {
 	primaryStage.setOnCloseRequest(e -> {
             e.consume();
             pause = true;
+            primaryStage.getScene().setRoot(exitRoot);
             
-            boolean close = AlertBox.exitDisplay("Exit Game", "Are you sure you want to exit?");
-            if (close) {
+            yes.setOnAction(eY -> {
                 Platform.exit();
                 gameplay = false;
                 
@@ -146,9 +161,11 @@ public class Main extends Application {
                     gameRoot.getChildren().removeAll(enemy);
                 }
                 enemies.clear();
-            }
-            
-            pause = false;
+            });
+            no.setOnAction(eN -> {
+                primaryStage.getScene().setRoot(gameRoot);
+                pause = false;
+            });
         });
     }
 
@@ -385,11 +402,22 @@ public class Main extends Application {
 
 	Button exitBtn = new Button("Exit");
 	exitBtn.setOnAction(e -> {
-	    e.consume();
-	    boolean close = AlertBox.exitDisplay("Exit Game", "Are you sure you want to exit?");
-	    if (close) {
-		Platform.exit();
-	    }
+	    pause = true;
+            pStage.getScene().setRoot(exitRoot);
+            
+            yes.setOnAction(eY -> {
+                Platform.exit();
+                gameplay = false;
+                
+                for (Enemy enemy : enemies) {
+                    gameRoot.getChildren().removeAll(enemy);
+                }
+                enemies.clear();
+            });
+            no.setOnAction(eN -> {
+                pStage.getScene().setRoot(gameRoot);
+                pause = false;
+            });
 	});
 
 	vbox.getChildren().addAll(startBtn, optionsBtn, exitBtn);
@@ -400,16 +428,6 @@ public class Main extends Application {
 	VBox vbox = new VBox();
 	vbox.setPadding(new Insets(15));
 	vbox.setSpacing(10);
-
-	CheckBox fullBox = new CheckBox("FullScreen");
-	fullBox.setSelected(false);
-	fullBox.setOnAction(e -> {
-	    if (fullBox.isSelected()) {
-		pStage.setFullScreen(true);
-	    } else {
-		pStage.setFullScreen(false);
-	    }
-	});
 
 	CheckBox musicBox = new CheckBox("Music");
 	musicBox.setSelected(false);
@@ -422,10 +440,10 @@ public class Main extends Application {
             pStage.getScene().setRoot(menuRoot);
 	});
 
-	vbox.getChildren().addAll(fullBox, musicBox, backBtn);
+	vbox.getChildren().addAll(musicBox, backBtn);
 	return vbox;
     }
-
+    
     public static void main(String[] args) {
 	launch(args);
     }
