@@ -5,16 +5,16 @@ import javafx.scene.layout.Pane;
 public class Projectile extends Pane {
     
     ImageView iv;
-    int width = 13;
-    int height = 13;
     int offsetX = 8;
     int offsetY = 8;
-    int x;
-    int y;
+    int width = 13;
+    int height = 13;
+    int x; //Proj xPos
+    int y; //Proj yPos
     
     int velocityX = 0;
     int velocityY = 0;
-    boolean isAlive = true;
+    boolean alive = true;
     
     public Projectile(ImageView iv, int posX, int posY) {
         this.iv = iv;
@@ -48,11 +48,11 @@ public class Projectile extends Pane {
     }
     
     public boolean isAlive() {
-        return isAlive;
+        return alive;
     }
     
-    public void setAlive(boolean i) {
-        isAlive = i;
+    public void setAlive(boolean alive) {
+        this.alive = alive;
     }
     
     public boolean isColliding(Enemy enemy) {

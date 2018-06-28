@@ -1,6 +1,9 @@
+import java.util.List;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 
 public class Enemy extends Pane {
     
@@ -12,8 +15,9 @@ public class Enemy extends Pane {
     int x; //Enemy xPos
     int y; //Enemy yPos
     
-    //int characterXpos;
-    //int characterYpos;
+    Rectangle healthBarOutline;
+    Rectangle actualHealth;
+    Rectangle lostHealth;
     boolean alive = true;
     int health = 3;
 
@@ -25,6 +29,15 @@ public class Enemy extends Pane {
         this.x = posX;
         this.y = posY;
         this.getChildren().addAll(iv);
+        
+	healthBarOutline = new Rectangle(x - 1, y - 6, 68, 4);
+	healthBarOutline.setFill(Color.TRANSPARENT);
+	healthBarOutline.setStroke(Color.BLACK);
+	lostHealth = new Rectangle(x, y - 5, 66, 3);
+	lostHealth.setFill(Color.RED);
+	actualHealth = new Rectangle(x, y - 5, 66, 3);
+	actualHealth.setFill(Color.GREEN);
+	actualHealth.toFront();
     }
     
     public void setCharacterView(int offsetX, int offsetY) {
@@ -50,6 +63,7 @@ public class Enemy extends Pane {
                     this.x--;
                 }
             }
+	    this.healthPos();
         }
     }
     
@@ -72,6 +86,7 @@ public class Enemy extends Pane {
                     this.y--;
                 }
             }
+	    this.healthPos();
         }
     }
 
@@ -91,12 +106,12 @@ public class Enemy extends Pane {
         this.y = y;
     }
     
-    public void setAlive(boolean alive){
-	this.alive = alive;
-    }
-    
     public boolean isAlive(){
 	return alive;
+    }
+    
+    public void setAlive(boolean alive){
+	this.alive = alive;
     }
     
     public void hit(){
@@ -105,5 +120,35 @@ public class Enemy extends Pane {
     
     public int getHealth(){
 	return health;
+    }
+    
+    public boolean playerColliding(Character player) {
+        return this.getBoundsInParent().intersects(player.getBoundsInParent());
+    }
+    
+    public boolean enemyColliding(List<Enemy> enemies){
+	boolean colliding = false;
+	for(Enemy enemy:enemies){
+	    if(this.x==enemy.x&&this.y==enemy.y) continue;
+	    if(this.getBoundsInParent().intersects(enemy.getBoundsInParent())){
+		colliding = true;
+	    }
+	}
+	return colliding;
+    }
+    
+    public Rectangle updateHealth(){
+	actualHealth = new Rectangle(x, y, this.getHealth() * 22, 3);
+	actualHealth.setFill(Color.GREEN);
+	return actualHealth;
+    }
+    
+    public void healthPos(){
+	actualHealth.setX(this.x);
+	actualHealth.setY(this.y - 5);
+	lostHealth.setX(this.x);
+	lostHealth.setY(this.y - 5);
+	healthBarOutline.setX(this.x - 1);
+	healthBarOutline.setY(this.y - 6);
     }
 }
