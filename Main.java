@@ -18,16 +18,23 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Screen;
+import javafx.stage.StageStyle;
 
 public class Main extends Application {
 
-    Scene menuScene;
-    Scene gameScene;
-    Scene optionScene;
-
-    static Pane root;
+    //Scene menuScene;
+    //Scene gameScene;
+    //Scene optionScene;
+    //static Pane root;
+    
+    Scene scene;
+    
+    static Pane gameRoot;
+    static BorderPane menuRoot;
+    static BorderPane optionsRoot;
 
     private HashMap<KeyCode, Boolean> keys = new HashMap();
     Image charImage = new Image("file:src/Greenies.png");
@@ -53,23 +60,25 @@ public class Main extends Application {
     
     @Override
     public void start(Stage primaryStage) {
-	//Menu Scene
+        
+	//Menu Root
 	Text title = new Text("The Awesome Game");
 	title.setFont(Font.font("Arial", 40));
 	VBox vbox = addMenuButtons(primaryStage);
 	vbox.setAlignment(Pos.CENTER);
 
-	BorderPane bp = new BorderPane();
-	bp.setId("menu");
-	bp.setCenter(vbox);
-	bp.setTop(title);
-	bp.setAlignment(title, Pos.CENTER);
-	menuScene = new Scene(bp, screenSize.getWidth(), screenSize.getHeight());
-	menuScene.getStylesheets().addAll(this.getClass().getResource("Menu.css").toExternalForm());
+	menuRoot = new BorderPane();
+	menuRoot.setId("menu");
+	menuRoot.setCenter(vbox);
+	menuRoot.setTop(title);
+	menuRoot.setAlignment(title, Pos.CENTER);
+	menuRoot.getStylesheets().addAll(this.getClass().getResource("Menu.css").toExternalForm());
+        
+        scene = new Scene(menuRoot, screenSize.getWidth(), screenSize.getHeight());
 
-	//Game Scene
-	root = new Pane();
-	root.setId("backgroundtrial");
+	//Game Root
+	gameRoot = new Pane();
+	gameRoot.setId("backgroundtrial");
 
 	Label healthLabel = new Label("Health: ");
 	healthLabel.setFont(new Font("Arial", 20));
@@ -88,25 +97,24 @@ public class Main extends Application {
 	health.setTranslateX(10);
 	health.setTranslateY(10);
 
-	root.getChildren().addAll(player, health, healthBarOutline, lostHealth, actualHealth);
-	gameScene = new Scene(root, screenSize.getWidth(), screenSize.getHeight());
-	gameScene.getStylesheets().addAll(this.getClass().getResource("Style.css").toExternalForm());
+	gameRoot.getChildren().addAll(player, health, healthBarOutline, lostHealth, actualHealth);
+	gameRoot.getStylesheets().addAll(this.getClass().getResource("Style.css").toExternalForm());
 
-	gameScene.setOnKeyPressed(e -> keys.put(e.getCode(), true));
-	gameScene.setOnKeyReleased(e -> keys.put(e.getCode(), false));
-
-	//Options Scene
+        //Options Root
 	Text opTitle = new Text("Options");
 	opTitle.setFont(Font.font("Arial", 40));
 	VBox optionsBox = addOptionButtons(primaryStage);
 	optionsBox.setAlignment(Pos.CENTER);
-	BorderPane opPane = new BorderPane();
-	opPane.setId("menu");
-	opPane.setCenter(optionsBox);
-	opPane.setTop(opTitle);
-	opPane.setAlignment(opTitle, Pos.CENTER);
-	optionScene = new Scene(opPane, screenSize.getWidth(), screenSize.getHeight());
-	optionScene.getStylesheets().addAll(this.getClass().getResource("Menu.css").toExternalForm());
+	optionsRoot = new BorderPane();
+	optionsRoot.setId("menu");
+	optionsRoot.setCenter(optionsBox);
+	optionsRoot.setTop(opTitle);
+	optionsRoot.setAlignment(opTitle, Pos.CENTER);
+	optionsRoot.getStylesheets().addAll(this.getClass().getResource("Menu.css").toExternalForm());
+        
+        //Gameplay
+	scene.setOnKeyPressed(e -> keys.put(e.getCode(), true));
+	scene.setOnKeyReleased(e -> keys.put(e.getCode(), false));
         
         AnimationTimer timer = new AnimationTimer() {
             @Override
@@ -116,10 +124,13 @@ public class Main extends Application {
         };
         timer.start();
 	
+        //Stage
 	primaryStage.setTitle("The Awesome Game");
-        //primaryStage.setFullScreen(true);
+        primaryStage.setFullScreen(true);
+        primaryStage.setFullScreenExitHint("");
+        primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
 	primaryStage.setResizable(false);
-	primaryStage.setScene(menuScene);
+	primaryStage.setScene(scene);
 	primaryStage.show();
 
 	primaryStage.setOnCloseRequest(e -> {
@@ -132,7 +143,7 @@ public class Main extends Application {
                 gameplay = false;
                 
                 for (Enemy enemy : enemies) {
-                    root.getChildren().removeAll(enemy);
+                    gameRoot.getChildren().removeAll(enemy);
                 }
                 enemies.clear();
             }
@@ -141,7 +152,7 @@ public class Main extends Application {
         });
     }
 
-    //This is where we update the gameplay 
+    //This is where the gameplay is updated 
     public void update() {
         if (gameplay && !pause) {
             if (player.getHealth() == 0) {
@@ -150,25 +161,25 @@ public class Main extends Application {
 
             if (isPressed(KeyCode.W)) {
                 player.setCharacterView(0, 183);
-                player.moveY(-2, gameScene.getHeight());
+                player.moveY(-2, scene.getHeight());
                 player.setOffsetY(183);
                 characterShooting();
 
             } else if (isPressed(KeyCode.S)) {
                 player.setCharacterView(0, 0);
-                player.moveY(2, gameScene.getHeight());
+                player.moveY(2, scene.getHeight());
                 player.setOffsetY(0);
                 characterShooting();
 
             } else if (isPressed(KeyCode.A)) {
                 player.setCharacterView(0, 123);
-                player.moveX(-2, gameScene.getWidth());
+                player.moveX(-2, scene.getWidth());
                 player.setOffsetY(123);
                 characterShooting();
 
             } else if (isPressed(KeyCode.D)) {
                 player.setCharacterView(0, 61);
-                player.moveX(2, gameScene.getWidth());
+                player.moveX(2, scene.getWidth());
                 player.setOffsetY(61);
                 characterShooting();
 
@@ -197,7 +208,7 @@ public class Main extends Application {
             //to clear enemies (temporary)
             if (isPressed(KeyCode.P)) {
                 for (Enemy enemy : enemies) {
-                    root.getChildren().removeAll(enemy);
+                    gameRoot.getChildren().removeAll(enemy);
                 }
                 enemies.clear();
             }
@@ -249,7 +260,7 @@ public class Main extends Application {
 	proj.setVelocityX(x);
 	proj.setVelocityY(y);
 
-	root.getChildren().addAll(proj);
+	gameRoot.getChildren().addAll(proj);
 	proj.toBack();
 	projectiles.add(proj);
     }
@@ -260,20 +271,20 @@ public class Main extends Application {
 	for (Enemy enemy : enemies) {
 	    if (proj.isColliding(enemy)) {
 		enemy.hit();
-		root.getChildren().remove(enemy.actualHealth);
-		root.getChildren().add(enemy.updateHealth());
+		gameRoot.getChildren().remove(enemy.actualHealth);
+		gameRoot.getChildren().add(enemy.updateHealth());
 		proj.setAlive(false);
 	    }
 	}
 
-	if (proj.getTranslateX() <= 0 || proj.getTranslateX() >= gameScene.getWidth()) {
+	if (proj.getTranslateX() <= 0 || proj.getTranslateX() >= scene.getWidth()) {
 	    proj.setAlive(false);
-	} else if (proj.getTranslateY() <= 0 || proj.getTranslateY() >= gameScene.getHeight()) {
+	} else if (proj.getTranslateY() <= 0 || proj.getTranslateY() >= scene.getHeight()) {
 	    proj.setAlive(false);
 	}
 
 	if (!proj.isAlive()) {
-	    root.getChildren().remove(proj);
+	    gameRoot.getChildren().remove(proj);
 	    projToRemove.add(proj);
 	}
     }
@@ -281,10 +292,10 @@ public class Main extends Application {
     public void createEnemy() {
 	Image image = new Image("file:src/Redies.png");
 	ImageView iv = new ImageView(image);
-	Enemy enemy = new Enemy(iv, (int)(Math.random() * (gameScene.getWidth() - player.width)),
-                                (int)(Math.random() * gameScene.getHeight()));
+	Enemy enemy = new Enemy(iv, (int)(Math.random() * (scene.getWidth() - player.width)),
+                                (int)(Math.random() * scene.getHeight()));
 
-	root.getChildren().addAll(enemy,enemy.healthBarOutline,enemy.lostHealth,enemy.actualHealth);
+	gameRoot.getChildren().addAll(enemy,enemy.healthBarOutline,enemy.lostHealth,enemy.actualHealth);
 	enemies.add(enemy);
     }
 
@@ -295,10 +306,10 @@ public class Main extends Application {
 	    if (enemy.playerColliding(player)) {
 		player.hit();
 
-		root.getChildren().remove(actualHealth);
+		gameRoot.getChildren().remove(actualHealth);
 		actualHealth = new Rectangle(80, 10, player.getHealth() * 20, 20);
 		actualHealth.setFill(Color.GREEN);
-		root.getChildren().add(actualHealth);
+		gameRoot.getChildren().add(actualHealth);
 	    }
 	    hitTime = timeNow;
 	}
@@ -306,40 +317,40 @@ public class Main extends Application {
 	//if (!enemy.playerColliding(player)&&!enemy.enemyColliding(enemies)) {
 	    if (player.getX() > enemy.getX() && player.getY() == enemy.getY()) { //right
 		enemy.setCharacterView(0, 61);
-		enemy.moveX(1, gameScene.getWidth());
+		enemy.moveX(1, scene.getWidth());
 	    }
 	    if (player.getX() < enemy.getX() && player.getY() == enemy.getY()) { //left
 		enemy.setCharacterView(0, 123);
-		enemy.moveX(-1, gameScene.getWidth());
+		enemy.moveX(-1, scene.getWidth());
 	    }
 	    if (player.getX() == enemy.getX() && player.getY() > enemy.getY()) { //down
 		enemy.setCharacterView(0, 0);
-		enemy.moveY(1, gameScene.getHeight());
+		enemy.moveY(1, scene.getHeight());
 	    }
 	    if (player.getX() == enemy.getX() && player.getY() < enemy.getY()) { //up
 		enemy.setCharacterView(0, 183);
-		enemy.moveY(-1, gameScene.getHeight());
+		enemy.moveY(-1, scene.getHeight());
 	    }
 
 	    if (player.getX() > enemy.getX() && player.getY() < enemy.getY()) { //quadrant1
 		enemy.setCharacterView(0, 61);
-		enemy.moveX(1, gameScene.getWidth());
-		enemy.moveY(-1, gameScene.getHeight());
+		enemy.moveX(1, scene.getWidth());
+		enemy.moveY(-1, scene.getHeight());
 	    }
 	    if (player.getX() < enemy.getX() && player.getY() < enemy.getY()) { //quadrant2
 		enemy.setCharacterView(0, 123);
-		enemy.moveX(-1, gameScene.getWidth());
-		enemy.moveY(-1, gameScene.getHeight());
+		enemy.moveX(-1, scene.getWidth());
+		enemy.moveY(-1, scene.getHeight());
 	    }
 	    if (player.getX() > enemy.getX() && player.getY() > enemy.getY()) { //quadrant3
 		enemy.setCharacterView(0, 61);
-		enemy.moveX(1, gameScene.getWidth());
-		enemy.moveY(1, gameScene.getHeight());
+		enemy.moveX(1, scene.getWidth());
+		enemy.moveY(1, scene.getHeight());
 	    }
 	    if (player.getX() < enemy.getX() && player.getY() > enemy.getY()) { //quadrant4
 		enemy.setCharacterView(0, 123);
-		enemy.moveX(-1, gameScene.getWidth());
-		enemy.moveY(1, gameScene.getHeight());
+		enemy.moveX(-1, scene.getWidth());
+		enemy.moveY(1, scene.getHeight());
 	    }
 	//}
 	if (enemy.getHealth() == 0) {
@@ -347,7 +358,7 @@ public class Main extends Application {
 	}
 	if (!enemy.isAlive()) {
 	    enemToRemove.add(enemy);
-	    root.getChildren().removeAll(enemy,enemy.actualHealth,enemy.lostHealth,enemy.healthBarOutline);
+	    gameRoot.getChildren().removeAll(enemy,enemy.actualHealth,enemy.lostHealth,enemy.healthBarOutline);
 	}
     }
 
@@ -363,15 +374,13 @@ public class Main extends Application {
 
 	Button startBtn = new Button("Start");
 	startBtn.setOnAction(e -> {
-	    pStage.setScene(gameScene);
-            //pStage.setFullScreen(true);
+            pStage.getScene().setRoot(gameRoot);
             gameplay = true;
 	});
 
 	Button optionsBtn = new Button("Options");
 	optionsBtn.setOnAction(e -> {
-	    pStage.setScene(optionScene);
-            //pStage.setFullScreen(true);
+            pStage.getScene().setRoot(optionsRoot);
 	});
 
 	Button exitBtn = new Button("Exit");
@@ -410,8 +419,7 @@ public class Main extends Application {
 
 	Button backBtn = new Button("Back to Menu");
 	backBtn.setOnAction(e -> {
-	    pStage.setScene(menuScene);
-            //pStage.setFullScreen(true);
+            pStage.getScene().setRoot(menuRoot);
 	});
 
 	vbox.getChildren().addAll(fullBox, musicBox, backBtn);
