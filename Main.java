@@ -25,17 +25,13 @@ import javafx.stage.StageStyle;
 
 public class Main extends Application {
 
-    //Scene menuScene;
-    //Scene gameScene;
-    //Scene optionScene;
-    //static Pane root;
-    
     Scene scene;
     
     static Pane gameRoot;
     static BorderPane menuRoot;
     static BorderPane optionsRoot;
     static VBox exitRoot;
+    
     Button yes = new Button("Yes");
     Button no = new Button("No");
 
@@ -178,25 +174,25 @@ public class Main extends Application {
 
             if (isPressed(KeyCode.W)) {
                 player.setCharacterView(0, 183);
-                player.moveY(-2, scene.getHeight());
+                player.moveY(-3, scene.getHeight());
                 player.setOffsetY(183);
                 characterShooting();
 
             } else if (isPressed(KeyCode.S)) {
                 player.setCharacterView(0, 0);
-                player.moveY(2, scene.getHeight());
+                player.moveY(3, scene.getHeight());
                 player.setOffsetY(0);
                 characterShooting();
 
             } else if (isPressed(KeyCode.A)) {
                 player.setCharacterView(0, 123);
-                player.moveX(-2, scene.getWidth());
+                player.moveX(-3, scene.getWidth());
                 player.setOffsetY(123);
                 characterShooting();
 
             } else if (isPressed(KeyCode.D)) {
                 player.setCharacterView(0, 61);
-                player.moveX(2, scene.getWidth());
+                player.moveX(3, scene.getWidth());
                 player.setOffsetY(61);
                 characterShooting();
 
@@ -240,7 +236,7 @@ public class Main extends Application {
 	    player.setCharacterView(128, 183);
 	    player.setOffsetY(183);
 	    if (time < 0 || time > 500) {
-		createProjectile(0, -8);
+		createProjectile(0, -9);
 		timeOfLastProjectile = timeNow;
 	    }
 
@@ -248,7 +244,7 @@ public class Main extends Application {
 	    player.setCharacterView(128, 0);
 	    player.setOffsetY(0);
 	    if (time < 0 || time > 500) {
-		createProjectile(0, 8);
+		createProjectile(0, 9);
 		timeOfLastProjectile = timeNow;
 	    }
 
@@ -256,7 +252,7 @@ public class Main extends Application {
 	    player.setCharacterView(128, 123);
 	    player.setOffsetY(123);
 	    if (time < 0 || time > 500) {
-		createProjectile(-8, 0);
+		createProjectile(-9, 0);
 		timeOfLastProjectile = timeNow;
 	    }
 
@@ -264,7 +260,7 @@ public class Main extends Application {
 	    player.setCharacterView(128, 61);
 	    player.setOffsetY(61);
 	    if (time < 0 || time > 500) {
-		createProjectile(8, 0);
+		createProjectile(9, 0);
 		timeOfLastProjectile = timeNow;
 	    }
 	}
@@ -415,7 +411,7 @@ public class Main extends Application {
                 enemies.clear();
             });
             no.setOnAction(eN -> {
-                pStage.getScene().setRoot(gameRoot);
+                pStage.getScene().setRoot(menuRoot);
                 pause = false;
             });
 	});
