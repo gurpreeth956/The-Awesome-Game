@@ -1,4 +1,3 @@
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,23 +25,21 @@ import javafx.stage.StageStyle;
 
 public class Main extends Application {
 
-    //Scene menuScene;
-    //Scene gameScene;
-    //Scene optionScene;
-    //static Pane root;
     Scene scene;
 
     static Pane gameRoot;
     static BorderPane menuRoot;
     static BorderPane optionsRoot;
+    static BorderPane gameOptionsRoot;
     static VBox exitRoot;
+    
     Button yes = new Button("Yes");
     Button no = new Button("No");
 
     private HashMap<KeyCode, Boolean> keys = new HashMap();
     Image charImage = new Image("file:src/Greenies.png");
     ImageView charIV = new ImageView(charImage);
-    Character player = new Character(charIV, 500, 500);
+    Character player;
 
     private List<Projectile> projectiles = new ArrayList<>();
     private List<Projectile> projToRemove = new ArrayList<>();
@@ -71,20 +68,18 @@ public class Main extends Application {
 	title.setFont(Font.font("Arial", 40));
 	VBox vbox = addMenuButtons(primaryStage);
 	vbox.setAlignment(Pos.CENTER);
-
 	menuRoot = new BorderPane();
 	menuRoot.setId("menu");
 	menuRoot.setCenter(vbox);
 	menuRoot.setTop(title);
 	menuRoot.setAlignment(title, Pos.CENTER);
-	menuRoot.getStylesheets().addAll(this.getClass().getResource("Menu.css").toExternalForm());
 
 	scene = new Scene(menuRoot, screenSize.getWidth(), screenSize.getHeight());
+        scene.getStylesheets().addAll(this.getClass().getResource("Menu.css").toExternalForm());
 
 	//Game Root
 	gameRoot = new Pane();
 	gameRoot.setId("backgroundtrial");
-
 	Label healthLabel = new Label("Health: ");
 	healthLabel.setFont(new Font("Arial", 20));
 	healthLabel.toFront();
@@ -96,17 +91,13 @@ public class Main extends Application {
 	actualHealth = new Rectangle(80, 10, 99, 20);
 	actualHealth.setFill(Color.GREEN);
 	actualHealth.toFront();
-
 	health = new VBox(10);
 	health.getChildren().addAll(healthLabel);
 	health.setTranslateX(10);
 	health.setTranslateY(10);
 
-	gameRoot.getChildren().addAll(player, health, healthBarOutline, lostHealth, actualHealth);
-	gameRoot.getStylesheets().addAll(this.getClass().getResource("Style.css").toExternalForm());
-
 	//Options Root
-	Text opTitle = new Text("Options");
+	Text opTitle = new Text("Game Options");
 	opTitle.setFont(Font.font("Arial", 40));
 	VBox optionsBox = addOptionButtons(primaryStage);
 	optionsBox.setAlignment(Pos.CENTER);
@@ -115,7 +106,17 @@ public class Main extends Application {
 	optionsRoot.setCenter(optionsBox);
 	optionsRoot.setTop(opTitle);
 	optionsRoot.setAlignment(opTitle, Pos.CENTER);
-	optionsRoot.getStylesheets().addAll(this.getClass().getResource("Menu.css").toExternalForm());
+        
+        //Game Options Root
+        Text gameOpTitle = new Text("Game Options");
+	gameOpTitle.setFont(Font.font("Arial", 40));
+        VBox gameOptionsBox = addGameOptionsButtons(primaryStage);
+        gameOptionsBox.setAlignment(Pos.CENTER);
+        gameOptionsRoot = new BorderPane();
+        gameOptionsRoot.setId("menu");
+        gameOptionsRoot.setCenter(gameOptionsBox);
+        gameOptionsRoot.setTop(gameOpTitle);
+        gameOptionsRoot.setAlignment(gameOpTitle, Pos.CENTER);
 
 	//Exit Root
 	exitRoot = new VBox(20);
@@ -127,7 +128,6 @@ public class Main extends Application {
 	exitRoot.getChildren().addAll(exitString, buttons);
 	exitRoot.setId("menu");
 	exitRoot.setAlignment(Pos.CENTER);
-	exitRoot.getStylesheets().addAll(this.getClass().getResource("Menu.css").toExternalForm());
 
 	//Gameplay
 	scene.setOnKeyPressed(e -> keys.put(e.getCode(), true));
@@ -181,29 +181,29 @@ public class Main extends Application {
 		Platform.exit();
 	    }
 
-	    if (isPressed(KeyCode.W)) {
-		player.setCharacterView(0, 183);
-		player.moveY(-2, scene.getHeight());
-		player.setOffsetY(183);
-		characterShooting();
+            if (isPressed(KeyCode.W)) {
+                player.setCharacterView(0, 183);
+                player.moveY(-3, scene.getHeight());
+                player.setOffsetY(183);
+                characterShooting();
 
-	    } else if (isPressed(KeyCode.S)) {
-		player.setCharacterView(0, 0);
-		player.moveY(2, scene.getHeight());
-		player.setOffsetY(0);
-		characterShooting();
+            } else if (isPressed(KeyCode.S)) {
+                player.setCharacterView(0, 0);
+                player.moveY(3, scene.getHeight());
+                player.setOffsetY(0);
+                characterShooting();
 
-	    } else if (isPressed(KeyCode.A)) {
-		player.setCharacterView(0, 123);
-		player.moveX(-2, scene.getWidth());
-		player.setOffsetY(123);
-		characterShooting();
+            } else if (isPressed(KeyCode.A)) {
+                player.setCharacterView(0, 123);
+                player.moveX(-3, scene.getWidth());
+                player.setOffsetY(123);
+                characterShooting();
 
-	    } else if (isPressed(KeyCode.D)) {
-		player.setCharacterView(0, 61);
-		player.moveX(2, scene.getWidth());
-		player.setOffsetY(61);
-		characterShooting();
+            } else if (isPressed(KeyCode.D)) {
+                player.setCharacterView(0, 61);
+                player.moveX(3, scene.getWidth());
+                player.setOffsetY(61);
+                characterShooting();
 
 	    } else {
 		player.setCharacterView(0, player.getOffsetY());
@@ -213,13 +213,15 @@ public class Main extends Application {
 	    if (Math.random() < 0.01) {
 		createEnemy();
 	    }
+            
 	    if (time < 0 || time > 150) {
 		if (isPressed(KeyCode.ESCAPE)) {
 		    pause = true;
-		    pStage.getScene().setRoot(optionsRoot);
+		    pStage.getScene().setRoot(gameOptionsRoot);
 		}
 		pauseTime = timeNow;
 	    }
+            
 	    for (Projectile proj : projectiles) {
 		updateProj(proj);
 	    }
@@ -236,15 +238,15 @@ public class Main extends Application {
 	    //to clear enemies (temporary)
 	    if (isPressed(KeyCode.P)) {
 		for (Enemy enemy : enemies) {
-		    gameRoot.getChildren().removeAll(enemy);
+		    gameRoot.getChildren().removeAll(enemy, enemy.healthBarOutline, enemy.lostHealth, enemy.actualHealth);
 		}
 		enemies.clear();
 	    }
 	} else if (pause) {
 	    if (time < 0 || time > 150) {
 		if (isPressed(KeyCode.ESCAPE)) {
-		    pause = false;
 		    pStage.getScene().setRoot(gameRoot);
+                    pause = false;
 		}
 		pauseTime = timeNow;
 	    }
@@ -259,7 +261,7 @@ public class Main extends Application {
 	    player.setCharacterView(128, 183);
 	    player.setOffsetY(183);
 	    if (time < 0 || time > 500) {
-		createProjectile(0, -8);
+		createProjectile(0, -9);
 		timeOfLastProjectile = timeNow;
 	    }
 
@@ -267,7 +269,7 @@ public class Main extends Application {
 	    player.setCharacterView(128, 0);
 	    player.setOffsetY(0);
 	    if (time < 0 || time > 500) {
-		createProjectile(0, 8);
+		createProjectile(0, 9);
 		timeOfLastProjectile = timeNow;
 	    }
 
@@ -275,7 +277,7 @@ public class Main extends Application {
 	    player.setCharacterView(128, 123);
 	    player.setOffsetY(123);
 	    if (time < 0 || time > 500) {
-		createProjectile(-8, 0);
+		createProjectile(-9, 0);
 		timeOfLastProjectile = timeNow;
 	    }
 
@@ -283,7 +285,7 @@ public class Main extends Application {
 	    player.setCharacterView(128, 61);
 	    player.setOffsetY(61);
 	    if (time < 0 || time > 500) {
-		createProjectile(8, 0);
+		createProjectile(9, 0);
 		timeOfLastProjectile = timeNow;
 	    }
 	}
@@ -350,7 +352,7 @@ public class Main extends Application {
 	    hitTime = timeNow;
 	}
 
-	//if (!enemy.playerColliding(player)&&!enemy.enemyColliding(enemies)) {
+	//if (!enemy.playerColliding(player)&&!enemy.enemyColliding(enemies)) { //need to fix this
 	if (player.getX() > enemy.getX() && player.getY() == enemy.getY()) { //right
 	    enemy.setCharacterView(0, 61);
 	    enemy.moveX(1, scene.getWidth());
@@ -401,6 +403,14 @@ public class Main extends Application {
     public boolean isPressed(KeyCode key) {
 	return keys.getOrDefault(key, false);
     }
+    
+    public void clearAll() {
+        projectiles.clear();
+        projToRemove.clear();
+        enemies.clear();
+        enemToRemove.clear();
+        gameRoot.getChildren().clear();    
+    }
 
     //Button Layouts
     public VBox addMenuButtons(Stage pStage) {
@@ -411,6 +421,8 @@ public class Main extends Application {
 	Button startBtn = new Button("Start");
 	startBtn.setOnAction(e -> {
 	    pStage.getScene().setRoot(gameRoot);
+            player = new Character(charIV, (int)screenSize.getWidth() / 2, (int)screenSize.getHeight() / 2);
+	    gameRoot.getChildren().addAll(player, health, healthBarOutline, lostHealth, actualHealth);
 	    gameplay = true;
 	});
 
@@ -421,21 +433,15 @@ public class Main extends Application {
 
 	Button exitBtn = new Button("Exit");
 	exitBtn.setOnAction(e -> {
-	    pause = true;
 	    pStage.getScene().setRoot(exitRoot);
 
 	    yes.setOnAction(eY -> {
 		Platform.exit();
 		gameplay = false;
-
-		for (Enemy enemy : enemies) {
-		    gameRoot.getChildren().removeAll(enemy);
-		}
-		enemies.clear();
+                clearAll();
 	    });
 	    no.setOnAction(eN -> {
-		pStage.getScene().setRoot(gameRoot);
-		pause = false;
+		pStage.getScene().setRoot(menuRoot);
 		gameplay = true;
 	    });
 	});
@@ -458,18 +464,53 @@ public class Main extends Application {
 	Button backBtn = new Button("Back to Menu");
 	backBtn.setOnAction(e -> {
 	    pStage.getScene().setRoot(menuRoot);
-	    projectiles.clear();
-	    projToRemove.clear();
-	    enemies.clear();
-	    enemToRemove.clear();
-	    gameRoot.getChildren().clear();
-	    gameRoot.getChildren().addAll(player, health, healthBarOutline, lostHealth, actualHealth);
-	    pause = false;
-	    gameplay = false;
 	});
 
 	vbox.getChildren().addAll(musicBox, backBtn);
 	return vbox;
+    }
+    
+    public VBox addGameOptionsButtons(Stage pStage) {
+        VBox vbox = new VBox();
+	vbox.setPadding(new Insets(15));
+	vbox.setSpacing(10);
+        
+        CheckBox musicBox = new CheckBox("Music");
+	musicBox.setSelected(false);
+	musicBox.setOnAction(e -> {
+
+	});
+
+        Button gameBtn = new Button("Back to Game");
+        gameBtn.setOnAction(e -> {
+            pStage.getScene().setRoot(gameRoot);
+            pause = false;
+        });
+        
+	Button backBtn = new Button("Back to Menu");
+	backBtn.setOnAction(e -> {
+	    pStage.getScene().setRoot(menuRoot);
+	    clearAll();
+	    gameplay = false;
+	    pause = false;
+	});
+        
+        Button exitBtn = new Button("Quit");
+	exitBtn.setOnAction(e -> {
+	    pStage.getScene().setRoot(exitRoot);
+
+	    yes.setOnAction(eY -> {
+		Platform.exit();
+		gameplay = false;
+                clearAll();
+	    });
+	    no.setOnAction(eN -> {
+		pStage.getScene().setRoot(gameOptionsRoot);
+	    });
+	});
+
+	vbox.getChildren().addAll(musicBox, gameBtn, backBtn, exitBtn);
+        return vbox;
     }
 
     public static void main(String[] args) {
