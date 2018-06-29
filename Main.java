@@ -31,6 +31,7 @@ public class Main extends Application {
     static BorderPane menuRoot;
     static BorderPane optionsRoot;
     static BorderPane gameOptionsRoot;
+    static BorderPane gameOverRoot;
     static VBox areYouSureRoot;
     static VBox exitRoot;
 
@@ -121,6 +122,17 @@ public class Main extends Application {
 	gameOptionsRoot.setTop(gameOpTitle);
 	gameOptionsRoot.setAlignment(gameOpTitle, Pos.CENTER);
         
+        //Game Over Root
+        Text gameOver = new Text("Game OVer");
+	gameOver.setFont(Font.font("Arial", 40));
+	VBox gameOverBox = addGameOverButtons(primaryStage);
+	gameOverBox.setAlignment(Pos.CENTER);
+	gameOverRoot = new BorderPane();
+	gameOverRoot.setId("menu");
+	gameOverRoot.setCenter(gameOverBox);
+	gameOverRoot.setTop(gameOver);
+	gameOptionsRoot.setAlignment(gameOver, Pos.CENTER);
+        
 	//Exit Root
 	exitRoot = new VBox(20);
 	Label exitString = new Label("Are you sure you want to exit?");
@@ -192,7 +204,9 @@ public class Main extends Application {
 	long time = timeNow - pauseTime;
 	if (gameplay && !pause) {
 	    if (player.getHealth() == 0) {
-		Platform.exit();
+		//Platform.exit();
+                pStage.getScene().setRoot(gameOverRoot);
+                gameplay = false;
 	    }
 
 	    if (isPressed(KeyCode.W)) {
@@ -362,18 +376,18 @@ public class Main extends Application {
     public void updateEnemy(Enemy enemy) {
 	long timeNow = System.currentTimeMillis();
 	long time = timeNow - hitTime;
+        boolean damaged = false;
 	if (enemy.playerColliding(player)) {
 	    if (time < 0 || time > 1000) {
-		player.hit();
-
+		player.hit();  
+                damaged = true;
 		gameRoot.getChildren().remove(actualHealth);
 		actualHealth = new Rectangle(80, 10, player.getHealth() * 20, 20);
 		actualHealth.setFill(Color.GREEN);
 		gameRoot.getChildren().add(actualHealth);
 		hitTime = timeNow;
 	    }
-
-	}
+        }
 
 	if (!enemy.playerColliding(player)) {//&&!enemy.enemyColliding(enemies)) { //need to fix this
 	    if (player.getX() > enemy.getX() && player.getY() == enemy.getY()) { //right
@@ -540,6 +554,57 @@ public class Main extends Application {
 
 	vbox.getChildren().addAll(musicBox, gameBtn, backBtn, exitBtn);
 	return vbox;
+    }
+    
+    public VBox addGameOverButtons(Stage pStage)
+    {
+        VBox vbox = new VBox();
+        vbox.setPadding(new Insets(15));
+	vbox.setSpacing(10);
+        
+        Button newBtn = new Button("New Game");
+        newBtn.setOnAction(e -> {
+            pStage.getScene().setRoot(gameRoot);
+            clearAll();
+            actualHealth = new Rectangle(80, 10, 99, 20);
+            actualHealth.setFill(Color.GREEN);
+            player = new Character(charIV, (int) screenSize.getWidth() / 2, (int) screenSize.getHeight() / 2);
+	    gameRoot.getChildren().addAll(player, health, healthBarOutline, lostHealth, actualHealth);
+            gameplay = true;
+        });
+        
+        Button backBtn = new Button("Back to Menu");
+	backBtn.setOnAction(e -> {
+	    pStage.getScene().setRoot(areYouSureRoot);
+	    
+            yesReturn.setOnAction(eY -> {
+                pStage.getScene().setRoot(menuRoot);
+                clearAll();
+                actualHealth = new Rectangle(80, 10, 99, 20);
+                actualHealth.setFill(Color.GREEN);
+                gameplay = false;
+                pause = false;
+            });
+            noReturn.setOnAction(eN -> {
+                pStage.getScene().setRoot(gameOptionsRoot);
+            });
+	});
+        
+        Button exitBtn = new Button("Quit");
+	exitBtn.setOnAction(e -> {
+	    pStage.getScene().setRoot(exitRoot);
+
+	    yesExit.setOnAction(eY -> {
+		Platform.exit();
+		gameplay = false;
+		clearAll();
+	    });
+	    noExit.setOnAction(eN -> {
+		pStage.getScene().setRoot(gameOptionsRoot);
+	    });
+	});
+        vbox.getChildren().addAll( newBtn, backBtn, exitBtn);
+        return vbox;
     }
 
     public static void main(String[] args) {
