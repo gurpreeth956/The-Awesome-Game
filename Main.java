@@ -26,7 +26,6 @@ import javafx.stage.StageStyle;
 public class Main extends Application {
 
     Scene scene;
-
     static Pane gameRoot;
     static BorderPane menuRoot;
     static BorderPane optionsRoot;
@@ -39,18 +38,18 @@ public class Main extends Application {
     Button yesReturn = new Button("Yes");
     Button noReturn = new Button("No");
 
-    private HashMap<KeyCode, Boolean> keys = new HashMap();
+    private final HashMap<KeyCode, Boolean> keys = new HashMap();
     Image charImage = new Image("file:src/Greenies.png");
     ImageView charIV = new ImageView(charImage);
     Character player;
 
     private List<Projectile> projectiles = new ArrayList<>();
     private List<Projectile> projToRemove = new ArrayList<>();
-    long timeOfLastProjectile = 0;
+    private long timeOfLastProjectile = 0;
 
     private List<Enemy> enemies = new ArrayList();
     private List<Enemy> enemToRemove = new ArrayList();
-    long hitTime = 0;
+    private long hitTime = 0;
 
     Rectangle healthBarOutline;
     Rectangle actualHealth;
