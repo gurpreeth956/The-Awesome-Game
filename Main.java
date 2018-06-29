@@ -1,4 +1,3 @@
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,10 +31,13 @@ public class Main extends Application {
     static BorderPane menuRoot;
     static BorderPane optionsRoot;
     static BorderPane gameOptionsRoot;
+    static VBox areYouSureRoot;
     static VBox exitRoot;
 
-    Button yes = new Button("Yes");
-    Button no = new Button("No");
+    Button yesExit = new Button("Yes");
+    Button noExit = new Button("No");
+    Button yesReturn = new Button("Yes");
+    Button noReturn = new Button("No");
 
     private HashMap<KeyCode, Boolean> keys = new HashMap();
     Image charImage = new Image("file:src/Greenies.png");
@@ -118,17 +120,28 @@ public class Main extends Application {
 	gameOptionsRoot.setCenter(gameOptionsBox);
 	gameOptionsRoot.setTop(gameOpTitle);
 	gameOptionsRoot.setAlignment(gameOpTitle, Pos.CENTER);
-
+        
 	//Exit Root
 	exitRoot = new VBox(20);
 	Label exitString = new Label("Are you sure you want to exit?");
 	exitString.setFont(Font.font("Arial", 25));
-	HBox buttons = new HBox(10);
-	buttons.getChildren().addAll(yes, no);
-	buttons.setAlignment(Pos.CENTER);
-	exitRoot.getChildren().addAll(exitString, buttons);
+        HBox exitButtons = new HBox(10);
+	exitButtons.getChildren().addAll(yesExit, noExit);
+	exitButtons.setAlignment(Pos.CENTER);
+	exitRoot.getChildren().addAll(exitString, exitButtons);
 	exitRoot.setId("menu");
 	exitRoot.setAlignment(Pos.CENTER);
+        
+        //Are You Sure Root
+        areYouSureRoot = new VBox(20);
+        Label areYouSureString = new Label("Are you sure you want to return to the menu?");
+        areYouSureString.setFont(Font.font("Arial", 25));
+        HBox returnButtons = new HBox(10);
+	returnButtons.getChildren().addAll(yesReturn, noReturn);
+	returnButtons.setAlignment(Pos.CENTER);
+        areYouSureRoot.getChildren().addAll(areYouSureString, returnButtons);
+        areYouSureRoot.setId("menu");
+        areYouSureRoot.setAlignment(Pos.CENTER);
 
 	//Gameplay
 	scene.setOnKeyPressed(e -> keys.put(e.getCode(), true));
@@ -157,7 +170,7 @@ public class Main extends Application {
 	    pause = true;
 	    primaryStage.getScene().setRoot(exitRoot);
 
-	    yes.setOnAction(eY -> {
+	    yesExit.setOnAction(eY -> {
 		Platform.exit();
 		gameplay = false;
 
@@ -166,7 +179,7 @@ public class Main extends Application {
 		}
 		enemies.clear();
 	    });
-	    no.setOnAction(eN -> {
+	    noExit.setOnAction(eN -> {
 		primaryStage.getScene().setRoot(gameRoot);
 		pause = false;
 	    });
@@ -445,14 +458,11 @@ public class Main extends Application {
 	exitBtn.setOnAction(e -> {
 	    pStage.getScene().setRoot(exitRoot);
 
-	    yes.setOnAction(eY -> {
+	    yesExit.setOnAction(eY -> {
 		Platform.exit();
-		gameplay = false;
-		clearAll();
 	    });
-	    no.setOnAction(eN -> {
+	    noExit.setOnAction(eN -> {
 		pStage.getScene().setRoot(menuRoot);
-		gameplay = true;
 	    });
 	});
 
@@ -499,24 +509,31 @@ public class Main extends Application {
 
 	Button backBtn = new Button("Back to Menu");
 	backBtn.setOnAction(e -> {
-	    pStage.getScene().setRoot(menuRoot);
-	    clearAll();
-	    actualHealth = new Rectangle(80, 10, 99, 20);
-	    actualHealth.setFill(Color.GREEN);
-	    gameplay = false;
-	    pause = false;
+	    pStage.getScene().setRoot(areYouSureRoot);
+	    
+            yesReturn.setOnAction(eY -> {
+                pStage.getScene().setRoot(menuRoot);
+                clearAll();
+                actualHealth = new Rectangle(80, 10, 99, 20);
+                actualHealth.setFill(Color.GREEN);
+                gameplay = false;
+                pause = false;
+            });
+            noReturn.setOnAction(eN -> {
+                pStage.getScene().setRoot(gameOptionsRoot);
+            });
 	});
 
 	Button exitBtn = new Button("Quit");
 	exitBtn.setOnAction(e -> {
 	    pStage.getScene().setRoot(exitRoot);
 
-	    yes.setOnAction(eY -> {
+	    yesExit.setOnAction(eY -> {
 		Platform.exit();
 		gameplay = false;
 		clearAll();
 	    });
-	    no.setOnAction(eN -> {
+	    noExit.setOnAction(eN -> {
 		pStage.getScene().setRoot(gameOptionsRoot);
 	    });
 	});
