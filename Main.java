@@ -184,29 +184,33 @@ public class Main extends Application {
 
 	    if (isPressed(KeyCode.W)) {
 		player.setCharacterView(0, 183);
-		if(!player.upColliding(enemies))
-		player.moveY(-3, scene.getHeight());
+		if (!player.upColliding(enemies)) {
+		    player.moveY(-3, scene.getHeight());
+		}
 		player.setOffsetY(183);
 		characterShooting();
 
 	    } else if (isPressed(KeyCode.S)) {
 		player.setCharacterView(0, 0);
-		if(!player.downColliding(enemies))
-		player.moveY(3, scene.getHeight());
+		if (!player.downColliding(enemies)) {
+		    player.moveY(3, scene.getHeight());
+		}
 		player.setOffsetY(0);
 		characterShooting();
 
 	    } else if (isPressed(KeyCode.A)) {
 		player.setCharacterView(0, 123);
-		if(!player.leftColliding(enemies))
-		player.moveX(-3, scene.getWidth());
+		if (!player.leftColliding(enemies)) {
+		    player.moveX(-3, scene.getWidth());
+		}
 		player.setOffsetY(123);
 		characterShooting();
 
 	    } else if (isPressed(KeyCode.D)) {
 		player.setCharacterView(0, 61);
-		if(!player.rightColliding(enemies))
-		player.moveX(3, scene.getWidth());
+		if (!player.rightColliding(enemies)) {
+		    player.moveX(3, scene.getWidth());
+		}
 		player.setOffsetY(61);
 		characterShooting();
 
@@ -345,16 +349,17 @@ public class Main extends Application {
     public void updateEnemy(Enemy enemy) {
 	long timeNow = System.currentTimeMillis();
 	long time = timeNow - hitTime;
-	if (time < 0 || time > 1000) {
-	    if (enemy.playerColliding(player)) {
+	if (enemy.playerColliding(player)) {
+	    if (time < 0 || time > 1000) {
 		player.hit();
 
 		gameRoot.getChildren().remove(actualHealth);
 		actualHealth = new Rectangle(80, 10, player.getHealth() * 20, 20);
 		actualHealth.setFill(Color.GREEN);
 		gameRoot.getChildren().add(actualHealth);
+		hitTime = timeNow;
 	    }
-	    hitTime = timeNow;
+
 	}
 
 	if (!enemy.playerColliding(player)) {//&&!enemy.enemyColliding(enemies)) { //need to fix this
@@ -496,6 +501,8 @@ public class Main extends Application {
 	backBtn.setOnAction(e -> {
 	    pStage.getScene().setRoot(menuRoot);
 	    clearAll();
+	    actualHealth = new Rectangle(80, 10, 99, 20);
+	    actualHealth.setFill(Color.GREEN);
 	    gameplay = false;
 	    pause = false;
 	});
