@@ -209,12 +209,15 @@ public class Main extends Application {
 	long timeNow = System.currentTimeMillis();
 	long time = timeNow - pauseTime;
 	if (gameplay && !pause) {
-	    if (player.getHealth() == 0||Level.getEnemiesLeft()==0) {
+	    if (player.getHealth() == 0) {
 		//Platform.exit();
 		pStage.getScene().setRoot(gameOverRoot);
 		gameplay = false;
 	    }
-
+	    if(Level.getEnemiesLeft()==0){
+		Level.increaseLevel();
+		level.increaseEnemies();
+	    }
 	    if (isPressed(KeyCode.W)) {
 		player.setCharacterView(0, 183);
 		player.moveY(-3, scene.getHeight());
