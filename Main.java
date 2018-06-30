@@ -123,7 +123,7 @@ public class Main extends Application {
 	gameOptionsRoot.setAlignment(gameOpTitle, Pos.CENTER);
         
         //Game Over Root
-        Text gameOver = new Text("Game OVer");
+        Text gameOver = new Text("Game Over");
 	gameOver.setFont(Font.font("Arial", 40));
 	VBox gameOverBox = addGameOverButtons(primaryStage);
 	gameOverBox.setAlignment(Pos.CENTER);
@@ -559,7 +559,7 @@ public class Main extends Application {
             clearAll();
             actualHealth = new Rectangle(80, 10, 99, 20);
             actualHealth.setFill(Color.GREEN);
-            player = new Character(charIV, (int) screenSize.getWidth() / 2, (int) screenSize.getHeight() / 2);
+            player = new Character(charIV, (int)screenSize.getWidth() / 2, (int)screenSize.getHeight() / 2);
 	    gameRoot.getChildren().addAll(player, health, healthBarOutline, lostHealth, actualHealth);
             gameplay = true;
         });
