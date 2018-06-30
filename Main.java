@@ -61,6 +61,7 @@ public class Main extends Application {
     Rectangle actualHealth;
     Rectangle lostHealth;
     VBox health;
+    VBox score;
 
     static Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
 
@@ -103,6 +104,13 @@ public class Main extends Application {
 	health.getChildren().addAll(healthLabel);
 	health.setTranslateX(10);
 	health.setTranslateY(10);
+	Label scoreLabel = new Label("Score: " + Level.getScore());
+	scoreLabel.setFont(new Font("Arial", 20));
+	scoreLabel.toFront();
+	score = new VBox(10);
+	score.getChildren().addAll(scoreLabel);
+	score.setTranslateX(screenSize.getWidth()-100);
+	score.setTranslateY(10);
 
 	//Options Root
 	Text opTitle = new Text("Game Options");
@@ -384,7 +392,7 @@ public class Main extends Application {
     public void createEnemy(Portal portal) {
 	Image image = new Image("file:src/Redies.png");
 	ImageView iv = new ImageView(image);
-	Enemy enemy = new Enemy(iv, portal.getX(), portal.getY());
+	Enemy enemy = new Enemy(iv, portal.getX(), portal.getY(),3,1);
 
 	gameRoot.getChildren().addAll(enemy, enemy.healthBarOutline, enemy.lostHealth, enemy.actualHealth);
 	enemies.add(enemy);
@@ -457,6 +465,9 @@ public class Main extends Application {
 	    enemToRemove.add(enemy);
 	    gameRoot.getChildren().removeAll(enemy, enemy.actualHealth, enemy.lostHealth, enemy.healthBarOutline);
 	    Level.enemyBeat();
+	    Level.scoreUp(enemy);
+	    score.getChildren().clear();
+	    score.getChildren().add(Level.updateScore());
 	}
     }
 
@@ -471,6 +482,9 @@ public class Main extends Application {
 	enemToRemove.clear();
         portals.clear();
         portalCount = 0;
+	Level.clearScore();
+	score.getChildren().clear();
+	score.getChildren().add(Level.updateScore());
 	gameRoot.getChildren().clear();
     }
 
@@ -485,8 +499,9 @@ public class Main extends Application {
 	    pStage.getScene().setRoot(gameRoot);
             level = new Level();
 	    player = new Character(charIV, (int) screenSize.getWidth() / 2, (int) screenSize.getHeight() / 2);
-	    gameRoot.getChildren().addAll(player, health, healthBarOutline, lostHealth, actualHealth);
+	    gameRoot.getChildren().addAll(player, health, healthBarOutline, lostHealth, actualHealth,score);
             health.toFront();
+	    score.toFront();
             healthBarOutline.toFront();
             lostHealth.toFront();
             actualHealth.toFront();

@@ -14,20 +14,23 @@ public class Enemy extends Pane {
     int height = 33;
     int x; //Enemy xPos
     int y; //Enemy yPos
+    int score;
     
     Rectangle healthBarOutline;
     Rectangle actualHealth;
     Rectangle lostHealth;
     boolean alive = true;
-    int health = 3;
+    int health;
 
-    public Enemy(ImageView iv, int posX, int posY) {
+    public Enemy(ImageView iv, int posX, int posY, int health, int score) {
         this.iv = iv;
         this.iv.setViewport(new Rectangle2D(offsetX, offsetY, width, height));
         this.setTranslateX(posX);
         this.setTranslateY(posY);
         this.x = posX;
         this.y = posY;
+	this.health = health;
+	this.score = score;
         this.getChildren().addAll(iv);
         
 	healthBarOutline = new Rectangle(x - 1, y - 6, 68, 4);
@@ -150,5 +153,9 @@ public class Enemy extends Pane {
 	    }
 	}
 	return colliding;
+    }
+    
+    public int getScore(){
+	return score;
     }
 }
