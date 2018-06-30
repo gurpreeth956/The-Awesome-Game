@@ -42,9 +42,9 @@ public class Main extends Application {
     private final HashMap<KeyCode, Boolean> keys = new HashMap();
     Image charImage = new Image("file:src/Greenies.png");
     ImageView charIV = new ImageView(charImage);
-    Character player;
     
-    Level level = new Level();
+    Character player;
+    Level level;
 
     private List<Projectile> projectiles = new ArrayList<>();
     private List<Projectile> projToRemove = new ArrayList<>();
@@ -213,7 +213,7 @@ public class Main extends Application {
 		gameplay = false;
 	    }
             
-	    if(Level.getEnemiesLeft()==0){
+	    if(Level.getEnemiesLeft() == 0){
 		Level.increaseLevel();
 		level.increaseEnemies();
 	    }
@@ -470,9 +470,8 @@ public class Main extends Application {
 	enemies.clear();
 	enemToRemove.clear();
         portals.clear();
-        porCount = 0;
+        portalCount = 0;
 	gameRoot.getChildren().clear();
-	porCount=0;
     }
 
     //Button Layouts
@@ -484,6 +483,7 @@ public class Main extends Application {
 	Button startBtn = new Button("Start");
 	startBtn.setOnAction(e -> {
 	    pStage.getScene().setRoot(gameRoot);
+            level = new Level();
 	    player = new Character(charIV, (int) screenSize.getWidth() / 2, (int) screenSize.getHeight() / 2);
 	    gameRoot.getChildren().addAll(player, health, healthBarOutline, lostHealth, actualHealth);
             health.toFront();
@@ -595,6 +595,7 @@ public class Main extends Application {
         newBtn.setOnAction(e -> {
             pStage.getScene().setRoot(gameRoot);
             clearAll();
+            level = new Level();
             actualHealth = new Rectangle(80, 10, 99, 20);
             actualHealth.setFill(Color.GREEN);
             player = new Character(charIV, (int)screenSize.getWidth() / 2, (int)screenSize.getHeight() / 2);
