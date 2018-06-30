@@ -334,7 +334,7 @@ public class Main extends Application {
     public void createPortal(){
 	Image image = new Image("file:src/portal.png");
 	ImageView iv = new ImageView(image);
-	Portal portal = new Portal(iv, (int)scene.getWidth(), (int)scene.getHeight());
+	Portal portal = new Portal(iv, (int)scene.getWidth() - 36, (int)scene.getHeight() - 60);
 	portal.toBack();
 	gameRoot.getChildren().add(portal);
 	portals.add(portal);
