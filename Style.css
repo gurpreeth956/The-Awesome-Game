@@ -1,3 +1,4 @@
 #backgroundtrial {
-    -fx-background-image: url("file:background png goes here");
+    -fx-background-image: url("file:src/backgroundtrial.png");
+    -fx-background-size: cover;
 }

@@ -122,21 +122,6 @@ public class Enemy extends Pane {
 	return health;
     }
     
-    public boolean playerColliding(Character player) {
-        return this.getBoundsInParent().intersects(player.getBoundsInParent());
-    }
-    
-    public boolean enemyColliding(List<Enemy> enemies){
-	boolean colliding = false;
-	for(Enemy enemy:enemies){
-	    if(this.x==enemy.x&&this.y==enemy.y) continue;
-	    if(this.getBoundsInParent().intersects(enemy.getBoundsInParent())){
-		colliding = true;
-	    }
-	}
-	return colliding;
-    }
-    
     public Rectangle updateHealth(){
 	actualHealth = new Rectangle(x, y, this.getHealth() * 22, 3);
 	actualHealth.setFill(Color.GREEN);
@@ -150,5 +135,20 @@ public class Enemy extends Pane {
 	lostHealth.setY(this.y - 5);
 	healthBarOutline.setX(this.x - 1);
 	healthBarOutline.setY(this.y - 6);
+    }
+    
+    public boolean playerColliding(Character player) {
+        return this.getBoundsInParent().intersects(player.getBoundsInParent());
+    }
+    
+    public boolean enemyColliding(List<Enemy> enemies){
+	boolean colliding = false;
+	for(Enemy enemy : enemies){
+	    if(this.x == enemy.x && this.y == enemy.y) continue;
+	    if(this.getBoundsInParent().intersects(enemy.getBoundsInParent())){
+		colliding = true;
+	    }
+	}
+	return colliding;
     }
 }
