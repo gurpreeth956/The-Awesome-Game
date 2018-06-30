@@ -462,7 +462,8 @@ public class Main extends Application {
 	projToRemove.clear();
 	enemies.clear();
 	enemToRemove.clear();
-	portals.clear();
+        portals.clear();
+        porCount = 0;
 	gameRoot.getChildren().clear();
 	porCount=0;
     }
