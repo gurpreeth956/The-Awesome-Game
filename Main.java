@@ -462,7 +462,9 @@ public class Main extends Application {
 	projToRemove.clear();
 	enemies.clear();
 	enemToRemove.clear();
+	portals.clear();
 	gameRoot.getChildren().clear();
+	porCount=0;
     }
 
     //Button Layouts
