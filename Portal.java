@@ -2,27 +2,27 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 
-
 public class Portal extends Pane{
+    
     ImageView iv;
-    int porX;
-    int porY;
     int offsetX = 0;
     int offsetY = 0;
     int width;
     int height;
-    int x;
-    int y;
+    int x; //Portal xPos
+    int y; //Portal xPos
     
-    public Portal(ImageView iv,int width, int height){
+    public Portal(ImageView iv, int posX, int posY){
 	this.iv = iv;
-	this.iv.setViewport(new Rectangle2D(offsetX, offsetY, this.width, this.height));
-	this.x = (int)(Math.random() * (width));
-	this.y = (int)(Math.random() * height);//generates random location for portal
+	this.iv.setViewport(new Rectangle2D(offsetX, offsetY, width, height));
+        this.setTranslateX(posX);
+        this.setTranslateY(posY);
+	this.x = posX;
+	this.y = posY;
 	this.getChildren().addAll(iv);
     }
     
     public boolean summon(){
-	return Math.random()<.001;//summons enemy from portal
+	return Math.random() < 0.001; //summons enemy from portal
     }
 }
