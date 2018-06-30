@@ -1,8 +1,8 @@
 public class Level {
     
     public static int currentLevel;
+    public static int enemiesToBeat;
     public static int enemiesLeft;
-    public int enemiesToBeat;
     
     public Level() {
 	currentLevel = 1;
@@ -10,7 +10,7 @@ public class Level {
 	enemiesLeft = 10;
     }
    
-    public void increaseLevel() {
+    public static void increaseLevel() {
 	currentLevel++;
     }
     
