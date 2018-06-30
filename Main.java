@@ -1,4 +1,3 @@
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -43,9 +42,9 @@ public class Main extends Application {
     private final HashMap<KeyCode, Boolean> keys = new HashMap();
     Image charImage = new Image("file:src/Greenies.png");
     ImageView charIV = new ImageView(charImage);
-    Character player;
     
-    Level level = new Level();
+    Character player;
+    Level level;
 
     private List<Projectile> projectiles = new ArrayList<>();
     private List<Projectile> projToRemove = new ArrayList<>();
@@ -56,7 +55,7 @@ public class Main extends Application {
     private long hitTime = 0;
 
     private List<Portal> portals = new ArrayList();
-    private int porCount = 0;
+    private int portalCount = 0;
 
     Rectangle healthBarOutline;
     Rectangle actualHealth;
@@ -100,7 +99,6 @@ public class Main extends Application {
 	lostHealth.setFill(Color.RED);
 	actualHealth = new Rectangle(80, 10, 99, 21);
 	actualHealth.setFill(Color.GREEN);
-	actualHealth.toFront();
 	health = new VBox(10);
 	health.getChildren().addAll(healthLabel);
 	health.setTranslateX(10);
@@ -127,9 +125,9 @@ public class Main extends Application {
 	gameOptionsRoot.setCenter(gameOptionsBox);
 	gameOptionsRoot.setTop(gameOpTitle);
 	gameOptionsRoot.setAlignment(gameOpTitle, Pos.CENTER);
-
-	//Game Over Root
-	Text gameOver = new Text("Game Over");
+        
+        //Game Over Root
+        Text gameOver = new Text("Game Over");
 	gameOver.setFont(Font.font("Arial", 40));
 	VBox gameOverBox = addGameOverButtons(primaryStage);
 	gameOverBox.setAlignment(Pos.CENTER);
@@ -211,13 +209,15 @@ public class Main extends Application {
 	if (gameplay && !pause) {
 	    if (player.getHealth() == 0) {
 		//Platform.exit();
-		pStage.getScene().setRoot(gameOverRoot);
+		pStage.getScene().setRoot(gameOverRoot); //need to change this to next level
 		gameplay = false;
 	    }
-	    if(Level.getEnemiesLeft()==0){
+            
+	    if(Level.getEnemiesLeft() == 0){
 		Level.increaseLevel();
 		level.increaseEnemies();
 	    }
+            
 	    if (isPressed(KeyCode.W)) {
 		player.setCharacterView(0, 183);
 		player.moveY(-3, scene.getHeight());
@@ -247,12 +247,13 @@ public class Main extends Application {
 		characterShooting();
 	    }
 	    
-	    while(porCount<Level.getLevel()){
+	    while(portalCount < Level.getLevel()){
 		createPortal();
-		porCount++;
+                player.toFront();
+		portalCount++;
 	    }
 	    
-	    for(Portal portal:portals){
+	    for(Portal portal : portals){
 		if(portal.summon()){
 		    createEnemy(portal);
 		}
@@ -338,8 +339,8 @@ public class Main extends Application {
     public void createPortal(){
 	Image image = new Image("file:src/portal.png");
 	ImageView iv = new ImageView(image);
-	Portal portal = new Portal(iv, (int)scene.getWidth(), (int)scene.getHeight());
-	portal.toFront();
+	Portal portal = new Portal(iv, (int)scene.getWidth() - 36, (int)scene.getHeight() - 60);
+	portal.toBack();
 	gameRoot.getChildren().add(portal);
 	portals.add(portal);
     }
@@ -387,6 +388,10 @@ public class Main extends Application {
 
 	gameRoot.getChildren().addAll(enemy, enemy.healthBarOutline, enemy.lostHealth, enemy.actualHealth);
 	enemies.add(enemy);
+        health.toFront();
+        healthBarOutline.toFront();
+        lostHealth.toFront();
+        actualHealth.toFront();
     }
 
     public void updateEnemy(Enemy enemy) {
@@ -400,6 +405,7 @@ public class Main extends Application {
 		actualHealth = new Rectangle(80, 10, player.getHealth() * 20, 21);
 		actualHealth.setFill(Color.GREEN);
 		gameRoot.getChildren().add(actualHealth);
+                actualHealth.toFront();
 		hitTime = timeNow;
 	    }
 	}
@@ -443,6 +449,7 @@ public class Main extends Application {
 		enemy.moveY(1, scene.getHeight());
 	    }
 	}
+        
 	if (enemy.getHealth() == 0) {
 	    enemy.setAlive(false);
 	}
@@ -463,9 +470,8 @@ public class Main extends Application {
 	enemies.clear();
 	enemToRemove.clear();
         portals.clear();
-        porCount = 0;
+        portalCount = 0;
 	gameRoot.getChildren().clear();
-	porCount=0;
     }
 
     //Button Layouts
@@ -477,8 +483,13 @@ public class Main extends Application {
 	Button startBtn = new Button("Start");
 	startBtn.setOnAction(e -> {
 	    pStage.getScene().setRoot(gameRoot);
+            level = new Level();
 	    player = new Character(charIV, (int) screenSize.getWidth() / 2, (int) screenSize.getHeight() / 2);
 	    gameRoot.getChildren().addAll(player, health, healthBarOutline, lostHealth, actualHealth);
+            health.toFront();
+            healthBarOutline.toFront();
+            lostHealth.toFront();
+            actualHealth.toFront();
 	    gameplay = true;
 	});
 
@@ -579,15 +590,20 @@ public class Main extends Application {
 	VBox vbox = new VBox();
 	vbox.setPadding(new Insets(15));
 	vbox.setSpacing(10);
-
-	Button newBtn = new Button("New Game");
-	newBtn.setOnAction(e -> {
-	    pStage.getScene().setRoot(gameRoot);
-	    clearAll();
-	    actualHealth = new Rectangle(80, 10, 99, 20);
-	    actualHealth.setFill(Color.GREEN);
-	    player = new Character(charIV, (int) screenSize.getWidth() / 2, (int) screenSize.getHeight() / 2);
+        
+        Button newBtn = new Button("New Game");
+        newBtn.setOnAction(e -> {
+            pStage.getScene().setRoot(gameRoot);
+            clearAll();
+            level = new Level();
+            actualHealth = new Rectangle(80, 10, 99, 20);
+            actualHealth.setFill(Color.GREEN);
+            player = new Character(charIV, (int)screenSize.getWidth() / 2, (int)screenSize.getHeight() / 2);
 	    gameRoot.getChildren().addAll(player, health, healthBarOutline, lostHealth, actualHealth);
+            health.toFront();
+            healthBarOutline.toFront();
+            lostHealth.toFront();
+            actualHealth.toFront();
 	    gameplay = true;
 	});
 
@@ -621,6 +637,7 @@ public class Main extends Application {
 		pStage.getScene().setRoot(gameOptionsRoot);
 	    });
 	});
+        
 	vbox.getChildren().addAll(newBtn, backBtn, exitBtn);
 	return vbox;
     }
