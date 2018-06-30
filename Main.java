@@ -465,6 +465,7 @@ public class Main extends Application {
         portals.clear();
         porCount = 0;
 	gameRoot.getChildren().clear();
+	porCount=0;
     }
 
     //Button Layouts
