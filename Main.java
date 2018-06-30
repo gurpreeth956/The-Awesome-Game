@@ -26,7 +26,6 @@ import javafx.stage.StageStyle;
 public class Main extends Application {
 
     Scene scene;
-
     static Pane gameRoot;
     static BorderPane menuRoot;
     static BorderPane optionsRoot;
@@ -39,18 +38,18 @@ public class Main extends Application {
     Button yesReturn = new Button("Yes");
     Button noReturn = new Button("No");
 
-    private HashMap<KeyCode, Boolean> keys = new HashMap();
+    private final HashMap<KeyCode, Boolean> keys = new HashMap();
     Image charImage = new Image("file:src/Greenies.png");
     ImageView charIV = new ImageView(charImage);
     Character player;
 
     private List<Projectile> projectiles = new ArrayList<>();
     private List<Projectile> projToRemove = new ArrayList<>();
-    long timeOfLastProjectile = 0;
+    private long timeOfLastProjectile = 0;
 
     private List<Enemy> enemies = new ArrayList();
     private List<Enemy> enemToRemove = new ArrayList();
-    long hitTime = 0;
+    private long hitTime = 0;
 
     Rectangle healthBarOutline;
     Rectangle actualHealth;
@@ -83,15 +82,16 @@ public class Main extends Application {
 	//Game Root
 	gameRoot = new Pane();
 	gameRoot.setId("backgroundtrial");
+        gameRoot.getStylesheets().addAll(this.getClass().getResource("Style.css").toExternalForm());
 	Label healthLabel = new Label("Health: ");
 	healthLabel.setFont(new Font("Arial", 20));
 	healthLabel.toFront();
 	healthBarOutline = new Rectangle(79, 9, 101, 22);
 	healthBarOutline.setFill(Color.TRANSPARENT);
 	healthBarOutline.setStroke(Color.BLACK);
-	lostHealth = new Rectangle(80, 10, 99, 20);
+	lostHealth = new Rectangle(80, 10, 99, 21);
 	lostHealth.setFill(Color.RED);
-	actualHealth = new Rectangle(80, 10, 99, 20);
+	actualHealth = new Rectangle(80, 10, 99, 21);
 	actualHealth.setFill(Color.GREEN);
 	actualHealth.toFront();
 	health = new VBox(10);
@@ -197,33 +197,25 @@ public class Main extends Application {
 
 	    if (isPressed(KeyCode.W)) {
 		player.setCharacterView(0, 183);
-		if (!player.upColliding(enemies)) {
-		    player.moveY(-3, scene.getHeight());
-		}
+		player.moveY(-3, scene.getHeight());
 		player.setOffsetY(183);
 		characterShooting();
 
 	    } else if (isPressed(KeyCode.S)) {
 		player.setCharacterView(0, 0);
-		if (!player.downColliding(enemies)) {
-		    player.moveY(3, scene.getHeight());
-		}
+		player.moveY(3, scene.getHeight());
 		player.setOffsetY(0);
 		characterShooting();
 
 	    } else if (isPressed(KeyCode.A)) {
 		player.setCharacterView(0, 123);
-		if (!player.leftColliding(enemies)) {
-		    player.moveX(-3, scene.getWidth());
-		}
+                player.moveX(-3, scene.getWidth());
 		player.setOffsetY(123);
 		characterShooting();
 
 	    } else if (isPressed(KeyCode.D)) {
 		player.setCharacterView(0, 61);
-		if (!player.rightColliding(enemies)) {
-		    player.moveX(3, scene.getWidth());
-		}
+                player.moveX(3, scene.getWidth());
 		player.setOffsetY(61);
 		characterShooting();
 
@@ -363,11 +355,11 @@ public class Main extends Application {
 	long timeNow = System.currentTimeMillis();
 	long time = timeNow - hitTime;
 	if (enemy.playerColliding(player)) {
-	    if (time < 0 || time > 1000) {
+            enemy.setCharacterView(128, 0);
+	    if (time < 0 || time > 2000) {
 		player.hit();
-
 		gameRoot.getChildren().remove(actualHealth);
-		actualHealth = new Rectangle(80, 10, player.getHealth() * 20, 20);
+		actualHealth = new Rectangle(80, 10, player.getHealth() * 20, 21);
 		actualHealth.setFill(Color.GREEN);
 		gameRoot.getChildren().add(actualHealth);
 		hitTime = timeNow;
@@ -514,7 +506,7 @@ public class Main extends Application {
             yesReturn.setOnAction(eY -> {
                 pStage.getScene().setRoot(menuRoot);
                 clearAll();
-                actualHealth = new Rectangle(80, 10, 99, 20);
+                actualHealth = new Rectangle(80, 10, 99, 21);
                 actualHealth.setFill(Color.GREEN);
                 gameplay = false;
                 pause = false;
