@@ -224,7 +224,7 @@ public class Main extends Application {
 		gameplay = false;
 	    }
             
-	    if(level.getEnemiesLeft() == 0){
+	    if(level.getEnemiesLeft() <= 0){
 		level.increaseLevel();
 		level.increaseEnemies();
 	    }
