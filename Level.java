@@ -1,5 +1,3 @@
-
-
 public class Level {
     
     public static int currentLevel;
@@ -35,27 +33,27 @@ public class Level {
 	return currentLevel;
     }
     
-    public static void coinUp(Enemy enemy){
-	coins+=enemy.getCoin();
+    public static void coinUp(Enemy enemy) {
+	coins += enemy.getCoin();
     }
     
-    public static void scoreUp(Enemy enemy){
-	highScore+=enemy.getScore();
+    public static void scoreUp(Enemy enemy) {
+	highScore += enemy.getScore();
     }
     
-    public static String getCoin(){
-	return coins+"";
+    public static String getCoin() {
+	return coins + "";
     }
     
-    public static String getScore(){
-	return highScore+"";
+    public static String getScore() {
+	return highScore + "";
     }
     
-    public static void clearScore(){
+    public static void clearScore() {
 	highScore = 0;
     }
     
-    public static void clearCoins(){
+    public static void clearCoins() {
 	coins = 0;
     }
 }

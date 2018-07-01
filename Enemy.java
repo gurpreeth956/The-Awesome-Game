@@ -111,29 +111,29 @@ public class Enemy extends Pane {
         this.y = y;
     }
     
-    public boolean isAlive(){
+    public boolean isAlive() {
 	return alive;
     }
     
-    public void setAlive(boolean alive){
+    public void setAlive(boolean alive) {
 	this.alive = alive;
     }
     
-    public void hit(){
+    public void hit() {
 	health--;
     }
     
-    public int getHealth(){
+    public int getHealth() {
 	return health;
     }
     
-    public Rectangle updateHealth(){
+    public Rectangle updateHealth() {
 	actualHealth = new Rectangle(x, y, this.getHealth() * 22, 3);
 	actualHealth.setFill(Color.GREEN);
 	return actualHealth;
     }
     
-    public void healthPos(){
+    public void healthPos() {
 	actualHealth.setX(this.x);
 	actualHealth.setY(this.y - 5);
 	lostHealth.setX(this.x);
@@ -146,7 +146,7 @@ public class Enemy extends Pane {
         return this.getBoundsInParent().intersects(player.getBoundsInParent());
     }
     
-    public boolean enemyColliding(List<Enemy> enemies){
+    public boolean enemyColliding(List<Enemy> enemies) {
 	boolean colliding = false;
 	for(Enemy enemy : enemies){
 	    if(this.x == enemy.x && this.y == enemy.y) continue;
@@ -157,11 +157,11 @@ public class Enemy extends Pane {
 	return colliding;
     }
     
-    public int getCoin(){
+    public int getCoin() {
 	return coin;
     }
     
-    public int getScore(){
+    public int getScore() {
 	return score;
     }
 }
