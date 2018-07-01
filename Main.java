@@ -61,7 +61,8 @@ public class Main extends Application {
     Rectangle actualHealth;
     Rectangle lostHealth;
     VBox health;
-    VBox score;
+    VBox coin;
+    Label coinLabel;
 
     static Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
 
@@ -104,13 +105,13 @@ public class Main extends Application {
 	health.getChildren().addAll(healthLabel);
 	health.setTranslateX(10);
 	health.setTranslateY(10);
-	Label scoreLabel = new Label("Score: " + Level.getScore());
-	scoreLabel.setFont(new Font("Arial", 20));
-	scoreLabel.toFront();
-	score = new VBox(10);
-	score.getChildren().addAll(scoreLabel);
-	score.setTranslateX(screenSize.getWidth()-100);
-	score.setTranslateY(10);
+	coinLabel = new Label("Coins: " + Level.getCoin());
+	coinLabel.setFont(new Font("Arial", 20));
+	coinLabel.toFront();
+	coin = new VBox(10);
+	coin.getChildren().addAll(coinLabel);
+	coin.setTranslateX(screenSize.getWidth()-100);
+	coin.setTranslateY(10);
 
 	//Options Root
 	Text opTitle = new Text("Game Options");
@@ -135,7 +136,7 @@ public class Main extends Application {
 	gameOptionsRoot.setAlignment(gameOpTitle, Pos.CENTER);
         
         //Game Over Root
-        Text gameOver = new Text("Game Over");
+        Text gameOver = new Text("Game Over \n Score: " + Level.getScore());//This line is not showing the proper value for getScore
 	gameOver.setFont(Font.font("Arial", 40));
 	VBox gameOverBox = addGameOverButtons(primaryStage);
 	gameOverBox.setAlignment(Pos.CENTER);
@@ -465,9 +466,9 @@ public class Main extends Application {
 	    enemToRemove.add(enemy);
 	    gameRoot.getChildren().removeAll(enemy, enemy.actualHealth, enemy.lostHealth, enemy.healthBarOutline);
 	    Level.enemyBeat();
+	    Level.coinUp(enemy);
 	    Level.scoreUp(enemy);
-	    score.getChildren().clear();
-	    score.getChildren().add(Level.updateScore());
+	    coinLabel.setText("Coins: " + Level.getCoin());
 	}
     }
 
@@ -483,8 +484,8 @@ public class Main extends Application {
         portals.clear();
         portalCount = 0;
 	Level.clearScore();
-	score.getChildren().clear();
-	score.getChildren().add(Level.updateScore());
+	Level.clearCoins();
+	coinLabel.setText("Coins: "+Level.getCoin());
 	gameRoot.getChildren().clear();
     }
 
@@ -499,9 +500,9 @@ public class Main extends Application {
 	    pStage.getScene().setRoot(gameRoot);
             level = new Level();
 	    player = new Character(charIV, (int) screenSize.getWidth() / 2, (int) screenSize.getHeight() / 2);
-	    gameRoot.getChildren().addAll(player, health, healthBarOutline, lostHealth, actualHealth,score);
+	    gameRoot.getChildren().addAll(player, health, healthBarOutline, lostHealth, actualHealth,coin);
             health.toFront();
-	    score.toFront();
+	    coin.toFront();
             healthBarOutline.toFront();
             lostHealth.toFront();
             actualHealth.toFront();

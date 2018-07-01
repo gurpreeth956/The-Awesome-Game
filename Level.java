@@ -1,12 +1,11 @@
 
-import javafx.scene.control.Label;
-import javafx.scene.text.Font;
 
 public class Level {
     
     public static int currentLevel;
     public static int enemiesToBeat;
     public static int enemiesLeft;
+    public static int coins;
     public static int highScore;
     
     public Level() {
@@ -36,21 +35,27 @@ public class Level {
 	return currentLevel;
     }
     
+    public static void coinUp(Enemy enemy){
+	coins+=enemy.getCoin();
+    }
+    
     public static void scoreUp(Enemy enemy){
 	highScore+=enemy.getScore();
+    }
+    
+    public static String getCoin(){
+	return coins+"";
     }
     
     public static String getScore(){
 	return highScore+"";
     }
     
-    public static Label updateScore(){
-	Label label = new Label("Score: " + getScore());
-	label.setFont(new Font("Arial", 20));
-	return label;
-    }
-    
     public static void clearScore(){
 	highScore = 0;
+    }
+    
+    public static void clearCoins(){
+	coins = 0;
     }
 }
