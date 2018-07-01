@@ -138,15 +138,11 @@ public class Main extends Application {
 	gameOptionsRoot.setAlignment(gameOpTitle, Pos.CENTER);
         
         //Game Over Root
-        Text gameOver = new Text("Game Over \n Score:  " + level.getScore());
-	gameOver.setFont(Font.font("Arial", 40));
 	VBox gameOverBox = addGameOverButtons(primaryStage);
 	gameOverBox.setAlignment(Pos.CENTER);
 	gameOverRoot = new BorderPane();
 	gameOverRoot.setId("menu");
 	gameOverRoot.setCenter(gameOverBox);
-	gameOverRoot.setTop(gameOver);
-	gameOverRoot.setAlignment(gameOver, Pos.CENTER);
 
 	//Exit Root
 	exitRoot = new VBox(20);
@@ -220,6 +216,10 @@ public class Main extends Application {
 	if (gameplay && !pause) {
 	    if (player.getHealth() == 0) {
 		//Platform.exit();
+                Text gameOver = new Text("Game Over \n Score:  " + level.getScore());
+                gameOver.setFont(Font.font("Arial", 40));
+                gameOverRoot.setTop(gameOver);
+                gameOverRoot.setAlignment(gameOver, Pos.CENTER);
 		pStage.getScene().setRoot(gameOverRoot); //need to change this to next level
 		gameplay = false;
 	    }
