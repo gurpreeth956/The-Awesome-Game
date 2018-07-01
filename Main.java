@@ -61,8 +61,9 @@ public class Main extends Application {
     Rectangle actualHealth;
     Rectangle lostHealth;
     VBox health;
-    VBox coin;
+    VBox coinAndScore;
     Label coinLabel;
+    Label scoreLabel;
 
     static Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
 
@@ -94,24 +95,25 @@ public class Main extends Application {
 	Label healthLabel = new Label("Health: ");
 	healthLabel.setFont(new Font("Arial", 20));
 	healthLabel.toFront();
-	healthBarOutline = new Rectangle(79, 9, 101, 22);
+	healthBarOutline = new Rectangle(screenSize.getWidth() - 121, 9, 101, 22);
 	healthBarOutline.setFill(Color.TRANSPARENT);
 	healthBarOutline.setStroke(Color.BLACK);
-	lostHealth = new Rectangle(80, 10, 99, 21);
+	lostHealth = new Rectangle(screenSize.getWidth() - 120, 10, 99, 21);
 	lostHealth.setFill(Color.RED);
-	actualHealth = new Rectangle(80, 10, 99, 21);
+	actualHealth = new Rectangle(screenSize.getWidth() - 120, 10, 99, 21);
 	actualHealth.setFill(Color.GREEN);
 	health = new VBox(10);
 	health.getChildren().addAll(healthLabel);
-	health.setTranslateX(10);
+	health.setTranslateX(screenSize.getWidth() - 200);
 	health.setTranslateY(10);
-	coinLabel = new Label("Coins: " + Level.getCoin());
+	coinLabel = new Label("Coins: " + level.getCoin());
 	coinLabel.setFont(new Font("Arial", 20));
-	coinLabel.toFront();
-	coin = new VBox(10);
-	coin.getChildren().addAll(coinLabel);
-	coin.setTranslateX(screenSize.getWidth()-100);
-	coin.setTranslateY(10);
+        scoreLabel = new Label("Score: " + level.getScore());
+        scoreLabel.setFont(new Font("Arial", 20));
+	coinAndScore = new VBox(10);
+	coinAndScore.getChildren().addAll(coinLabel, scoreLabel);
+	coinAndScore.setTranslateX(10);
+	coinAndScore.setTranslateY(10);
 
 	//Options Root
 	Text opTitle = new Text("Game Options");
@@ -136,7 +138,7 @@ public class Main extends Application {
 	gameOptionsRoot.setAlignment(gameOpTitle, Pos.CENTER);
         
         //Game Over Root
-        Text gameOver = new Text("Game Over \n Score: " + Level.getScore());//This line is not showing the proper value for getScore
+        Text gameOver = new Text("Game Over \n Score:  " + level.getScore());
 	gameOver.setFont(Font.font("Arial", 40));
 	VBox gameOverBox = addGameOverButtons(primaryStage);
 	gameOverBox.setAlignment(Pos.CENTER);
@@ -144,7 +146,7 @@ public class Main extends Application {
 	gameOverRoot.setId("menu");
 	gameOverRoot.setCenter(gameOverBox);
 	gameOverRoot.setTop(gameOver);
-	gameOptionsRoot.setAlignment(gameOver, Pos.CENTER);
+	gameOverRoot.setAlignment(gameOver, Pos.CENTER);
 
 	//Exit Root
 	exitRoot = new VBox(20);
@@ -222,8 +224,8 @@ public class Main extends Application {
 		gameplay = false;
 	    }
             
-	    if(Level.getEnemiesLeft() == 0){
-		Level.increaseLevel();
+	    if(level.getEnemiesLeft() == 0){
+		level.increaseLevel();
 		level.increaseEnemies();
 	    }
             
@@ -256,14 +258,14 @@ public class Main extends Application {
 		characterShooting();
 	    }
 	    
-	    while(portalCount < Level.getLevel()){
+	    while(portalCount < level.getLevel()) {
 		createPortal();
                 player.toFront();
 		portalCount++;
 	    }
 	    
-	    for(Portal portal : portals){
-		if(portal.summon()){
+	    for(Portal portal : portals) {
+		if(portal.summon()) {
 		    createEnemy(portal);
 		}
 	    }
@@ -393,9 +395,12 @@ public class Main extends Application {
     public void createEnemy(Portal portal) {
 	Image image = new Image("file:src/Redies.png");
 	ImageView iv = new ImageView(image);
-	Enemy enemy = new Enemy(iv, portal.getX(), portal.getY(),3,1);
+	Enemy enemy = new Enemy(iv, portal.getX(), portal.getY(), 3, 1);
 
 	gameRoot.getChildren().addAll(enemy, enemy.healthBarOutline, enemy.lostHealth, enemy.actualHealth);
+        coinAndScore.toFront();
+        coinLabel.toFront();
+        scoreLabel.toFront();
 	enemies.add(enemy);
         health.toFront();
         healthBarOutline.toFront();
@@ -411,7 +416,7 @@ public class Main extends Application {
 	    if (time < 0 || time > 2000) {
 		player.hit();
 		gameRoot.getChildren().remove(actualHealth);
-		actualHealth = new Rectangle(80, 10, player.getHealth() * 20, 21);
+		actualHealth = new Rectangle(screenSize.getWidth() - 120, 10, player.getHealth() * 20, 21);
 		actualHealth.setFill(Color.GREEN);
 		gameRoot.getChildren().add(actualHealth);
                 actualHealth.toFront();
@@ -465,10 +470,11 @@ public class Main extends Application {
 	if (!enemy.isAlive()) {
 	    enemToRemove.add(enemy);
 	    gameRoot.getChildren().removeAll(enemy, enemy.actualHealth, enemy.lostHealth, enemy.healthBarOutline);
-	    Level.enemyBeat();
-	    Level.coinUp(enemy);
-	    Level.scoreUp(enemy);
-	    coinLabel.setText("Coins: " + Level.getCoin());
+	    level.enemyBeat();
+	    level.coinUp(enemy);
+	    level.scoreUp(enemy);
+	    coinLabel.setText("Coins: " + level.getCoin());
+            scoreLabel.setText("Score: " + level.getScore());
 	}
     }
 
@@ -483,9 +489,10 @@ public class Main extends Application {
 	enemToRemove.clear();
         portals.clear();
         portalCount = 0;
-	Level.clearScore();
-	Level.clearCoins();
-	coinLabel.setText("Coins: "+Level.getCoin());
+	level.clearScore();
+	level.clearCoins();
+	coinLabel.setText("Coins: " + level.getCoin());
+        scoreLabel.setText("Score: " + level.getScore());
 	gameRoot.getChildren().clear();
     }
 
@@ -500,9 +507,11 @@ public class Main extends Application {
 	    pStage.getScene().setRoot(gameRoot);
             level = new Level();
 	    player = new Character(charIV, (int) screenSize.getWidth() / 2, (int) screenSize.getHeight() / 2);
-	    gameRoot.getChildren().addAll(player, health, healthBarOutline, lostHealth, actualHealth,coin);
+	    gameRoot.getChildren().addAll(player, health, healthBarOutline, lostHealth, actualHealth, coinAndScore);
+	    coinAndScore.toFront();
+            coinLabel.toFront();
+            scoreLabel.toFront();
             health.toFront();
-	    coin.toFront();
             healthBarOutline.toFront();
             lostHealth.toFront();
             actualHealth.toFront();
@@ -574,7 +583,7 @@ public class Main extends Application {
 	    yesReturn.setOnAction(eY -> {
 		pStage.getScene().setRoot(menuRoot);
 		clearAll();
-		actualHealth = new Rectangle(80, 10, 99, 21);
+		actualHealth = new Rectangle(screenSize.getWidth() - 120, 10, 99, 21);
 		actualHealth.setFill(Color.GREEN);
 		gameplay = false;
 		pause = false;
@@ -612,10 +621,13 @@ public class Main extends Application {
             pStage.getScene().setRoot(gameRoot);
             clearAll();
             level = new Level();
-            actualHealth = new Rectangle(80, 10, 99, 20);
+            actualHealth = new Rectangle(screenSize.getWidth() - 120, 10, 99, 21);
             actualHealth.setFill(Color.GREEN);
             player = new Character(charIV, (int)screenSize.getWidth() / 2, (int)screenSize.getHeight() / 2);
-	    gameRoot.getChildren().addAll(player, health, healthBarOutline, lostHealth, actualHealth);
+	    gameRoot.getChildren().addAll(player, health, healthBarOutline, lostHealth, actualHealth, coinAndScore);
+            coinAndScore.toFront();
+            coinLabel.toFront();
+            scoreLabel.toFront();
             health.toFront();
             healthBarOutline.toFront();
             lostHealth.toFront();
@@ -630,7 +642,7 @@ public class Main extends Application {
 	    yesReturn.setOnAction(eY -> {
 		pStage.getScene().setRoot(menuRoot);
 		clearAll();
-		actualHealth = new Rectangle(80, 10, 99, 20);
+		actualHealth = new Rectangle(screenSize.getWidth() - 120, 10, 99, 21);
 		actualHealth.setFill(Color.GREEN);
 		gameplay = false;
 		pause = false;
