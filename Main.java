@@ -348,7 +348,7 @@ public class Main extends Application {
     }
     
     public void createPortal(){
-	Image image = new Image("file:src/portal.png");
+	Image image = new Image("file:src/Portal.png");
 	ImageView iv = new ImageView(image);
 	Portal portal = new Portal(iv, (int)scene.getWidth() - 36, (int)scene.getHeight() - 60);
 	portal.toBack();
@@ -357,7 +357,7 @@ public class Main extends Application {
     }
 
     public void createProjectile(int x, int y) {
-	Image image = new Image("file:src/shot.png");
+	Image image = new Image("file:src/Shot.png");
 	ImageView iv = new ImageView(image);
 	Projectile proj = new Projectile(iv, player.getX() + 28, player.getY() + 16);
 	proj.setVelocityX(x);
