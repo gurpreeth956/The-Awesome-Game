@@ -14,20 +14,25 @@ public class Enemy extends Pane {
     int height = 33;
     int x; //Enemy xPos
     int y; //Enemy yPos
+    int coin;
+    int score;
     
     Rectangle healthBarOutline;
     Rectangle actualHealth;
     Rectangle lostHealth;
     boolean alive = true;
-    int health = 3;
+    int health;
 
-    public Enemy(ImageView iv, int posX, int posY) {
+    public Enemy(ImageView iv, int posX, int posY, int health, int coin) {
         this.iv = iv;
         this.iv.setViewport(new Rectangle2D(offsetX, offsetY, width, height));
         this.setTranslateX(posX);
         this.setTranslateY(posY);
         this.x = posX;
         this.y = posY;
+	this.health = health;
+	this.coin = coin;
+	this.score = coin;
         this.getChildren().addAll(iv);
         
 	healthBarOutline = new Rectangle(x - 1, y - 6, 68, 4);
@@ -106,30 +111,45 @@ public class Enemy extends Pane {
         this.y = y;
     }
     
-    public boolean isAlive(){
+    public boolean isAlive() {
 	return alive;
     }
     
-    public void setAlive(boolean alive){
+    public void setAlive(boolean alive) {
 	this.alive = alive;
     }
     
-    public void hit(){
+    public void hit() {
 	health--;
     }
     
-    public int getHealth(){
+    public int getHealth() {
 	return health;
+    }
+    
+    public Rectangle updateHealth() {
+	actualHealth = new Rectangle(x, y, this.getHealth() * 22, 3);
+	actualHealth.setFill(Color.GREEN);
+	return actualHealth;
+    }
+    
+    public void healthPos() {
+	actualHealth.setX(this.x);
+	actualHealth.setY(this.y - 5);
+	lostHealth.setX(this.x);
+	lostHealth.setY(this.y - 5);
+	healthBarOutline.setX(this.x - 1);
+	healthBarOutline.setY(this.y - 6);
     }
     
     public boolean playerColliding(Character player) {
         return this.getBoundsInParent().intersects(player.getBoundsInParent());
     }
     
-    public boolean enemyColliding(List<Enemy> enemies){
+    public boolean enemyColliding(List<Enemy> enemies) {
 	boolean colliding = false;
-	for(Enemy enemy:enemies){
-	    if(this.x==enemy.x&&this.y==enemy.y) continue;
+	for(Enemy enemy : enemies){
+	    if(this.x == enemy.x && this.y == enemy.y) continue;
 	    if(this.getBoundsInParent().intersects(enemy.getBoundsInParent())){
 		colliding = true;
 	    }
@@ -137,18 +157,11 @@ public class Enemy extends Pane {
 	return colliding;
     }
     
-    public Rectangle updateHealth(){
-	actualHealth = new Rectangle(x, y, this.getHealth() * 22, 3);
-	actualHealth.setFill(Color.GREEN);
-	return actualHealth;
+    public int getCoin() {
+	return coin;
     }
     
-    public void healthPos(){
-	actualHealth.setX(this.x);
-	actualHealth.setY(this.y - 5);
-	lostHealth.setX(this.x);
-	lostHealth.setY(this.y - 5);
-	healthBarOutline.setX(this.x - 1);
-	healthBarOutline.setY(this.y - 6);
+    public int getScore() {
+	return score;
     }
 }
