@@ -1,5 +1,6 @@
 import java.util.List;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -10,8 +11,8 @@ public class Enemy extends Pane {
     ImageView iv;
     int offsetX = 0;
     int offsetY = 0;
-    int width = 66;
-    int height = 33;
+    int width;
+    int height;
     int x; //Enemy xPos
     int y; //Enemy yPos
     int coin;
@@ -23,7 +24,9 @@ public class Enemy extends Pane {
     boolean alive = true;
     int health;
 
-    public Enemy(ImageView iv, int posX, int posY, int health, int coin) {
+    public Enemy(int posX, int posY, int health, int coin, int width, int height) {
+	Image image = new Image("file:src/Redies.png");
+	ImageView iv = new ImageView(image);
         this.iv = iv;
         this.iv.setViewport(new Rectangle2D(offsetX, offsetY, width, height));
         this.setTranslateX(posX);
@@ -33,6 +36,8 @@ public class Enemy extends Pane {
 	this.health = health;
 	this.coin = coin;
 	this.score = coin;
+	this.width = width;
+	this.height = height;
         this.getChildren().addAll(iv);
         
 	healthBarOutline = new Rectangle(x - 1, y - 6, 68, 4);
@@ -164,4 +169,5 @@ public class Enemy extends Pane {
     public int getScore() {
 	return score;
     }
+    
 }

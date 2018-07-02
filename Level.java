@@ -1,3 +1,7 @@
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class Level {
     
     public static int currentLevel;
@@ -56,4 +60,5 @@ public class Level {
     public static void clearCoins() {
 	coins = 0;
     }
+    
 }

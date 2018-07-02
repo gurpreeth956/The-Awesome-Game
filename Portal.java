@@ -1,4 +1,5 @@
 import javafx.geometry.Rectangle2D;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 
@@ -12,7 +13,9 @@ public class Portal extends Pane {
     int x; //Portal xPos
     int y; //Portal yPos
     
-    public Portal(ImageView iv, int screenWidth, int screenHeight) {
+    public Portal(int screenWidth, int screenHeight) {
+	Image image = new Image("file:src/Portal.png");
+	ImageView iv = new ImageView(image);
 	this.iv = iv;
 	this.iv.setViewport(new Rectangle2D(offsetX, offsetY, this.width, this.height));
 	this.x = (int)(Math.random() * screenWidth);

@@ -348,9 +348,7 @@ public class Main extends Application {
     }
     
     public void createPortal(){
-	Image image = new Image("file:src/Portal.png");
-	ImageView iv = new ImageView(image);
-	Portal portal = new Portal(iv, (int)scene.getWidth() - 36, (int)scene.getHeight() - 60);
+	Portal portal = new Portal((int)scene.getWidth() - 36, (int)scene.getHeight() - 60);
 	portal.toBack();
 	gameRoot.getChildren().add(portal);
 	portals.add(portal);
@@ -393,9 +391,7 @@ public class Main extends Application {
     }
 
     public void createEnemy(Portal portal) {
-	Image image = new Image("file:src/Redies.png");
-	ImageView iv = new ImageView(image);
-	Enemy enemy = new Enemy(iv, portal.getX(), portal.getY(), 3, 1);
+	Enemy enemy = new Enemy(portal.getX(), portal.getY(), 3, 1, 66, 33);
 
 	gameRoot.getChildren().addAll(enemy, enemy.healthBarOutline, enemy.lostHealth, enemy.actualHealth);
         coinAndScore.toFront();
