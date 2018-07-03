@@ -1,3 +1,4 @@
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -42,9 +43,10 @@ public class Main extends Application {
     private final HashMap<KeyCode, Boolean> keys = new HashMap();
     Image charImage = new Image("file:src/Greenies.png");
     ImageView charIV = new ImageView(charImage);
-    
+
     Character player;
     Level level;
+    Stairs stair;
 
     private List<Projectile> projectiles = new ArrayList<>();
     private List<Projectile> projToRemove = new ArrayList<>();
@@ -108,8 +110,8 @@ public class Main extends Application {
 	health.setTranslateY(10);
 	coinLabel = new Label("Coins: " + level.getCoin());
 	coinLabel.setFont(new Font("Arial", 20));
-        scoreLabel = new Label("Score: " + level.getScore());
-        scoreLabel.setFont(new Font("Arial", 20));
+	scoreLabel = new Label("Score: " + level.getScore());
+	scoreLabel.setFont(new Font("Arial", 20));
 	coinAndScore = new VBox(10);
 	coinAndScore.getChildren().addAll(coinLabel, scoreLabel);
 	coinAndScore.setTranslateX(10);
@@ -136,8 +138,8 @@ public class Main extends Application {
 	gameOptionsRoot.setCenter(gameOptionsBox);
 	gameOptionsRoot.setTop(gameOpTitle);
 	gameOptionsRoot.setAlignment(gameOpTitle, Pos.CENTER);
-        
-        //Game Over Root
+
+	//Game Over Root
 	VBox gameOverBox = addGameOverButtons(primaryStage);
 	gameOverBox.setAlignment(Pos.CENTER);
 	gameOverRoot = new BorderPane();
@@ -216,19 +218,29 @@ public class Main extends Application {
 	if (gameplay && !pause) {
 	    if (player.getHealth() == 0) {
 		//Platform.exit();
-                Text gameOver = new Text("Game Over \n Score:  " + level.getScore());
-                gameOver.setFont(Font.font("Arial", 40));
-                gameOverRoot.setTop(gameOver);
-                gameOverRoot.setAlignment(gameOver, Pos.CENTER);
+		Text gameOver = new Text("Game Over \n Score:  " + level.getScore());
+		gameOver.setFont(Font.font("Arial", 40));
+		gameOverRoot.setTop(gameOver);
+		gameOverRoot.setAlignment(gameOver, Pos.CENTER);
 		pStage.getScene().setRoot(gameOverRoot); //need to change this to next level
 		gameplay = false;
 	    }
-            
-	    if(level.getEnemiesLeft() <= 0){
-		level.increaseLevel();
-		level.increaseEnemies();
+
+	    if (level.getEnemiesLeft() <= 0) {
+		if (level.stairCreated() == false) {
+		    stair = new Stairs((int) scene.getWidth() - 65, (int) scene.getHeight() - 47);
+		    gameRoot.getChildren().add(stair);
+		    level.setStair(true);
+		} else {
+		    if (player.isColliding(stair)) {
+			level.increaseLevel();
+			level.increaseEnemies();
+			level.setStair(false);
+			gameRoot.getChildren().remove(stair);
+		    }
+		}
 	    }
-            
+
 	    if (isPressed(KeyCode.W)) {
 		player.setCharacterView(0, 183);
 		player.moveY(-3, scene.getHeight());
@@ -257,15 +269,15 @@ public class Main extends Application {
 		player.setCharacterView(0, player.getOffsetY());
 		characterShooting();
 	    }
-	    
-	    while(portalCount < level.getLevel()) {
+
+	    while (portalCount < level.getLevel()) {
 		createPortal();
-                player.toFront();
+		player.toFront();
 		portalCount++;
 	    }
-	    
-	    for(Portal portal : portals) {
-		if(portal.summon()) {
+
+	    for (Portal portal : portals) {
+		if (portal.summon()&&level.stairCreated()==false) {
 		    createEnemy(portal);
 		}
 	    }
@@ -346,11 +358,9 @@ public class Main extends Application {
 	    }
 	}
     }
-    
-    public void createPortal(){
-	Image image = new Image("file:src/Portal.png");
-	ImageView iv = new ImageView(image);
-	Portal portal = new Portal(iv, (int)scene.getWidth() - 36, (int)scene.getHeight() - 60);
+
+    public void createPortal() {
+	Portal portal = new Portal((int) scene.getWidth() - 36, (int) scene.getHeight() - 60);
 	portal.toBack();
 	gameRoot.getChildren().add(portal);
 	portals.add(portal);
@@ -393,19 +403,17 @@ public class Main extends Application {
     }
 
     public void createEnemy(Portal portal) {
-	Image image = new Image("file:src/Redies.png");
-	ImageView iv = new ImageView(image);
-	Enemy enemy = new Enemy(iv, portal.getX(), portal.getY(), 3, 1);
+	Enemy enemy = new Enemy(portal.getX(), portal.getY(), 3, 1, 66, 33);
 
 	gameRoot.getChildren().addAll(enemy, enemy.healthBarOutline, enemy.lostHealth, enemy.actualHealth);
-        coinAndScore.toFront();
-        coinLabel.toFront();
-        scoreLabel.toFront();
+	coinAndScore.toFront();
+	coinLabel.toFront();
+	scoreLabel.toFront();
 	enemies.add(enemy);
-        health.toFront();
-        healthBarOutline.toFront();
-        lostHealth.toFront();
-        actualHealth.toFront();
+	health.toFront();
+	healthBarOutline.toFront();
+	lostHealth.toFront();
+	actualHealth.toFront();
     }
 
     public void updateEnemy(Enemy enemy) {
@@ -419,7 +427,7 @@ public class Main extends Application {
 		actualHealth = new Rectangle(screenSize.getWidth() - 120, 10, player.getHealth() * 20, 21);
 		actualHealth.setFill(Color.GREEN);
 		gameRoot.getChildren().add(actualHealth);
-                actualHealth.toFront();
+		actualHealth.toFront();
 		hitTime = timeNow;
 	    }
 	}
@@ -463,7 +471,7 @@ public class Main extends Application {
 		enemy.moveY(1, scene.getHeight());
 	    }
 	}
-        
+
 	if (enemy.getHealth() == 0) {
 	    enemy.setAlive(false);
 	}
@@ -474,7 +482,7 @@ public class Main extends Application {
 	    level.coinUp(enemy);
 	    level.scoreUp(enemy);
 	    coinLabel.setText("Coins: " + level.getCoin());
-            scoreLabel.setText("Score: " + level.getScore());
+	    scoreLabel.setText("Score: " + level.getScore());
 	}
     }
 
@@ -487,12 +495,13 @@ public class Main extends Application {
 	projToRemove.clear();
 	enemies.clear();
 	enemToRemove.clear();
-        portals.clear();
-        portalCount = 0;
+	portals.clear();
+	portalCount = 0;
 	level.clearScore();
 	level.clearCoins();
+	level.setStair(false);
 	coinLabel.setText("Coins: " + level.getCoin());
-        scoreLabel.setText("Score: " + level.getScore());
+	scoreLabel.setText("Score: " + level.getScore());
 	gameRoot.getChildren().clear();
     }
 
@@ -505,16 +514,16 @@ public class Main extends Application {
 	Button startBtn = new Button("Start");
 	startBtn.setOnAction(e -> {
 	    pStage.getScene().setRoot(gameRoot);
-            level = new Level();
+	    level = new Level();
 	    player = new Character(charIV, (int) screenSize.getWidth() / 2, (int) screenSize.getHeight() / 2);
 	    gameRoot.getChildren().addAll(player, health, healthBarOutline, lostHealth, actualHealth, coinAndScore);
 	    coinAndScore.toFront();
-            coinLabel.toFront();
-            scoreLabel.toFront();
-            health.toFront();
-            healthBarOutline.toFront();
-            lostHealth.toFront();
-            actualHealth.toFront();
+	    coinLabel.toFront();
+	    scoreLabel.toFront();
+	    health.toFront();
+	    healthBarOutline.toFront();
+	    lostHealth.toFront();
+	    actualHealth.toFront();
 	    gameplay = true;
 	});
 
@@ -615,23 +624,23 @@ public class Main extends Application {
 	VBox vbox = new VBox();
 	vbox.setPadding(new Insets(15));
 	vbox.setSpacing(10);
-        
-        Button newBtn = new Button("New Game");
-        newBtn.setOnAction(e -> {
-            pStage.getScene().setRoot(gameRoot);
-            clearAll();
-            level = new Level();
-            actualHealth = new Rectangle(screenSize.getWidth() - 120, 10, 99, 21);
-            actualHealth.setFill(Color.GREEN);
-            player = new Character(charIV, (int)screenSize.getWidth() / 2, (int)screenSize.getHeight() / 2);
+
+	Button newBtn = new Button("New Game");
+	newBtn.setOnAction(e -> {
+	    pStage.getScene().setRoot(gameRoot);
+	    clearAll();
+	    level = new Level();
+	    actualHealth = new Rectangle(screenSize.getWidth() - 120, 10, 99, 21);
+	    actualHealth.setFill(Color.GREEN);
+	    player = new Character(charIV, (int) screenSize.getWidth() / 2, (int) screenSize.getHeight() / 2);
 	    gameRoot.getChildren().addAll(player, health, healthBarOutline, lostHealth, actualHealth, coinAndScore);
-            coinAndScore.toFront();
-            coinLabel.toFront();
-            scoreLabel.toFront();
-            health.toFront();
-            healthBarOutline.toFront();
-            lostHealth.toFront();
-            actualHealth.toFront();
+	    coinAndScore.toFront();
+	    coinLabel.toFront();
+	    scoreLabel.toFront();
+	    health.toFront();
+	    healthBarOutline.toFront();
+	    lostHealth.toFront();
+	    actualHealth.toFront();
 	    gameplay = true;
 	});
 
@@ -665,7 +674,7 @@ public class Main extends Application {
 		pStage.getScene().setRoot(gameOptionsRoot);
 	    });
 	});
-        
+
 	vbox.getChildren().addAll(newBtn, backBtn, exitBtn);
 	return vbox;
     }
