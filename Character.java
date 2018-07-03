@@ -116,6 +116,10 @@ public class Character extends Pane {
 	alive = health != 0;
 	return alive;
     }
+    
+    public boolean isColliding(Stairs stair){
+	return this.getBoundsInParent().intersects(stair.getBoundsInParent());
+    }
 
     public boolean leftColliding(List<Enemy> enemies) {
 	boolean collide = false;
