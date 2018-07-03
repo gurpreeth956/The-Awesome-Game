@@ -1,5 +1,6 @@
 import java.util.List;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 
@@ -16,8 +17,10 @@ public class Character extends Pane {
     int health = 5;
     boolean alive = true;
 
-    public Character(ImageView iv, int posX, int posY) {
-	this.iv = iv;
+    public Character(int posX, int posY) {
+	Image charImage = new Image("file:src/Greenies.png");
+	ImageView charIV = new ImageView(charImage);
+	this.iv = charIV;
 	this.iv.setViewport(new Rectangle2D(offsetX, offsetY, width, height));
 	this.setTranslateX(posX);
 	this.setTranslateY(posY);

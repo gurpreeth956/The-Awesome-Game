@@ -29,6 +29,7 @@ public class Main extends Application {
     Scene scene;
     static Pane gameRoot;
     static BorderPane menuRoot;
+    static BorderPane shopRoot;
     static BorderPane optionsRoot;
     static BorderPane gameOptionsRoot;
     static BorderPane gameOverRoot;
@@ -41,12 +42,12 @@ public class Main extends Application {
     Button noReturn = new Button("No");
 
     private final HashMap<KeyCode, Boolean> keys = new HashMap();
-    Image charImage = new Image("file:src/Greenies.png");
-    ImageView charIV = new ImageView(charImage);
-
+    
     Character player;
     Level level;
-    Stairs stair;
+    Stairs downstair;
+    Stairs upstair;
+    Stairs shopstair;
 
     private List<Projectile> projectiles = new ArrayList<>();
     private List<Projectile> projToRemove = new ArrayList<>();
@@ -116,6 +117,13 @@ public class Main extends Application {
 	coinAndScore.getChildren().addAll(coinLabel, scoreLabel);
 	coinAndScore.setTranslateX(10);
 	coinAndScore.setTranslateY(10);
+
+	//Shop Root here
+	shopRoot = new BorderPane();
+	upstair = new Stairs("up", (int) screenSize.getWidth(), (int) screenSize.getHeight());
+	shopstair = new Stairs("down", (int) screenSize.getWidth()-100, (int) screenSize.getHeight()-100);
+	player = new Character((int) screenSize.getWidth() / 2, (int) screenSize.getHeight() / 2);
+	shopRoot.getChildren().addAll(upstair,shopstair,player);
 
 	//Options Root
 	Text opTitle = new Text("Game Options");
@@ -225,18 +233,32 @@ public class Main extends Application {
 		pStage.getScene().setRoot(gameOverRoot); //need to change this to next level
 		gameplay = false;
 	    }
+	    
+	    if (level.shopping()) {
+		if (player.isColliding(shopstair)) {
+		    level.increaseLevel();
+		    level.increaseEnemies();
+		    level.setShopping(false);
+		    pStage.getScene().setRoot(gameRoot);
+		    shopRoot.getChildren().remove(shopstair);
+		}
+	    }
 
 	    if (level.getEnemiesLeft() <= 0) {
-		if (level.stairCreated() == false) {
-		    stair = new Stairs((int) scene.getWidth() - 65, (int) scene.getHeight() - 47);
-		    gameRoot.getChildren().add(stair);
-		    level.setStair(true);
+		if (level.shopping() == false) {
+		    downstair = new Stairs("down", (int) scene.getWidth() - 65, (int) scene.getHeight() - 47);
+		    gameRoot.getChildren().add(downstair);
+		    for(Enemy enemy:enemies){
+			gameRoot.getChildren().removeAll(enemy, enemy.actualHealth, enemy.lostHealth, enemy.healthBarOutline);
+		    }
+		    enemies.clear();
+		    enemToRemove.clear();
+		    level.setShopping(true);
 		} else {
-		    if (player.isColliding(stair)) {
-			level.increaseLevel();
-			level.increaseEnemies();
-			level.setStair(false);
-			gameRoot.getChildren().remove(stair);
+		    if (player.isColliding(downstair)) {
+			pStage.getScene().setRoot(shopRoot);
+			gameRoot.getChildren().remove(downstair);
+			//player = (Character)shopRoot.getChildren().get(2); Tried to make shop player the controlled player
 		    }
 		}
 	    }
@@ -277,7 +299,7 @@ public class Main extends Application {
 	    }
 
 	    for (Portal portal : portals) {
-		if (portal.summon()&&level.stairCreated()==false) {
+		if (portal.summon() && level.shopping() == false) {
 		    createEnemy(portal);
 		}
 	    }
@@ -499,7 +521,7 @@ public class Main extends Application {
 	portalCount = 0;
 	level.clearScore();
 	level.clearCoins();
-	level.setStair(false);
+	level.setShopping(false);
 	coinLabel.setText("Coins: " + level.getCoin());
 	scoreLabel.setText("Score: " + level.getScore());
 	gameRoot.getChildren().clear();
@@ -515,7 +537,7 @@ public class Main extends Application {
 	startBtn.setOnAction(e -> {
 	    pStage.getScene().setRoot(gameRoot);
 	    level = new Level();
-	    player = new Character(charIV, (int) screenSize.getWidth() / 2, (int) screenSize.getHeight() / 2);
+	    player = new Character((int) screenSize.getWidth() / 2, (int) screenSize.getHeight() / 2);
 	    gameRoot.getChildren().addAll(player, health, healthBarOutline, lostHealth, actualHealth, coinAndScore);
 	    coinAndScore.toFront();
 	    coinLabel.toFront();
@@ -632,7 +654,7 @@ public class Main extends Application {
 	    level = new Level();
 	    actualHealth = new Rectangle(screenSize.getWidth() - 120, 10, 99, 21);
 	    actualHealth.setFill(Color.GREEN);
-	    player = new Character(charIV, (int) screenSize.getWidth() / 2, (int) screenSize.getHeight() / 2);
+	    player = new Character((int) screenSize.getWidth() / 2, (int) screenSize.getHeight() / 2);
 	    gameRoot.getChildren().addAll(player, health, healthBarOutline, lostHealth, actualHealth, coinAndScore);
 	    coinAndScore.toFront();
 	    coinLabel.toFront();

@@ -7,7 +7,7 @@ public class Level {
     public static int enemiesLeft;
     public static int coins;
     public static int highScore;
-    static boolean stairsCreated;
+    static boolean shopping;
     
     public Level() {
 	currentLevel = 1;
@@ -60,11 +60,11 @@ public class Level {
 	coins = 0;
     }
     
-    public void setStair(boolean a){
-	stairsCreated = a;
+    public void setShopping(boolean a){
+	shopping = a;
     }
     
-    public static boolean stairCreated(){
-	return stairsCreated;
+    public static boolean shopping(){
+	return shopping;
     }
 }
