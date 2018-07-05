@@ -121,7 +121,7 @@ public class Main extends Application {
 	//Shop Root here
 	shopRoot = new BorderPane();
 	upstair = new Stairs("up", (int) screenSize.getWidth(), (int) screenSize.getHeight());
-	shopstair = new Stairs("down", (int) screenSize.getWidth()-100, (int) screenSize.getHeight()-100);
+	shopstair = new Stairs("shop", (int) screenSize.getWidth()-100, (int) screenSize.getHeight()-100);
 	player = new Character((int) screenSize.getWidth() / 2, (int) screenSize.getHeight() / 2);
 	shopRoot.getChildren().addAll(upstair,shopstair,player);
 
