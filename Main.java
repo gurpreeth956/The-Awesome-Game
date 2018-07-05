@@ -119,8 +119,8 @@ public class Main extends Application {
 
 	//Shop Root here
 	shopRoot = new BorderPane();
-	upstair = new Stairs("up", (int) screenSize.getWidth(), (int) screenSize.getHeight());
-	shopstair = new Stairs("down", (int) screenSize.getWidth()-100, (int) screenSize.getHeight()-100);
+	upstair = new Stairs("up", (int)screenSize.getWidth(), (int)screenSize.getHeight());
+	shopstair = new Stairs("down", (int)screenSize.getWidth() - 100, (int)screenSize.getHeight() - 100);
 	player = new Character((int) screenSize.getWidth() / 2, (int) screenSize.getHeight() / 2);
 	shopRoot.getChildren().addAll(upstair,shopstair,player);
 
@@ -224,7 +224,6 @@ public class Main extends Application {
 	long time = timeNow - pauseTime;
 	if (gameplay && !pause) {
 	    if (player.getHealth() == 0) {
-		//Platform.exit();
 		Text gameOver = new Text("Game Over \n Score:  " + level.getScore());
 		gameOver.setFont(Font.font("Arial", 40));
 		gameOverRoot.setTop(gameOver);
@@ -245,7 +244,7 @@ public class Main extends Application {
 
 	    if (level.getEnemiesLeft() <= 0) {
 		if (level.shopping() == false) {
-		    downstair = new Stairs("down", (int) scene.getWidth() - 65, (int) scene.getHeight() - 47);
+		    downstair = new Stairs("down", (int)scene.getWidth() - 65, (int)scene.getHeight() - 47);
 		    gameRoot.getChildren().add(downstair);
 		    for(Enemy enemy:enemies){
 			gameRoot.getChildren().removeAll(enemy, enemy.actualHealth, enemy.lostHealth, enemy.healthBarOutline);
@@ -391,9 +390,8 @@ public class Main extends Application {
 	Projectile proj = new Projectile(player.getX() + 28, player.getY() + 16);
 	proj.setVelocityX(x);
 	proj.setVelocityY(y);
-
+        proj.toBack();
 	gameRoot.getChildren().addAll(proj);
-	proj.toBack();
 	projectiles.add(proj);
     }
 
@@ -423,7 +421,6 @@ public class Main extends Application {
 
     public void createEnemy(Portal portal) {
 	Enemy enemy = new Enemy(portal.getX(), portal.getY(), 3, 1, 66, 33);
-
 	gameRoot.getChildren().addAll(enemy, enemy.healthBarOutline, enemy.lostHealth, enemy.actualHealth);
 	coinAndScore.toFront();
 	coinLabel.toFront();
@@ -451,7 +448,7 @@ public class Main extends Application {
 	    }
 	}
 
-	if (!enemy.playerColliding(player)) {//&&!enemy.enemyColliding(enemies)) { //need to fix this
+	if (!enemy.playerColliding(player)) { //&&!enemy.enemyColliding(enemies)) { //need to fix this
 	    if (player.getX() > enemy.getX() && player.getY() == enemy.getY()) { //right
 		enemy.setCharacterView(0, 61);
 		enemy.moveX(1, scene.getWidth());
