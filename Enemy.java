@@ -25,8 +25,8 @@ public class Enemy extends Pane {
     int health;
 
     public Enemy(int posX, int posY, int health, int coin, int width, int height) {
-	Image image = new Image("file:src/Redies.png");
-	ImageView iv = new ImageView(image);
+	Image enemyImage = new Image("file:src/Redies.png");
+	ImageView iv = new ImageView(enemyImage);
         this.iv = iv;
         this.iv.setViewport(new Rectangle2D(offsetX, offsetY, width, height));
         this.setTranslateX(posX);
@@ -169,5 +169,4 @@ public class Enemy extends Pane {
     public int getScore() {
 	return score;
     }
-    
 }

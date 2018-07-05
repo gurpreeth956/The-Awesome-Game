@@ -1,4 +1,3 @@
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,8 +15,8 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+//import javafx.scene.image.Image;
+//import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.shape.Rectangle;
@@ -86,7 +85,7 @@ public class Main extends Application {
 	menuRoot.setId("menu");
 	menuRoot.setCenter(vbox);
 	menuRoot.setTop(title);
-	menuRoot.setAlignment(title, Pos.CENTER);
+	BorderPane.setAlignment(title, Pos.CENTER);
 
 	scene = new Scene(menuRoot, screenSize.getWidth(), screenSize.getHeight());
 	scene.getStylesheets().addAll(this.getClass().getResource("Menu.css").toExternalForm());
@@ -109,9 +108,9 @@ public class Main extends Application {
 	health.getChildren().addAll(healthLabel);
 	health.setTranslateX(screenSize.getWidth() - 200);
 	health.setTranslateY(10);
-	coinLabel = new Label("Coins: " + level.getCoin());
+	coinLabel = new Label("Coins: ");
 	coinLabel.setFont(new Font("Arial", 20));
-	scoreLabel = new Label("Score: " + level.getScore());
+	scoreLabel = new Label("Score: ");
 	scoreLabel.setFont(new Font("Arial", 20));
 	coinAndScore = new VBox(10);
 	coinAndScore.getChildren().addAll(coinLabel, scoreLabel);
@@ -134,7 +133,7 @@ public class Main extends Application {
 	optionsRoot.setId("menu");
 	optionsRoot.setCenter(optionsBox);
 	optionsRoot.setTop(opTitle);
-	optionsRoot.setAlignment(opTitle, Pos.CENTER);
+	BorderPane.setAlignment(opTitle, Pos.CENTER);
 
 	//Game Options Root
 	Text gameOpTitle = new Text("Game Options");
@@ -145,7 +144,7 @@ public class Main extends Application {
 	gameOptionsRoot.setId("menu");
 	gameOptionsRoot.setCenter(gameOptionsBox);
 	gameOptionsRoot.setTop(gameOpTitle);
-	gameOptionsRoot.setAlignment(gameOpTitle, Pos.CENTER);
+	BorderPane.setAlignment(gameOpTitle, Pos.CENTER);
 
 	//Game Over Root
 	VBox gameOverBox = addGameOverButtons(primaryStage);
@@ -225,11 +224,10 @@ public class Main extends Application {
 	long time = timeNow - pauseTime;
 	if (gameplay && !pause) {
 	    if (player.getHealth() == 0) {
-		//Platform.exit();
 		Text gameOver = new Text("Game Over \n Score:  " + level.getScore());
 		gameOver.setFont(Font.font("Arial", 40));
 		gameOverRoot.setTop(gameOver);
-		gameOverRoot.setAlignment(gameOver, Pos.CENTER);
+		BorderPane.setAlignment(gameOver, Pos.CENTER);
 		pStage.getScene().setRoot(gameOverRoot); //need to change this to next level
 		gameplay = false;
 	    }
@@ -237,7 +235,6 @@ public class Main extends Application {
 	    if (level.shopping()) {
 		if (player.isColliding(shopstair)) {
 		    level.increaseLevel();
-		    level.increaseEnemies();
 		    level.setShopping(false);
 		    pStage.getScene().setRoot(gameRoot);
 		    shopRoot.getChildren().remove(shopstair);
@@ -245,21 +242,20 @@ public class Main extends Application {
 	    }
 
 	    if (level.getEnemiesLeft() <= 0) {
-		if (level.shopping() == false) {
-		    downstair = new Stairs("down", (int) scene.getWidth() - 65, (int) scene.getHeight() - 47);
+		if (!level.shopping()) {
+		    downstair = new Stairs("down", (int)scene.getWidth() - 65, (int)scene.getHeight() - 47);
 		    gameRoot.getChildren().add(downstair);
-		    for(Enemy enemy:enemies){
+		    for (Enemy enemy:enemies) {
 			gameRoot.getChildren().removeAll(enemy, enemy.actualHealth, enemy.lostHealth, enemy.healthBarOutline);
 		    }
 		    enemies.clear();
 		    enemToRemove.clear();
 		    level.setShopping(true);
-		} else {
-		    if (player.isColliding(downstair)) {
-			pStage.getScene().setRoot(shopRoot);
-			gameRoot.getChildren().remove(downstair);
-			//player = (Character)shopRoot.getChildren().get(2); Tried to make shop player the controlled player
-		    }
+		}
+                if (player.isColliding(downstair)) {
+                    pStage.getScene().setRoot(shopRoot);
+                    gameRoot.getChildren().remove(downstair);
+                    //player = (Character)shopRoot.getChildren().get(2); Tried to make shop player the controlled player 
 		}
 	    }
 
@@ -299,7 +295,7 @@ public class Main extends Application {
 	    }
 
 	    for (Portal portal : portals) {
-		if (portal.summon() && level.shopping() == false) {
+		if (portal.summon() && !level.shopping() && level.getEnemiesSpawned() < level.getEnemiesToBeat()) {
 		    createEnemy(portal);
 		}
 	    }
@@ -382,21 +378,18 @@ public class Main extends Application {
     }
 
     public void createPortal() {
-	Portal portal = new Portal((int) scene.getWidth() - 36, (int) scene.getHeight() - 60);
-	portal.toBack();
+	Portal portal = new Portal((int)scene.getWidth() - 36, (int)scene.getHeight() - 60);
 	gameRoot.getChildren().add(portal);
+        portal.toBack();
 	portals.add(portal);
     }
 
     public void createProjectile(int x, int y) {
-	Image image = new Image("file:src/Shot.png");
-	ImageView iv = new ImageView(image);
-	Projectile proj = new Projectile(iv, player.getX() + 28, player.getY() + 16);
+	Projectile proj = new Projectile(player.getX() + 28, player.getY() + 16);
 	proj.setVelocityX(x);
 	proj.setVelocityY(y);
-
 	gameRoot.getChildren().addAll(proj);
-	proj.toBack();
+        proj.toBack();
 	projectiles.add(proj);
     }
 
@@ -426,7 +419,6 @@ public class Main extends Application {
 
     public void createEnemy(Portal portal) {
 	Enemy enemy = new Enemy(portal.getX(), portal.getY(), 3, 1, 66, 33);
-
 	gameRoot.getChildren().addAll(enemy, enemy.healthBarOutline, enemy.lostHealth, enemy.actualHealth);
 	coinAndScore.toFront();
 	coinLabel.toFront();
@@ -436,6 +428,7 @@ public class Main extends Application {
 	healthBarOutline.toFront();
 	lostHealth.toFront();
 	actualHealth.toFront();
+        level.enemySpawned();
     }
 
     public void updateEnemy(Enemy enemy) {
@@ -454,7 +447,7 @@ public class Main extends Application {
 	    }
 	}
 
-	if (!enemy.playerColliding(player)) {//&&!enemy.enemyColliding(enemies)) { //need to fix this
+	if (!enemy.playerColliding(player)) { //&&!enemy.enemyColliding(enemies)) { //need to fix this
 	    if (player.getX() > enemy.getX() && player.getY() == enemy.getY()) { //right
 		enemy.setCharacterView(0, 61);
 		enemy.moveX(1, scene.getWidth());

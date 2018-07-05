@@ -1,4 +1,3 @@
-
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -16,12 +15,12 @@ public class Stairs extends Pane {
 
     public Stairs(String level, int screenWidth, int screenHeight) {
 	if (level.equals("down")) {
-	    Image image = new Image("file:src/Downstairs.png");
-	    ImageView iv = new ImageView(image);
+	    Image downImage = new Image("file:src/Downstairs.png");
+	    ImageView iv = new ImageView(downImage);
 	    this.iv = iv;
 	    this.iv.setViewport(new Rectangle2D(offsetX, offsetY, this.width, this.height));
-	    this.x = (int) (Math.random() * screenWidth);
-	    this.y = (int) (Math.random() * screenHeight);
+	    this.x = (int)(Math.random() * screenWidth);
+	    this.y = (int)(Math.random() * screenHeight);
 	    this.setTranslateX(this.x);
 	    this.setTranslateY(this.y);
 	    this.getChildren().addAll(iv);
@@ -36,8 +35,8 @@ public class Stairs extends Pane {
 	    this.setTranslateY(this.y);
 	    this.getChildren().addAll(iv);
 	} else {
-	    Image image = new Image("file:src/Upstairs.png");
-	    ImageView iv = new ImageView(image);
+	    Image upImage = new Image("file:src/Upstairs.png");
+	    ImageView iv = new ImageView(upImage);
 	    this.iv = iv;
 	    this.iv.setViewport(new Rectangle2D(offsetX, offsetY, this.width, this.height));
 	    this.x = screenWidth / 2 - 65;
@@ -47,5 +46,4 @@ public class Stairs extends Pane {
 	    this.getChildren().addAll(iv);
 	}
     }
-
 }

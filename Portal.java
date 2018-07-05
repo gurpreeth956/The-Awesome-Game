@@ -14,8 +14,8 @@ public class Portal extends Pane {
     int y; //Portal yPos
     
     public Portal(int screenWidth, int screenHeight) {
-	Image image = new Image("file:src/Portal.png");
-	ImageView iv = new ImageView(image);
+	Image portImage = new Image("file:src/Portal.png");
+	ImageView iv = new ImageView(portImage);
 	this.iv = iv;
 	this.iv.setViewport(new Rectangle2D(offsetX, offsetY, this.width, this.height));
 	this.x = (int)(Math.random() * screenWidth);
