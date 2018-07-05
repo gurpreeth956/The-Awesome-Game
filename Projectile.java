@@ -19,8 +19,8 @@ public class Projectile extends Pane {
     
     public Projectile(int posX, int posY) {
         Image projImage = new Image("file:src/Shot.png");
-	ImageView iv = new ImageView(projImage);
-        this.iv = iv;
+	ImageView projIV = new ImageView(projImage);
+        this.iv = projIV;
         this.iv.setViewport(new Rectangle2D(offsetX, offsetY, width, height));
         this.setTranslateX(posX);
         this.setTranslateY(posY);

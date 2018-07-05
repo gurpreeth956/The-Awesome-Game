@@ -26,8 +26,8 @@ public class Enemy extends Pane {
 
     public Enemy(int posX, int posY, int health, int coin, int width, int height) {
 	Image enemyImage = new Image("file:src/Redies.png");
-	ImageView iv = new ImageView(enemyImage);
-        this.iv = iv;
+	ImageView enemyIV = new ImageView(enemyImage);
+        this.iv = enemyIV;
         this.iv.setViewport(new Rectangle2D(offsetX, offsetY, width, height));
         this.setTranslateX(posX);
         this.setTranslateY(posY);
@@ -153,9 +153,9 @@ public class Enemy extends Pane {
     
     public boolean enemyColliding(List<Enemy> enemies) {
 	boolean colliding = false;
-	for(Enemy enemy : enemies){
-	    if(this.x == enemy.x && this.y == enemy.y) continue;
-	    if(this.getBoundsInParent().intersects(enemy.getBoundsInParent())){
+	for (Enemy enemy : enemies){
+	    if (this.x == enemy.x && this.y == enemy.y) continue;
+	    if (this.getBoundsInParent().intersects(enemy.getBoundsInParent())){
 		colliding = true;
 	    }
 	}
