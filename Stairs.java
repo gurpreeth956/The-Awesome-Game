@@ -19,8 +19,8 @@ public class Stairs extends Pane {
 	    ImageView iv = new ImageView(downImage);
 	    this.iv = iv;
 	    this.iv.setViewport(new Rectangle2D(offsetX, offsetY, this.width, this.height));
-	    this.x = (int) (Math.random() * screenWidth);
-	    this.y = (int) (Math.random() * screenHeight);
+	    this.x = (int)(Math.random() * screenWidth);
+	    this.y = (int)(Math.random() * screenHeight);
 	    this.setTranslateX(this.x);
 	    this.setTranslateY(this.y);
 	    this.getChildren().addAll(iv);
@@ -29,8 +29,8 @@ public class Stairs extends Pane {
 	    ImageView iv = new ImageView(upImage);
 	    this.iv = iv;
 	    this.iv.setViewport(new Rectangle2D(offsetX, offsetY, this.width, this.height));
-	    this.x = screenWidth/2-65;
-	    this.y = screenHeight/2-47;
+	    this.x = screenWidth / 2 - 65;
+	    this.y = screenHeight / 2 - 47;
 	    this.setTranslateX(this.x);
 	    this.setTranslateY(this.y);
 	    this.getChildren().addAll(iv);
