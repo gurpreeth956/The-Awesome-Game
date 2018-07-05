@@ -1,4 +1,3 @@
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -382,16 +381,14 @@ public class Main extends Application {
     }
 
     public void createPortal() {
-	Portal portal = new Portal((int) scene.getWidth() - 36, (int) scene.getHeight() - 60);
+	Portal portal = new Portal((int)scene.getWidth() - 36, (int)scene.getHeight() - 60);
 	portal.toBack();
 	gameRoot.getChildren().add(portal);
 	portals.add(portal);
     }
 
     public void createProjectile(int x, int y) {
-	Image image = new Image("file:src/Shot.png");
-	ImageView iv = new ImageView(image);
-	Projectile proj = new Projectile(iv, player.getX() + 28, player.getY() + 16);
+	Projectile proj = new Projectile(player.getX() + 28, player.getY() + 16);
 	proj.setVelocityX(x);
 	proj.setVelocityY(y);
 
