@@ -169,5 +169,4 @@ public class Enemy extends Pane {
     public int getScore() {
 	return score;
     }
-    
 }
