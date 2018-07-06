@@ -127,7 +127,7 @@ public class Character extends Pane {
     public boolean leftColliding(List<Enemy> enemies) {
 	boolean collide = false;
 	for (Enemy enemy : enemies) {
-	    if(this.getBoundsInParent().intersects(enemy.getBoundsInParent()) && enemy.x < this.x){
+	    if (this.getBoundsInParent().intersects(enemy.getBoundsInParent()) && enemy.x < this.x){
 		collide = true;
 	    }
 	}
@@ -137,7 +137,7 @@ public class Character extends Pane {
     public boolean rightColliding(List<Enemy> enemies) {
 	boolean collide = false;
 	for (Enemy enemy : enemies) {
-	    if(this.getBoundsInParent().intersects(enemy.getBoundsInParent()) && enemy.x > this.x){
+	    if (this.getBoundsInParent().intersects(enemy.getBoundsInParent()) && enemy.x > this.x){
 		collide = true;
 	    }
 	}
@@ -147,7 +147,7 @@ public class Character extends Pane {
     public boolean upColliding(List<Enemy> enemies) {
 	boolean collide = false;
 	for (Enemy enemy : enemies) {
-	    if(this.getBoundsInParent().intersects(enemy.getBoundsInParent()) && enemy.y < this.y){
+	    if (this.getBoundsInParent().intersects(enemy.getBoundsInParent()) && enemy.y < this.y){
 		collide = true;
 	    }
 	}
@@ -157,7 +157,7 @@ public class Character extends Pane {
     public boolean downColliding(List<Enemy> enemies) {
 	boolean collide = false;
 	for (Enemy enemy : enemies) {
-	    if(this.getBoundsInParent().intersects(enemy.getBoundsInParent()) && enemy.y > this.y){
+	    if (this.getBoundsInParent().intersects(enemy.getBoundsInParent()) && enemy.y > this.y){
 		collide = true;
 	    }
 	}

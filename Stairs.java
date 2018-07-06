@@ -16,8 +16,8 @@ public class Stairs extends Pane {
     public Stairs(String level, int screenWidth, int screenHeight) {
 	if (level.equals("down")) {
 	    Image downImage = new Image("file:src/Downstairs.png");
-	    ImageView iv = new ImageView(downImage);
-	    this.iv = iv;
+	    ImageView downIV = new ImageView(downImage);
+	    this.iv = downIV;
 	    this.iv.setViewport(new Rectangle2D(offsetX, offsetY, this.width, this.height));
 	    this.x = screenWidth / 2 - 65;
 	    this.y = screenHeight / 2 - 47;
@@ -36,8 +36,8 @@ public class Stairs extends Pane {
 	    this.getChildren().addAll(iv);
 	} else {
 	    Image upImage = new Image("file:src/Upstairs.png");
-	    ImageView iv = new ImageView(upImage);
-	    this.iv = iv;
+	    ImageView upIV = new ImageView(upImage);
+	    this.iv = upIV;
 	    this.iv.setViewport(new Rectangle2D(offsetX, offsetY, this.width, this.height));
 	    this.x = screenWidth / 2 - 65;
 	    this.y = screenHeight / 2 - 47;
