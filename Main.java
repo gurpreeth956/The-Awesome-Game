@@ -1,4 +1,3 @@
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -70,6 +69,8 @@ public class Main extends Application {
     
     boolean gameplay = false;
     boolean pause = false;
+    boolean couldGoToShop = true;
+    boolean couldGoToMap = false;
     long pauseTime = 0;
     
     @Override
@@ -229,8 +230,14 @@ public class Main extends Application {
 		gameplay = false;
 	    }
 	    
-	    if (level.shopping()) {
+	    if (level.isShopping()) {
 		if (player.isColliding(shopstair)) {
+                    if (couldGoToMap) {
+                        shopRoot.getChildren().remove(player);
+                        gameRoot.getChildren().add(player);
+                        couldGoToShop = true;
+                        couldGoToMap = false;
+                    }
 		    level.increaseLevel();
 		    level.setShopping(false);
 		    pStage.getScene().setRoot(gameRoot);
@@ -238,18 +245,19 @@ public class Main extends Application {
 	    }
 	    
 	    if (level.getEnemiesLeft() <= 0) {
-		if (!level.shopping()) {
+		if (!level.isShopping()) {
 		    downstair = new Stairs("down", (int) scene.getWidth() - 65, (int) scene.getHeight() - 47);
 		    gameRoot.getChildren().add(downstair);
-		    for (Enemy enemy : enemies) {
-			gameRoot.getChildren().removeAll(enemy, enemy.actualHealth, enemy.lostHealth, enemy.healthBarOutline);
-		    }
-		    enemies.clear();
-		    enemToRemove.clear();
 		    level.setShopping(true);
 		}
 		if (player.isColliding(downstair)) {
 		    pStage.getScene().setRoot(shopRoot);
+                    if (couldGoToShop) {
+                        gameRoot.getChildren().remove(player);
+                        shopRoot.getChildren().add(player);
+                        couldGoToShop = false;
+                        couldGoToMap = true;
+                    }
 		    gameRoot.getChildren().remove(downstair);
 		}
 	    }
@@ -290,7 +298,7 @@ public class Main extends Application {
 	    }
 	    
 	    for (Portal portal : portals) {
-		if (portal.summon() && !level.shopping() && level.getEnemiesSpawned() < level.getEnemiesToBeat()) {
+		if (portal.summon() && !level.isShopping() && level.getEnemiesSpawned() < level.getEnemiesToBeat()) {
 		    createEnemy(portal);
 		}
 	    }
@@ -326,7 +334,7 @@ public class Main extends Application {
 	} else if (pause) {
 	    if (time < 0 || time > 150) {
 		if (isPressed(KeyCode.ESCAPE)) {
-		    if (!level.shopping()) {
+		    if (!level.isShopping()) {
 			pStage.getScene().setRoot(gameRoot);
 		    } else {
 			pStage.getScene().setRoot(shopRoot);
@@ -531,7 +539,7 @@ public class Main extends Application {
 	    level = new Level();
 	    player = new Character((int) screenSize.getWidth() / 2, (int) screenSize.getHeight() / 2);
 	    gameRoot.getChildren().addAll(player, health, healthBarOutline, lostHealth, actualHealth, coinAndScore);
-	    shopRoot.getChildren().addAll(upstair, shopstair, player);
+            shopRoot.getChildren().addAll(upstair, shopstair);
 	    coinAndScore.toFront();
 	    coinLabel.toFront();
 	    scoreLabel.toFront();
@@ -596,7 +604,7 @@ public class Main extends Application {
 	
 	Button gameBtn = new Button("Back to Game");
 	gameBtn.setOnAction(e -> {
-	    if (!level.shopping()) {
+	    if (!level.isShopping()) {
 		pStage.getScene().setRoot(gameRoot);
 	    } else {
 		pStage.getScene().setRoot(shopRoot);
