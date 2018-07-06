@@ -548,6 +548,8 @@ public class Main extends Application {
 	    lostHealth.toFront();
 	    actualHealth.toFront();
 	    gameplay = true;
+            couldGoToShop = true;
+            couldGoToMap = false;
 	});
 	
 	Button optionsBtn = new Button("Options");
@@ -619,6 +621,10 @@ public class Main extends Application {
 	    yesReturn.setOnAction(eY -> {
 		pStage.getScene().setRoot(menuRoot);
                 shopRoot.getChildren().removeAll(upstair, shopstair);
+                if (couldGoToMap) {
+                    shopRoot.getChildren().remove(player);
+                    couldGoToMap = false;
+                }
 		clearAll();
                 
 		actualHealth = new Rectangle(screenSize.getWidth() - 120, 10, 99, 21);
@@ -658,6 +664,7 @@ public class Main extends Application {
 	newBtn.setOnAction(e -> {
 	    pStage.getScene().setRoot(gameRoot);
             shopRoot.getChildren().removeAll(upstair, shopstair);
+            if (couldGoToMap) shopRoot.getChildren().remove(player);
 	    clearAll();
             
 	    level = new Level();
@@ -674,6 +681,8 @@ public class Main extends Application {
 	    lostHealth.toFront();
 	    actualHealth.toFront();
 	    gameplay = true;
+            couldGoToShop = true;
+            couldGoToMap = false;
 	});
 	
 	Button backBtn = new Button("Back to Menu");
