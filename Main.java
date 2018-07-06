@@ -618,7 +618,9 @@ public class Main extends Application {
 	    
 	    yesReturn.setOnAction(eY -> {
 		pStage.getScene().setRoot(menuRoot);
+                shopRoot.getChildren().removeAll(upstair, shopstair);
 		clearAll();
+                
 		actualHealth = new Rectangle(screenSize.getWidth() - 120, 10, 99, 21);
 		actualHealth.setFill(Color.GREEN);
 		gameplay = false;
@@ -655,12 +657,15 @@ public class Main extends Application {
 	Button newBtn = new Button("New Game");
 	newBtn.setOnAction(e -> {
 	    pStage.getScene().setRoot(gameRoot);
+            shopRoot.getChildren().removeAll(upstair, shopstair);
 	    clearAll();
+            
 	    level = new Level();
 	    actualHealth = new Rectangle(screenSize.getWidth() - 120, 10, 99, 21);
 	    actualHealth.setFill(Color.GREEN);
 	    player = new Character((int) screenSize.getWidth() / 2, (int) screenSize.getHeight() / 2);
 	    gameRoot.getChildren().addAll(player, health, healthBarOutline, lostHealth, actualHealth, coinAndScore);
+            shopRoot.getChildren().addAll(upstair, shopstair);
 	    coinAndScore.toFront();
 	    coinLabel.toFront();
 	    scoreLabel.toFront();
@@ -677,7 +682,9 @@ public class Main extends Application {
 	    
 	    yesReturn.setOnAction(eY -> {
 		pStage.getScene().setRoot(menuRoot);
+                shopRoot.getChildren().removeAll(upstair, shopstair);
 		clearAll();
+                
 		actualHealth = new Rectangle(screenSize.getWidth() - 120, 10, 99, 21);
 		actualHealth.setFill(Color.GREEN);
 		gameplay = false;
