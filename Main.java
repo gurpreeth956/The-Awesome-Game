@@ -42,9 +42,9 @@ public class Main extends Application {
     
     Character player;
     Level level;
-    Stairs downstair;
-    Stairs upstair;
-    Stairs shopstair;
+    Stairs toShopStair;
+    Stairs decUpStair;
+    Stairs toGameStair;
     
     private List<Projectile> projectiles = new ArrayList<>();
     private List<Projectile> projToRemove = new ArrayList<>();
@@ -100,9 +100,9 @@ public class Main extends Application {
 	healthBarOutline = new Rectangle(screenSize.getWidth() - 121, 9, 101, 22);
 	healthBarOutline.setFill(Color.TRANSPARENT);
 	healthBarOutline.setStroke(Color.BLACK);
-	lostHealth = new Rectangle(screenSize.getWidth() - 120, 10, 99, 21);
+	lostHealth = new Rectangle(screenSize.getWidth() - 120, 10, 99, 22);
 	lostHealth.setFill(Color.RED);
-	actualHealth = new Rectangle(screenSize.getWidth() - 120, 10, 99, 21);
+	actualHealth = new Rectangle(screenSize.getWidth() - 120, 10, 99, 22);
 	actualHealth.setFill(Color.GREEN);
 	health = new VBox(10);
 	health.getChildren().addAll(healthLabel);
@@ -119,8 +119,8 @@ public class Main extends Application {
 
 	//Shop Root here
 	shopRoot = new BorderPane();
-	upstair = new Stairs("up", (int) screenSize.getWidth(), (int) screenSize.getHeight());
-	shopstair = new Stairs("shop", (int) screenSize.getWidth() - 100, (int) screenSize.getHeight() - 100);
+	decUpStair = new Stairs("up", (int) screenSize.getWidth(), (int) screenSize.getHeight());
+	toGameStair = new Stairs("shop", (int) screenSize.getWidth() - 100, (int) screenSize.getHeight() - 100);
 
 	//Options Root
 	Text opTitle = new Text("Game Options");
@@ -226,12 +226,12 @@ public class Main extends Application {
 		gameOver.setFont(Font.font("Arial", 40));
 		gameOverRoot.setTop(gameOver);
 		BorderPane.setAlignment(gameOver, Pos.CENTER);
-		pStage.getScene().setRoot(gameOverRoot); //need to change this to next level
+		pStage.getScene().setRoot(gameOverRoot);
 		gameplay = false;
 	    }
 	    
 	    if (level.isShopping()) {
-		if (player.isColliding(shopstair)) {
+		if (player.isColliding(toGameStair) && couldGoToMap) {
                     if (couldGoToMap) {
                         shopRoot.getChildren().remove(player);
                         gameRoot.getChildren().add(player);
@@ -242,15 +242,17 @@ public class Main extends Application {
 		    level.setShopping(false);
 		    pStage.getScene().setRoot(gameRoot);
 		}
+                
+                //need to add here a way to go to next level if player does not want to go to shop!!!
 	    }
 	    
 	    if (level.getEnemiesLeft() <= 0) {
 		if (!level.isShopping()) {
-		    downstair = new Stairs("down", (int) scene.getWidth() - 65, (int) scene.getHeight() - 47);
-		    gameRoot.getChildren().add(downstair);
+		    toShopStair = new Stairs("down", (int) scene.getWidth() - 65, (int) scene.getHeight() - 47);
+		    gameRoot.getChildren().add(toShopStair);
 		    level.setShopping(true);
 		}
-		if (player.isColliding(downstair)) {
+		if (player.isColliding(toShopStair)) {
 		    pStage.getScene().setRoot(shopRoot);
                     if (couldGoToShop) {
                         gameRoot.getChildren().remove(player);
@@ -258,7 +260,7 @@ public class Main extends Application {
                         couldGoToShop = false;
                         couldGoToMap = true;
                     }
-		    gameRoot.getChildren().remove(downstair);
+		    gameRoot.getChildren().remove(toShopStair);
 		}
 	    }
 	    
@@ -446,7 +448,7 @@ public class Main extends Application {
 	    if (time < 0 || time > 2000) {
 		player.hit();
 		gameRoot.getChildren().remove(actualHealth);
-		actualHealth = new Rectangle(screenSize.getWidth() - 120, 10, player.getHealth() * 20, 21);
+		actualHealth = new Rectangle(screenSize.getWidth() - 120, 10, player.getHealth() * 20, 22);
 		actualHealth.setFill(Color.GREEN);
 		gameRoot.getChildren().add(actualHealth);
 		actualHealth.toFront();
@@ -539,7 +541,7 @@ public class Main extends Application {
 	    level = new Level();
 	    player = new Character((int) screenSize.getWidth() / 2, (int) screenSize.getHeight() / 2);
 	    gameRoot.getChildren().addAll(player, health, healthBarOutline, lostHealth, actualHealth, coinAndScore);
-            shopRoot.getChildren().addAll(upstair, shopstair);
+            shopRoot.getChildren().addAll(decUpStair, toGameStair);
 	    coinAndScore.toFront();
 	    coinLabel.toFront();
 	    scoreLabel.toFront();
@@ -548,6 +550,8 @@ public class Main extends Application {
 	    lostHealth.toFront();
 	    actualHealth.toFront();
 	    gameplay = true;
+            couldGoToShop = true;
+            couldGoToMap = false;
 	});
 	
 	Button optionsBtn = new Button("Options");
@@ -618,10 +622,14 @@ public class Main extends Application {
 	    
 	    yesReturn.setOnAction(eY -> {
 		pStage.getScene().setRoot(menuRoot);
-                shopRoot.getChildren().removeAll(upstair, shopstair);
+                shopRoot.getChildren().removeAll(decUpStair, toGameStair);
+                if (couldGoToMap) {
+                    shopRoot.getChildren().remove(player);
+                    couldGoToMap = false;
+                }
 		clearAll();
                 
-		actualHealth = new Rectangle(screenSize.getWidth() - 120, 10, 99, 21);
+		actualHealth = new Rectangle(screenSize.getWidth() - 120, 10, 99, 22);
 		actualHealth.setFill(Color.GREEN);
 		gameplay = false;
 		pause = false;
@@ -657,15 +665,16 @@ public class Main extends Application {
 	Button newBtn = new Button("New Game");
 	newBtn.setOnAction(e -> {
 	    pStage.getScene().setRoot(gameRoot);
-            shopRoot.getChildren().removeAll(upstair, shopstair);
+            shopRoot.getChildren().removeAll(decUpStair, toGameStair);
+            if (couldGoToMap) shopRoot.getChildren().remove(player);
 	    clearAll();
             
 	    level = new Level();
-	    actualHealth = new Rectangle(screenSize.getWidth() - 120, 10, 99, 21);
+	    actualHealth = new Rectangle(screenSize.getWidth() - 120, 10, 99, 22);
 	    actualHealth.setFill(Color.GREEN);
 	    player = new Character((int) screenSize.getWidth() / 2, (int) screenSize.getHeight() / 2);
 	    gameRoot.getChildren().addAll(player, health, healthBarOutline, lostHealth, actualHealth, coinAndScore);
-            shopRoot.getChildren().addAll(upstair, shopstair);
+            shopRoot.getChildren().addAll(decUpStair, toGameStair);
 	    coinAndScore.toFront();
 	    coinLabel.toFront();
 	    scoreLabel.toFront();
@@ -674,6 +683,8 @@ public class Main extends Application {
 	    lostHealth.toFront();
 	    actualHealth.toFront();
 	    gameplay = true;
+            couldGoToShop = true;
+            couldGoToMap = false;
 	});
 	
 	Button backBtn = new Button("Back to Menu");
@@ -682,10 +693,10 @@ public class Main extends Application {
 	    
 	    yesReturn.setOnAction(eY -> {
 		pStage.getScene().setRoot(menuRoot);
-                shopRoot.getChildren().removeAll(upstair, shopstair);
+                shopRoot.getChildren().removeAll(decUpStair, toGameStair);
 		clearAll();
                 
-		actualHealth = new Rectangle(screenSize.getWidth() - 120, 10, 99, 21);
+		actualHealth = new Rectangle(screenSize.getWidth() - 120, 10, 99, 22);
 		actualHealth.setFill(Color.GREEN);
 		gameplay = false;
 		pause = false;

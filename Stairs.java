@@ -26,15 +26,15 @@ public class Stairs extends Pane {
 	    this.getChildren().addAll(iv);
 	} else if (level.equals("shop")) {
 	    Image image = new Image("file:src/Downstairs.png");
-	    ImageView iv = new ImageView(image);
-	    this.iv = iv;
+	    ImageView shopIV = new ImageView(image);
+	    this.iv = shopIV;
 	    this.iv.setViewport(new Rectangle2D(offsetX, offsetY, this.width, this.height));
-	    this.x = (int) screenWidth-100;
-	    this.y = (int) screenHeight-100;
+	    this.x = screenWidth - 100;
+	    this.y = screenHeight - 100;
 	    this.setTranslateX(this.x);
 	    this.setTranslateY(this.y);
 	    this.getChildren().addAll(iv);
-	} else {
+	} else if (level.equals("up")) {
 	    Image upImage = new Image("file:src/Upstairs.png");
 	    ImageView upIV = new ImageView(upImage);
 	    this.iv = upIV;
