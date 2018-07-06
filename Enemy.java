@@ -6,7 +6,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
-public class Enemy extends Pane {
+public class Enemy extends Pane{
     
     ImageView iv;
     int offsetX = 0;

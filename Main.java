@@ -248,7 +248,7 @@ public class Main extends Application {
 	    
 	    if (level.getEnemiesLeft() <= 0) {
 		if (!level.isShopping()) {
-		    toShopStair = new Stairs("down", (int) scene.getWidth() - 65, (int) scene.getHeight() - 47);
+		    toShopStair = new Stairs("down", (int) scene.getWidth(), (int) scene.getHeight());
 		    gameRoot.getChildren().add(toShopStair);
 		    level.setShopping(true);
 		}
@@ -336,7 +336,7 @@ public class Main extends Application {
 	} else if (pause) {
 	    if (time < 0 || time > 150) {
 		if (isPressed(KeyCode.ESCAPE)) {
-		    if (!level.isShopping()) {
+		    if (couldGoToShop==true) {
 			pStage.getScene().setRoot(gameRoot);
 		    } else {
 			pStage.getScene().setRoot(shopRoot);
@@ -608,7 +608,7 @@ public class Main extends Application {
 	
 	Button gameBtn = new Button("Back to Game");
 	gameBtn.setOnAction(e -> {
-	    if (!level.isShopping()) {
+	    if (couldGoToShop == true) {
 		pStage.getScene().setRoot(gameRoot);
 	    } else {
 		pStage.getScene().setRoot(shopRoot);
