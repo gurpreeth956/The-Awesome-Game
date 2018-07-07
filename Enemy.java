@@ -24,8 +24,8 @@ public class Enemy extends Pane{
     boolean alive = true;
     int health;
 
-    public Enemy(int posX, int posY, int health, int coin, int width, int height) {
-	Image enemyImage = new Image("file:src/Redies.png");
+    public Enemy(String img, int posX, int posY, int health, int coin, int width, int height) {
+	Image enemyImage = new Image(img);
 	ImageView enemyIV = new ImageView(enemyImage);
         this.iv = enemyIV;
         this.iv.setViewport(new Rectangle2D(offsetX, offsetY, width, height));
@@ -54,46 +54,50 @@ public class Enemy extends Pane{
         this.iv.setViewport(new Rectangle2D(offsetX,offsetY,width,height));
     }
     
-    public void moveX(int x, double width) {
+    public void move(Character player, double a, double b){
+	//To be overridden by child classes
+    }
+    
+    public void moveX(int x, double width, int speed) {
         boolean right = x > 0;
         for (int i = 0; i < Math.abs(x); i++) {
             if (right) {
                 if(this.x > width - this.width)
                     this.setTranslateX(width - this.width);
                 else {
-                    this.setTranslateX(this.getTranslateX() + 1);
-                    this.x++;
+                    this.setTranslateX(this.getTranslateX() + speed);
+                    this.x+=speed;
                 }
             }
             else  {
                 if(this.x < 0)
                     this.setTranslateX(0);
                 else {
-                    this.setTranslateX(this.getTranslateX() - 1);
-                    this.x--;
+                    this.setTranslateX(this.getTranslateX() - speed);
+                    this.x-=speed;
                 }
             }
 	    this.healthPos();
         }
     }
     
-    public void moveY(int y, double height) {
+    public void moveY(int y, double height, int speed) {
         boolean down = y > 0;
         for (int i = 0; i < Math.abs(y); i++) {
             if (down) {
                 if(this.y > height - this.height)
                     this.setTranslateY(height - this.height);
                 else {
-                    this.setTranslateY(this.getTranslateY() + 1);
-                    this.y++;
+                    this.setTranslateY(this.getTranslateY() + speed);
+                    this.y+=speed;
                 }
             }
             else {
                 if(this.y < 0)
                     this.setTranslateY(0);
                 else {
-                    this.setTranslateY(this.getTranslateY() - 1);
-                    this.y--;
+                    this.setTranslateY(this.getTranslateY() - speed);
+                    this.y-=speed;
                 }
             }
 	    this.healthPos();

@@ -427,7 +427,7 @@ public class Main extends Application {
     }
     
     public void createEnemy(Portal portal) {
-	Enemy enemy = new Enemy(portal.getX(), portal.getY(), 3, 1, 66, 33);
+	Enemy enemy = new MeleeEnemy("file:src/Redies.png", portal.getX(), portal.getY(), 3, 1, 66, 33);
 	gameRoot.getChildren().addAll(enemy, enemy.healthBarOutline, enemy.lostHealth, enemy.actualHealth);
 	coinAndScore.toFront();
 	coinLabel.toFront();
@@ -457,43 +457,7 @@ public class Main extends Application {
 	}
 	
 	if (!enemy.playerColliding(player)) { //&&!enemy.enemyColliding(enemies)) { //need to fix this
-	    if (player.getX() > enemy.getX() && player.getY() == enemy.getY()) { //right
-		enemy.setCharacterView(0, 61);
-		enemy.moveX(1, scene.getWidth());
-	    }
-	    if (player.getX() < enemy.getX() && player.getY() == enemy.getY()) { //left
-		enemy.setCharacterView(0, 123);
-		enemy.moveX(-1, scene.getWidth());
-	    }
-	    if (player.getX() == enemy.getX() && player.getY() > enemy.getY()) { //down
-		enemy.setCharacterView(0, 0);
-		enemy.moveY(1, scene.getHeight());
-	    }
-	    if (player.getX() == enemy.getX() && player.getY() < enemy.getY()) { //up
-		enemy.setCharacterView(0, 183);
-		enemy.moveY(-1, scene.getHeight());
-	    }
-	    
-	    if (player.getX() > enemy.getX() && player.getY() < enemy.getY()) { //quadrant1
-		enemy.setCharacterView(0, 61);
-		enemy.moveX(1, scene.getWidth());
-		enemy.moveY(-1, scene.getHeight());
-	    }
-	    if (player.getX() < enemy.getX() && player.getY() < enemy.getY()) { //quadrant2
-		enemy.setCharacterView(0, 123);
-		enemy.moveX(-1, scene.getWidth());
-		enemy.moveY(-1, scene.getHeight());
-	    }
-	    if (player.getX() > enemy.getX() && player.getY() > enemy.getY()) { //quadrant3
-		enemy.setCharacterView(0, 61);
-		enemy.moveX(1, scene.getWidth());
-		enemy.moveY(1, scene.getHeight());
-	    }
-	    if (player.getX() < enemy.getX() && player.getY() > enemy.getY()) { //quadrant4
-		enemy.setCharacterView(0, 123);
-		enemy.moveX(-1, scene.getWidth());
-		enemy.moveY(1, scene.getHeight());
-	    }
+	    enemy.move(player, scene.getWidth(),scene.getHeight());
 	}
 	
 	if (enemy.getHealth() == 0) {
