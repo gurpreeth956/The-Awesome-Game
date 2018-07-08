@@ -123,6 +123,9 @@ public class Main extends Application {
 	shopRoot = new BorderPane();
 	decUpStair = new Stairs("up", (int) screenSize.getWidth(), (int) screenSize.getHeight());
 	toGameStair = new Stairs("shop", (int) screenSize.getWidth() - 100, (int) screenSize.getHeight() - 100);
+	VBox shopBox = addShopButtons();
+	shopBox.setAlignment(Pos.CENTER);
+	shopRoot.setLeft(shopBox);
 
 	//Options Root
 	Text opTitle = new Text("Game Options");
@@ -620,6 +623,19 @@ public class Main extends Application {
 	});
 	
 	vbox.getChildren().addAll(musicBox, gameBtn, backBtn, exitBtn);
+	return vbox;
+    }
+    
+    public VBox addShopButtons(){
+	VBox vbox = new VBox();
+	vbox.setPadding(new Insets(30));
+	vbox.setSpacing(30);
+	
+	HealthUpgrade healthup = new HealthUpgrade();
+	HealthPackUpgrade heal = new HealthPackUpgrade();
+	ShootSpeedUpgrade shoot = new ShootSpeedUpgrade();
+	
+	vbox.getChildren().addAll(healthup, shoot, heal);
 	return vbox;
     }
     

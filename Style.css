@@ -1,4 +1,4 @@
 #backgroundtrial {
-    -fx-background-image: url("file:src/Background-Cave.png");
+    -fx-background-image: url("file:src/Sprites/Background-Cave.png");
     -fx-background-size: cover;
 }

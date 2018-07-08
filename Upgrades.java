@@ -1,4 +1,5 @@
 
+import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -9,16 +10,18 @@ public class Upgrades extends Pane{
     boolean active;
     boolean purchased;
     int cost;
-    int width=10;
-    int height=10;
+    int width=31;
+    int height=31;
     
-    public Upgrades(String pic, int price){
-	Image downImage = new Image(pic);
+    public Upgrades(String img, int price){
+	Image downImage = new Image(img);
 	ImageView downIV = new ImageView(downImage);
 	this.iv = downIV;
+	this.iv.setViewport(new Rectangle2D(0, 0, this.width, this.height));
 	cost = price;
 	active = false;
 	purchased = false;
+	this.getChildren().addAll(iv);
     }
     
     public void setActive(boolean a){
