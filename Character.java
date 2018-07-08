@@ -13,8 +13,10 @@ public class Character extends Pane {
     int height = 33;
     int x; //Character xPos
     int y; //Character yPos
+    int shootSpeed;
 
     int health = 5;
+    int fullHealth = 5;
     boolean alive = true;
 
     public Character(int posX, int posY) {
@@ -27,6 +29,7 @@ public class Character extends Pane {
 	this.x = posX;
 	this.y = posY;
 	this.getChildren().addAll(iv);
+	this.shootSpeed = 500;
     }
 
     public void setCharacterView(int offsetX, int offsetY) {
@@ -114,6 +117,10 @@ public class Character extends Pane {
     public int getHealth() {
 	return health;
     }
+    
+    public void setHealth(int a){
+	health = a;
+    }
 
     public boolean isAlive() {
 	alive = health != 0;
@@ -123,44 +130,13 @@ public class Character extends Pane {
     public boolean isColliding(Stairs stair){
 	return this.getBoundsInParent().intersects(stair.getBoundsInParent());
     }
+    
+    public void setShootSpeed(int a){
+	shootSpeed = a;
+    }
+    
+    public int getShootSpeed(){
+	return shootSpeed;
+    }
 
-    public boolean leftColliding(List<Enemy> enemies) {
-	boolean collide = false;
-	for (Enemy enemy : enemies) {
-	    if (this.getBoundsInParent().intersects(enemy.getBoundsInParent()) && enemy.x < this.x){
-		collide = true;
-	    }
-	}
-	return collide;
-    }
-    
-    public boolean rightColliding(List<Enemy> enemies) {
-	boolean collide = false;
-	for (Enemy enemy : enemies) {
-	    if (this.getBoundsInParent().intersects(enemy.getBoundsInParent()) && enemy.x > this.x){
-		collide = true;
-	    }
-	}
-	return collide;
-    }
-    
-    public boolean upColliding(List<Enemy> enemies) {
-	boolean collide = false;
-	for (Enemy enemy : enemies) {
-	    if (this.getBoundsInParent().intersects(enemy.getBoundsInParent()) && enemy.y < this.y){
-		collide = true;
-	    }
-	}
-	return collide;
-    }
-    
-    public boolean downColliding(List<Enemy> enemies) {
-	boolean collide = false;
-	for (Enemy enemy : enemies) {
-	    if (this.getBoundsInParent().intersects(enemy.getBoundsInParent()) && enemy.y > this.y){
-		collide = true;
-	    }
-	}
-	return collide;
-    }
 }

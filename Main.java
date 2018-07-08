@@ -57,6 +57,8 @@ public class Main extends Application {
     private List<Portal> portals = new ArrayList();
     private int portalCount = 0;
     
+    private List<Upgrades> upgrades = new ArrayList();
+    
     Rectangle healthBarOutline;
     Rectangle actualHealth;
     Rectangle lostHealth;
@@ -355,7 +357,7 @@ public class Main extends Application {
 	if (isPressed(KeyCode.UP)) {
 	    player.setCharacterView(128, 183);
 	    player.setOffsetY(183);
-	    if (time < 0 || time > 500) {
+	    if (time < 0 || time > player.getShootSpeed()) {
 		createProjectile(0, -9);
 		timeOfLastProjectile = timeNow;
 	    }
