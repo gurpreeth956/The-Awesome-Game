@@ -15,7 +15,7 @@ public class Stairs extends Pane {
 
     public Stairs(String level, int screenWidth, int screenHeight) {
 	if (level.equals("down")) {
-	    Image downImage = new Image("file:src/Downstairs.png");
+	    Image downImage = new Image("file:src/Sprites/Downstairs.png");
 	    ImageView downIV = new ImageView(downImage);
 	    this.iv = downIV;
 	    this.iv.setViewport(new Rectangle2D(offsetX, offsetY, this.width, this.height));
@@ -25,7 +25,7 @@ public class Stairs extends Pane {
 	    this.setTranslateY(this.y);
 	    this.getChildren().addAll(iv);
 	} else if (level.equals("shop")) {
-	    Image image = new Image("file:src/Downstairs.png");
+	    Image image = new Image("file:src/Sprites/Downstairs.png");
 	    ImageView shopIV = new ImageView(image);
 	    this.iv = shopIV;
 	    this.iv.setViewport(new Rectangle2D(offsetX, offsetY, this.width, this.height));
@@ -35,7 +35,7 @@ public class Stairs extends Pane {
 	    this.setTranslateY(this.y);
 	    this.getChildren().addAll(iv);
 	} else if (level.equals("up")) {
-	    Image upImage = new Image("file:src/Upstairs.png");
+	    Image upImage = new Image("file:src/Sprites/Upstairs.png");
 	    ImageView upIV = new ImageView(upImage);
 	    this.iv = upIV;
 	    this.iv.setViewport(new Rectangle2D(offsetX, offsetY, this.width, this.height));
