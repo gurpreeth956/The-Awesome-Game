@@ -20,7 +20,7 @@ public class Character extends Pane {
     boolean alive = true;
 
     public Character(int posX, int posY) {
-	Image charImage = new Image("file:src/Greenies.png");
+	Image charImage = new Image("file:src/Sprites/Greenies.png");
 	ImageView charIV = new ImageView(charImage);
 	this.iv = charIV;
 	this.iv.setViewport(new Rectangle2D(offsetX, offsetY, width, height));

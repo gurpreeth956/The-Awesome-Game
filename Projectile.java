@@ -18,7 +18,7 @@ public class Projectile extends Pane {
     boolean alive = true;
     
     public Projectile(int posX, int posY) {
-        Image projImage = new Image("file:src/Shot.png");
+        Image projImage = new Image("file:src/Sprites/Shot.png");
 	ImageView projIV = new ImageView(projImage);
         this.iv = projIV;
         this.iv.setViewport(new Rectangle2D(offsetX, offsetY, width, height));

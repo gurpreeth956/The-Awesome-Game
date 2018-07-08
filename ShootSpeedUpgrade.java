@@ -2,7 +2,7 @@
 public class ShootSpeedUpgrade extends Upgrades{
     
     public ShootSpeedUpgrade(){
-	super("file:src/ShootSpeed.png", 100);
+	super("file:src/Sprites/ShootSpeed.png", 100);
     }
     
     public void activeAbility(Character player){

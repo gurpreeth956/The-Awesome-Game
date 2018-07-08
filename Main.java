@@ -429,7 +429,7 @@ public class Main extends Application {
     }
     
     public void createEnemy(Portal portal) {
-	Enemy enemy = new MeleeEnemy("file:src/Redies.png", portal.getX(), portal.getY(), 3, 1, 66, 33);
+	Enemy enemy = new MeleeEnemy("file:src/Sprites/Redies.png", portal.getX(), portal.getY(), 3, 1, 66, 33);
 	gameRoot.getChildren().addAll(enemy, enemy.healthBarOutline, enemy.lostHealth, enemy.actualHealth);
 	coinAndScore.toFront();
 	coinLabel.toFront();
