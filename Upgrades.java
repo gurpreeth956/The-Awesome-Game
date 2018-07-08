@@ -36,4 +36,15 @@ public class Upgrades extends Pane{
 	return active;
     }
     
+    public int getPrice(){
+	return cost;
+    }
+    
+    public boolean isColliding(Character player){
+	return this.getBoundsInParent().intersects(player.getBoundsInParent());
+    }
+    
+    public void activeAbility(Character player){
+	//Override this
+    }
 }

@@ -4,7 +4,7 @@ public class Level {
     public static int enemiesToBeat;
     public static int enemiesLeft;
     public static int enemiesSpawned;
-    public static int coins;
+    public static int coins=100;
     public static int highScore;
     static boolean shopping;
     
@@ -57,6 +57,10 @@ public class Level {
     
     public int getCoin() {
 	return coins;
+    }
+    
+    public void spend(int a){
+	coins-=a;
     }
     
     public int getScore() {
