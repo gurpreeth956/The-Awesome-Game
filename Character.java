@@ -12,6 +12,7 @@ public class Character extends Pane {
     int height = 33;
     int x; //Character xPos
     int y; //Character yPos
+    int playerSpeed;
     int shootSpeed;
 
     int health = 5;
@@ -28,6 +29,7 @@ public class Character extends Pane {
 	this.x = posX;
 	this.y = posY;
 	this.getChildren().addAll(iv);
+        this.playerSpeed = 3;
 	this.shootSpeed = 500;
     }
 
@@ -113,8 +115,8 @@ public class Character extends Pane {
 	health--;
     }
     
-    public void setHealth(int a){
-	health = a;
+    public void setHealth(int i) {
+	health = i;
     }
     
     public int getHealth() {
@@ -130,12 +132,20 @@ public class Character extends Pane {
 	return alive;
     }
     
-    public boolean isColliding(Stairs stair){
+    public boolean isColliding(Stairs stair) {
 	return this.getBoundsInParent().intersects(stair.getBoundsInParent());
     }
     
-    public void setShootSpeed(int a){
-	shootSpeed = a;
+    public void setPlayerSpeed(int i) {
+        playerSpeed = i;
+    }
+    
+    public int getPlayerSpeed() {
+        return playerSpeed;
+    }
+    
+    public void setShootSpeed(int i){
+	shootSpeed = i;
     }
     
     public int getShootSpeed(){

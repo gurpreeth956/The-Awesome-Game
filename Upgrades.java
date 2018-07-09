@@ -27,7 +27,7 @@ public class Upgrades extends Pane {
 	active = a;
     }
     
-    public void setBrought(boolean a) {
+    public void setBought(boolean a) {
 	purchased = a;
     }
     
