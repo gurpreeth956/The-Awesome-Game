@@ -1,4 +1,3 @@
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -123,13 +122,10 @@ public class Main extends Application {
 	coinAndScore.setTranslateX(10);
 	coinAndScore.setTranslateY(10);
 
-	//Shop Root here
+	//Shop Root
 	shopRoot = new BorderPane();
 	decUpStair = new Stairs("up", (int) screenSize.getWidth(), (int) screenSize.getHeight());
 	toGameStair = new Stairs("shop", (int) screenSize.getWidth() - 100, (int) screenSize.getHeight() - 100);
-	shopBox = addShopButtons();
-	shopBox.setAlignment(Pos.CENTER);
-	shopRoot.setCenter(shopBox);
 
 	//Options Root
 	Text opTitle = new Text("Game Options");
@@ -215,6 +211,7 @@ public class Main extends Application {
 
 		for (Enemy enemy : enemies) {
 		    gameRoot.getChildren().removeAll(enemy);
+                    clearAll();
 		}
 		enemies.clear();
 	    });
@@ -229,6 +226,7 @@ public class Main extends Application {
     public void update(Stage pStage) {
 	long timeNow = System.currentTimeMillis();
 	long time = timeNow - pauseTime;
+        
 	if (gameplay && !pause) {
 	    if (player.getHealth() == 0) {
 		Text gameOver = new Text("Game Over \n Score:  " + level.getScore());
@@ -238,64 +236,7 @@ public class Main extends Application {
 		pStage.getScene().setRoot(gameOverRoot);
 		gameplay = false;
 	    }
-
-	    if (level.isShopping()) {
-		for (Upgrades upgrade : shopUpgrades) {
-		    if (upgrade.isColliding(player) && isPressed(KeyCode.ENTER)) {
-			if (level.getCoin() > upgrade.getPrice()) {
-			    upgradesToRemove.add(upgrade);
-			    shopBox.getChildren().remove(upgrade);
-			    currentUpgrades.add(upgrade);
-			    upgrade.setBrought(true);
-			    level.spend(upgrade.getPrice());
-			    coinLabel.setText("Coins: " + level.getCoin());
-			}
-		    }
-		}
-		if (player.isColliding(toGameStair) && couldGoToMap) {
-		    if (couldGoToMap) {
-			for (Upgrades upgrade : currentUpgrades) {
-			    if (!upgrade.isActive()) {
-				upgrade.activeAbility(player);
-				upgrade.setActive(true);
-				gameRoot.getChildren().remove(actualHealth);
-				actualHealth = new Rectangle(screenSize.getWidth() - 120, 10, player.getHealth() * 20, 22);
-				actualHealth.setFill(Color.GREEN);
-				gameRoot.getChildren().add(actualHealth);
-				actualHealth.toFront();
-			    }
-			}
-			shopRoot.getChildren().remove(player);
-			gameRoot.getChildren().add(player);
-			couldGoToShop = true;
-			couldGoToMap = false;
-		    }
-		    level.increaseLevel();
-		    level.setShopping(false);
-		    pStage.getScene().setRoot(gameRoot);
-		}
-
-		//need to add here a way to go to next level if player does not want to go to shop!!!
-	    }
-
-	    if (level.getEnemiesLeft() <= 0) {
-		if (!level.isShopping()) {
-		    toShopStair = new Stairs("down", (int) scene.getWidth(), (int) scene.getHeight());
-		    gameRoot.getChildren().add(toShopStair);
-		    level.setShopping(true);
-		}
-		if (player.isColliding(toShopStair)) {
-		    pStage.getScene().setRoot(shopRoot);
-		    if (couldGoToShop) {
-			gameRoot.getChildren().remove(player);
-			shopRoot.getChildren().add(player);
-			couldGoToShop = false;
-			couldGoToMap = true;
-		    }
-		    gameRoot.getChildren().remove(toShopStair);
-		}
-	    }
-
+            
 	    if (isPressed(KeyCode.W)) {
 		player.setCharacterView(0, 183);
 		player.moveY(-3, scene.getHeight());
@@ -324,7 +265,6 @@ public class Main extends Application {
 		player.setCharacterView(0, player.getOffsetY());
 		characterShooting();
 	    }
-
 	    while (portalCount < level.getLevel()) {
 		createPortal();
 		player.toFront();
@@ -336,6 +276,8 @@ public class Main extends Application {
 		    createEnemy(portal);
 		}
 	    }
+            
+            shoppingUpdate(pStage);
 
 	    if (time < 0 || time > 150) {
 		if (isPressed(KeyCode.ESCAPE)) {
@@ -480,7 +422,7 @@ public class Main extends Application {
 	long time = timeNow - hitTime;
 	if (enemy.playerColliding(player)) {
 	    enemy.setCharacterView(128, 0);
-	    if (time < 0 || time > 2000) {
+	    if (time < 0 || time > 1000) {
 		player.hit();
 		gameRoot.getChildren().remove(actualHealth);
 		actualHealth = new Rectangle(screenSize.getWidth() - 120, 10, player.getHealth() * 20, 22);
@@ -508,6 +450,63 @@ public class Main extends Application {
 	    scoreLabel.setText("Score: " + level.getScore());
 	}
     }
+    
+    public void shoppingUpdate(Stage pStage) {
+        if (level.isShopping()) {
+            for (Upgrades upgrade : shopUpgrades) {
+                if (upgrade.isColliding(player) && isPressed(KeyCode.ENTER)) {
+                    if (level.getCoin() >= upgrade.getPrice()) {
+                        upgradesToRemove.add(upgrade);
+                        shopBox.getChildren().remove(upgrade);
+                        currentUpgrades.add(upgrade);
+                        upgrade.setBrought(true);
+                        level.spend(upgrade.getPrice());
+                        coinLabel.setText("Coins: " + level.getCoin());
+                    }
+                }
+            }
+            for (Upgrades upgrade : currentUpgrades) {
+                if (!upgrade.isActive()) {
+                    upgrade.activeAbility(player);
+                    upgrade.setActive(true);
+                    shopRoot.getChildren().remove(actualHealth);
+                    actualHealth = new Rectangle(screenSize.getWidth() - 120, 10, player.getHealth() * 20, 22);
+                    actualHealth.setFill(Color.GREEN);
+                    shopRoot.getChildren().add(actualHealth);
+                    actualHealth.toFront();
+                }
+            }
+            if (player.isColliding(toGameStair) && couldGoToMap) {
+                shopRoot.getChildren().removeAll(player, health, healthBarOutline, lostHealth, actualHealth, coinAndScore);
+                gameRoot.getChildren().addAll(player, health, healthBarOutline, lostHealth, actualHealth, coinAndScore);
+                couldGoToShop = true;
+                couldGoToMap = false;
+                level.increaseLevel();
+                level.setShopping(false);
+                pStage.getScene().setRoot(gameRoot);
+            }
+
+            //need to add here a way to go to next level if player does not want to go to shop!!!
+        }
+
+        if (level.getEnemiesLeft() <= 0) {
+            if (!level.isShopping()) {
+                toShopStair = new Stairs("down", (int) scene.getWidth(), (int) scene.getHeight());
+                gameRoot.getChildren().add(toShopStair);
+                level.setShopping(true);
+            }
+            if (player.isColliding(toShopStair)) {
+                pStage.getScene().setRoot(shopRoot);
+                if (couldGoToShop) {
+                    gameRoot.getChildren().removeAll(player, health, healthBarOutline, lostHealth, actualHealth, coinAndScore);
+                    shopRoot.getChildren().addAll(player, health, healthBarOutline, lostHealth, actualHealth, coinAndScore);
+                    couldGoToShop = false;
+                    couldGoToMap = true;
+                }
+                gameRoot.getChildren().remove(toShopStair);
+            }
+        }
+    }
 
     public boolean isPressed(KeyCode key) {
 	return keys.getOrDefault(key, false);
@@ -528,6 +527,26 @@ public class Main extends Application {
 	scoreLabel.setText("Score: " + level.getScore());
 	gameRoot.getChildren().clear();
     }
+    
+    public void newGame() {
+        level = new Level();
+        player = new Character((int) screenSize.getWidth() / 2, (int) screenSize.getHeight() / 2);
+        gameRoot.getChildren().addAll(player, health, healthBarOutline, lostHealth, actualHealth, coinAndScore);
+        shopRoot.getChildren().addAll(decUpStair, toGameStair);
+        shopBox = addShopButtons();
+        shopBox.setAlignment(Pos.CENTER);
+        shopRoot.setCenter(shopBox);
+        coinAndScore.toFront();
+        coinLabel.toFront();
+        scoreLabel.toFront();
+        health.toFront();
+        healthBarOutline.toFront();
+        lostHealth.toFront();
+        actualHealth.toFront();
+        gameplay = true;
+        couldGoToShop = true;
+        couldGoToMap = false;
+    }
 
     //Button Layouts
     public VBox addMenuButtons(Stage pStage) {
@@ -538,20 +557,7 @@ public class Main extends Application {
 	Button startBtn = new Button("Start");
 	startBtn.setOnAction(e -> {
 	    pStage.getScene().setRoot(gameRoot);
-	    level = new Level();
-	    player = new Character((int) screenSize.getWidth() / 2, (int) screenSize.getHeight() / 2);
-	    gameRoot.getChildren().addAll(player, health, healthBarOutline, lostHealth, actualHealth, coinAndScore);
-	    shopRoot.getChildren().addAll(decUpStair, toGameStair);
-	    coinAndScore.toFront();
-	    coinLabel.toFront();
-	    scoreLabel.toFront();
-	    health.toFront();
-	    healthBarOutline.toFront();
-	    lostHealth.toFront();
-	    actualHealth.toFront();
-	    gameplay = true;
-	    couldGoToShop = true;
-	    couldGoToMap = false;
+	    newGame();
 	});
 
 	Button optionsBtn = new Button("Options");
@@ -625,7 +631,7 @@ public class Main extends Application {
 		shopRoot.getChildren().removeAll(decUpStair, toGameStair);
 		if (couldGoToMap) {
 		    shopRoot.getChildren().remove(player);
-		    couldGoToMap = false;
+                    couldGoToMap = false;
 		}
 		clearAll();
 
@@ -685,24 +691,10 @@ public class Main extends Application {
 	    if (couldGoToMap) {
 		shopRoot.getChildren().remove(player);
 	    }
+            couldGoToShop = true;
+            couldGoToMap = false;
 	    clearAll();
-
-	    level = new Level();
-	    actualHealth = new Rectangle(screenSize.getWidth() - 120, 10, 99, 22);
-	    actualHealth.setFill(Color.GREEN);
-	    player = new Character((int) screenSize.getWidth() / 2, (int) screenSize.getHeight() / 2);
-	    gameRoot.getChildren().addAll(player, health, healthBarOutline, lostHealth, actualHealth, coinAndScore);
-	    shopRoot.getChildren().addAll(decUpStair, toGameStair);
-	    coinAndScore.toFront();
-	    coinLabel.toFront();
-	    scoreLabel.toFront();
-	    health.toFront();
-	    healthBarOutline.toFront();
-	    lostHealth.toFront();
-	    actualHealth.toFront();
-	    gameplay = true;
-	    couldGoToShop = true;
-	    couldGoToMap = false;
+            newGame();
 	});
 
 	Button backBtn = new Button("Back to Menu");

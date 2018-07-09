@@ -1,4 +1,3 @@
-
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -113,13 +112,17 @@ public class Character extends Pane {
     public void hit() {
 	health--;
     }
-
+    
+    public void setHealth(int a){
+	health = a;
+    }
+    
     public int getHealth() {
 	return health;
     }
     
-    public void setHealth(int a){
-	health = a;
+    public int getFullHealth() {
+        return fullHealth;
     }
 
     public boolean isAlive() {
@@ -138,5 +141,4 @@ public class Character extends Pane {
     public int getShootSpeed(){
 	return shootSpeed;
     }
-
 }
