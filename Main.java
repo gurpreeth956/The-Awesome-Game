@@ -278,7 +278,7 @@ public class Main extends Application {
 		    if (level.getEnemiesLeft() == 1 && bosses.size() >= level.getLevel()) {//bosses.size part is temp so game doesnt crash after we run out of bosses
 			createBoss(portal);
 		    } else {
-			if (level.getEnemiesToBeat() - level.getEnemiesSpawned() != 1) {
+			if (level.getEnemiesToBeat() - level.getEnemiesSpawned() != 1||bosses.size() < level.getLevel()) {
 			    createEnemy(portal);
 			}
 		    }
