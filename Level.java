@@ -4,7 +4,7 @@ public class Level {
     public static int enemiesToBeat;
     public static int enemiesLeft;
     public static int enemiesSpawned;
-    public static int coins=100;
+    public static int coins = 100; //temporary
     public static int highScore;
     static boolean shopping;
     

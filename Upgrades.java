@@ -1,19 +1,18 @@
-
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 
-
-public class Upgrades extends Pane{
+public class Upgrades extends Pane {
+    
     ImageView iv;
     boolean active;
     boolean purchased;
     int cost;
-    int width=31;
-    int height=31;
+    int width = 31;
+    int height = 31;
     
-    public Upgrades(String img, int price){
+    public Upgrades(String img, int price) {
 	Image downImage = new Image(img);
 	ImageView downIV = new ImageView(downImage);
 	this.iv = downIV;
@@ -24,27 +23,27 @@ public class Upgrades extends Pane{
 	this.getChildren().addAll(iv);
     }
     
-    public void setActive(boolean a){
+    public void setActive(boolean a) {
 	active = a;
     }
     
-    public void setBrought(boolean a){
+    public void setBrought(boolean a) {
 	purchased = a;
     }
     
-    public boolean isActive(){
+    public boolean isActive() {
 	return active;
     }
     
-    public int getPrice(){
+    public int getPrice() {
 	return cost;
     }
     
-    public boolean isColliding(Character player){
+    public boolean isColliding(Character player) {
 	return this.getBoundsInParent().intersects(player.getBoundsInParent());
     }
     
-    public void activeAbility(Character player){
-	//Override this
+    public void activeAbility(Character player) {
+	//To be overridden by child classes
     }
 }
