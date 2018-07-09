@@ -211,7 +211,6 @@ public class Main extends Application {
 
 		for (Enemy enemy : enemies) {
 		    gameRoot.getChildren().removeAll(enemy);
-                    clearAll();
 		}
 		enemies.clear();
 	    });
@@ -239,25 +238,25 @@ public class Main extends Application {
             
 	    if (isPressed(KeyCode.W)) {
 		player.setCharacterView(0, 183);
-		player.moveY(-3, scene.getHeight());
+		player.moveY(-player.getPlayerSpeed(), scene.getHeight());
 		player.setOffsetY(183);
 		characterShooting();
 
 	    } else if (isPressed(KeyCode.S)) {
 		player.setCharacterView(0, 0);
-		player.moveY(3, scene.getHeight());
+		player.moveY(player.getPlayerSpeed(), scene.getHeight());
 		player.setOffsetY(0);
 		characterShooting();
 
 	    } else if (isPressed(KeyCode.A)) {
 		player.setCharacterView(0, 123);
-		player.moveX(-3, scene.getWidth());
+		player.moveX(-player.getPlayerSpeed(), scene.getWidth());
 		player.setOffsetY(123);
 		characterShooting();
 
 	    } else if (isPressed(KeyCode.D)) {
 		player.setCharacterView(0, 61);
-		player.moveX(3, scene.getWidth());
+		player.moveX(player.getPlayerSpeed(), scene.getWidth());
 		player.setOffsetY(61);
 		characterShooting();
 
@@ -459,7 +458,7 @@ public class Main extends Application {
                         upgradesToRemove.add(upgrade);
                         shopBox.getChildren().remove(upgrade);
                         currentUpgrades.add(upgrade);
-                        upgrade.setBrought(true);
+                        upgrade.setBought(true);
                         level.spend(upgrade.getPrice());
                         coinLabel.setText("Coins: " + level.getCoin());
                     }
@@ -671,11 +670,13 @@ public class Main extends Application {
 	HealthUpgrade healthup = new HealthUpgrade();
 	HealthPackUpgrade heal = new HealthPackUpgrade();
 	ShootSpeedUpgrade shoot = new ShootSpeedUpgrade();
+        UpgradePlayerSpeed speed = new UpgradePlayerSpeed();
 	shopUpgrades.add(healthup);
 	shopUpgrades.add(heal);
 	shopUpgrades.add(shoot);
+        shopUpgrades.add(speed);
 
-	hbox.getChildren().addAll(healthup, shoot, heal);
+	hbox.getChildren().addAll(healthup, shoot, speed, heal);
 	return hbox;
     }
 
