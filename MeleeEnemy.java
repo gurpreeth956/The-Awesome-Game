@@ -1,7 +1,8 @@
+
 public class MeleeEnemy extends Enemy {
     
-    public MeleeEnemy(String img, int posX, int posY, int health, int coin, int width, int height) {
-	super(img, posX, posY, health, coin, width, height);
+    public MeleeEnemy(String img, int health, int coin, int width, int height) {
+	super(img, health, coin, width, height);
     }
     
     public void move(Character player, double width, double height) {

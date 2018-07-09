@@ -1,3 +1,6 @@
+
+import java.util.List;
+
 public class Level {
     
     public static int currentLevel;
@@ -81,5 +84,9 @@ public class Level {
     
     public boolean isShopping(){
 	return shopping;
+    }
+    
+    public void fillBoss(List<Enemy> bosses){
+	bosses.add(new Boss("file:src/Sprites/test.png", 30, 20, 200, 200));
     }
 }
