@@ -23,29 +23,27 @@ public class Enemy extends Pane{
     Rectangle lostHealth;
     boolean alive = true;
     int health;
+    int totalHealth;
 
-    public Enemy(String img, int posX, int posY, int health, int coin, int width, int height) {
+    public Enemy(String img, int health, int coin, int width, int height) {
 	Image enemyImage = new Image(img);
 	ImageView enemyIV = new ImageView(enemyImage);
         this.iv = enemyIV;
         this.iv.setViewport(new Rectangle2D(offsetX, offsetY, width, height));
-        this.setTranslateX(posX);
-        this.setTranslateY(posY);
-        this.x = posX;
-        this.y = posY;
 	this.health = health;
+	this.totalHealth = health;
 	this.coin = coin;
 	this.score = coin;
 	this.width = width;
 	this.height = height;
         this.getChildren().addAll(iv);
         
-	healthBarOutline = new Rectangle(x - 1, y - 6, 68, 4);
+	healthBarOutline = new Rectangle(x - 1, y - 6, width+2, 4);
 	healthBarOutline.setFill(Color.TRANSPARENT);
 	healthBarOutline.setStroke(Color.BLACK);
-	lostHealth = new Rectangle(x, y - 5, 66, 3);
+	lostHealth = new Rectangle(x, y - 5, width, 3);
 	lostHealth.setFill(Color.RED);
-	actualHealth = new Rectangle(x, y - 5, 66, 3);
+	actualHealth = new Rectangle(x, y - 5, width, 3);
 	actualHealth.setFill(Color.GREEN);
 	actualHealth.toFront();
     }
@@ -137,7 +135,7 @@ public class Enemy extends Pane{
     }
     
     public Rectangle updateHealth() {
-	actualHealth = new Rectangle(x, y, this.getHealth() * 22, 3);
+	actualHealth = new Rectangle(x, y, this.getHealth() * width/this.totalHealth, 3);
 	actualHealth.setFill(Color.GREEN);
 	return actualHealth;
     }
@@ -172,5 +170,12 @@ public class Enemy extends Pane{
     
     public int getScore() {
 	return score;
+    }
+    
+    public void summon(Portal portal){
+	this.setTranslateX(portal.getX());
+        this.setTranslateY(portal.getY());
+        this.x = portal.getX();
+        this.y = portal.getY();
     }
 }

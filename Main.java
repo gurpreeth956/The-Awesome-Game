@@ -1,3 +1,4 @@
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -53,6 +54,8 @@ public class Main extends Application {
     private List<Enemy> enemies = new ArrayList();
     private List<Enemy> enemToRemove = new ArrayList();
     private long hitTime = 0;
+
+    private List<Enemy> bosses = new ArrayList();
 
     private List<Portal> portals = new ArrayList();
     private int portalCount = 0;
@@ -225,7 +228,7 @@ public class Main extends Application {
     public void update(Stage pStage) {
 	long timeNow = System.currentTimeMillis();
 	long time = timeNow - pauseTime;
-        
+
 	if (gameplay && !pause) {
 	    if (player.getHealth() == 0) {
 		Text gameOver = new Text("Game Over \n Score:  " + level.getScore());
@@ -235,7 +238,7 @@ public class Main extends Application {
 		pStage.getScene().setRoot(gameOverRoot);
 		gameplay = false;
 	    }
-            
+
 	    if (isPressed(KeyCode.W)) {
 		player.setCharacterView(0, 183);
 		player.moveY(-player.getPlayerSpeed(), scene.getHeight());
@@ -272,11 +275,17 @@ public class Main extends Application {
 
 	    for (Portal portal : portals) {
 		if (portal.summon() && !level.isShopping() && level.getEnemiesSpawned() < level.getEnemiesToBeat()) {
-		    createEnemy(portal);
+		    if (level.getEnemiesLeft() == 1 && bosses.size() >= level.getLevel()) {//bosses.size part is temp so game doesnt crash after we run out of bosses
+			createBoss(portal);
+		    } else {
+			if (level.getEnemiesToBeat() - level.getEnemiesSpawned() != 1) {
+			    createEnemy(portal);
+			}
+		    }
 		}
 	    }
-            
-            shoppingUpdate(pStage);
+
+	    shoppingUpdate(pStage);
 
 	    if (time < 0 || time > 150) {
 		if (isPressed(KeyCode.ESCAPE)) {
@@ -402,8 +411,24 @@ public class Main extends Application {
 	}
     }
 
+    public void createBoss(Portal portal) {
+	Enemy enemy = bosses.get(level.getLevel() - 1);
+	enemy.summon(portal);
+	gameRoot.getChildren().addAll(enemy, enemy.healthBarOutline, enemy.lostHealth, enemy.actualHealth);
+	coinAndScore.toFront();
+	coinLabel.toFront();
+	scoreLabel.toFront();
+	enemies.add(enemy);
+	health.toFront();
+	healthBarOutline.toFront();
+	lostHealth.toFront();
+	actualHealth.toFront();
+	level.enemySpawned();
+    }
+
     public void createEnemy(Portal portal) {
-	Enemy enemy = new MeleeEnemy("file:src/Sprites/Redies.png", portal.getX(), portal.getY(), 3, 1, 66, 33);
+	Enemy enemy = new MeleeEnemy("file:src/Sprites/Redies.png", 3, 1, 66, 33);
+	enemy.summon(portal);
 	gameRoot.getChildren().addAll(enemy, enemy.healthBarOutline, enemy.lostHealth, enemy.actualHealth);
 	coinAndScore.toFront();
 	coinLabel.toFront();
@@ -449,62 +474,62 @@ public class Main extends Application {
 	    scoreLabel.setText("Score: " + level.getScore());
 	}
     }
-    
+
     public void shoppingUpdate(Stage pStage) {
-        if (level.isShopping()) {
-            for (Upgrades upgrade : shopUpgrades) {
-                if (upgrade.isColliding(player) && isPressed(KeyCode.ENTER)) {
-                    if (level.getCoin() >= upgrade.getPrice()) {
-                        upgradesToRemove.add(upgrade);
-                        shopBox.getChildren().remove(upgrade);
-                        currentUpgrades.add(upgrade);
-                        upgrade.setBought(true);
-                        level.spend(upgrade.getPrice());
-                        coinLabel.setText("Coins: " + level.getCoin());
-                    }
-                }
-            }
-            for (Upgrades upgrade : currentUpgrades) {
-                if (!upgrade.isActive()) {
-                    upgrade.activeAbility(player);
-                    upgrade.setActive(true);
-                    shopRoot.getChildren().remove(actualHealth);
-                    actualHealth = new Rectangle(screenSize.getWidth() - 120, 10, player.getHealth() * 20, 22);
-                    actualHealth.setFill(Color.GREEN);
-                    shopRoot.getChildren().add(actualHealth);
-                    actualHealth.toFront();
-                }
-            }
-            if (player.isColliding(toGameStair) && couldGoToMap) {
-                shopRoot.getChildren().removeAll(player, health, healthBarOutline, lostHealth, actualHealth, coinAndScore);
-                gameRoot.getChildren().addAll(player, health, healthBarOutline, lostHealth, actualHealth, coinAndScore);
-                couldGoToShop = true;
-                couldGoToMap = false;
-                level.increaseLevel();
-                level.setShopping(false);
-                pStage.getScene().setRoot(gameRoot);
-            }
+	if (level.isShopping()) {
+	    for (Upgrades upgrade : shopUpgrades) {
+		if (upgrade.isColliding(player) && isPressed(KeyCode.ENTER)) {
+		    if (level.getCoin() >= upgrade.getPrice()) {
+			upgradesToRemove.add(upgrade);
+			shopBox.getChildren().remove(upgrade);
+			currentUpgrades.add(upgrade);
+			upgrade.setBought(true);
+			level.spend(upgrade.getPrice());
+			coinLabel.setText("Coins: " + level.getCoin());
+		    }
+		}
+	    }
+	    for (Upgrades upgrade : currentUpgrades) {
+		if (!upgrade.isActive()) {
+		    upgrade.activeAbility(player);
+		    upgrade.setActive(true);
+		    shopRoot.getChildren().remove(actualHealth);
+		    actualHealth = new Rectangle(screenSize.getWidth() - 120, 10, player.getHealth() * 20, 22);
+		    actualHealth.setFill(Color.GREEN);
+		    shopRoot.getChildren().add(actualHealth);
+		    actualHealth.toFront();
+		}
+	    }
+	    if (player.isColliding(toGameStair) && couldGoToMap) {
+		shopRoot.getChildren().removeAll(player, health, healthBarOutline, lostHealth, actualHealth, coinAndScore);
+		gameRoot.getChildren().addAll(player, health, healthBarOutline, lostHealth, actualHealth, coinAndScore);
+		couldGoToShop = true;
+		couldGoToMap = false;
+		level.increaseLevel();
+		level.setShopping(false);
+		pStage.getScene().setRoot(gameRoot);
+	    }
 
-            //need to add here a way to go to next level if player does not want to go to shop!!!
-        }
+	    //need to add here a way to go to next level if player does not want to go to shop!!!
+	}
 
-        if (level.getEnemiesLeft() <= 0) {
-            if (!level.isShopping()) {
-                toShopStair = new Stairs("down", (int) scene.getWidth(), (int) scene.getHeight());
-                gameRoot.getChildren().add(toShopStair);
-                level.setShopping(true);
-            }
-            if (player.isColliding(toShopStair)) {
-                pStage.getScene().setRoot(shopRoot);
-                if (couldGoToShop) {
-                    gameRoot.getChildren().removeAll(player, health, healthBarOutline, lostHealth, actualHealth, coinAndScore);
-                    shopRoot.getChildren().addAll(player, health, healthBarOutline, lostHealth, actualHealth, coinAndScore);
-                    couldGoToShop = false;
-                    couldGoToMap = true;
-                }
-                gameRoot.getChildren().remove(toShopStair);
-            }
-        }
+	if (level.getEnemiesLeft() <= 0) {
+	    if (!level.isShopping()) {
+		toShopStair = new Stairs("down", (int) scene.getWidth(), (int) scene.getHeight());
+		gameRoot.getChildren().add(toShopStair);
+		level.setShopping(true);
+	    }
+	    if (player.isColliding(toShopStair)) {
+		pStage.getScene().setRoot(shopRoot);
+		if (couldGoToShop) {
+		    gameRoot.getChildren().removeAll(player, health, healthBarOutline, lostHealth, actualHealth, coinAndScore);
+		    shopRoot.getChildren().addAll(player, health, healthBarOutline, lostHealth, actualHealth, coinAndScore);
+		    couldGoToShop = false;
+		    couldGoToMap = true;
+		}
+		gameRoot.getChildren().remove(toShopStair);
+	    }
+	}
     }
 
     public boolean isPressed(KeyCode key) {
@@ -516,6 +541,7 @@ public class Main extends Application {
 	projToRemove.clear();
 	enemies.clear();
 	enemToRemove.clear();
+	bosses.clear();
 	portals.clear();
 	portalCount = 0;
 	currentUpgrades.clear();
@@ -526,25 +552,26 @@ public class Main extends Application {
 	scoreLabel.setText("Score: " + level.getScore());
 	gameRoot.getChildren().clear();
     }
-    
+
     public void newGame() {
-        level = new Level();
-        player = new Character((int) screenSize.getWidth() / 2, (int) screenSize.getHeight() / 2);
-        gameRoot.getChildren().addAll(player, health, healthBarOutline, lostHealth, actualHealth, coinAndScore);
-        shopRoot.getChildren().addAll(decUpStair, toGameStair);
-        shopBox = addShopButtons();
-        shopBox.setAlignment(Pos.CENTER);
-        shopRoot.setCenter(shopBox);
-        coinAndScore.toFront();
-        coinLabel.toFront();
-        scoreLabel.toFront();
-        health.toFront();
-        healthBarOutline.toFront();
-        lostHealth.toFront();
-        actualHealth.toFront();
-        gameplay = true;
-        couldGoToShop = true;
-        couldGoToMap = false;
+	level = new Level();
+	player = new Character((int) screenSize.getWidth() / 2, (int) screenSize.getHeight() / 2);
+	gameRoot.getChildren().addAll(player, health, healthBarOutline, lostHealth, actualHealth, coinAndScore);
+	shopRoot.getChildren().addAll(decUpStair, toGameStair);
+	shopBox = addShopButtons();
+	shopBox.setAlignment(Pos.CENTER);
+	shopRoot.setCenter(shopBox);
+	coinAndScore.toFront();
+	coinLabel.toFront();
+	scoreLabel.toFront();
+	health.toFront();
+	healthBarOutline.toFront();
+	lostHealth.toFront();
+	actualHealth.toFront();
+	gameplay = true;
+	couldGoToShop = true;
+	couldGoToMap = false;
+	level.fillBoss(bosses);
     }
 
     //Button Layouts
@@ -630,7 +657,7 @@ public class Main extends Application {
 		shopRoot.getChildren().removeAll(decUpStair, toGameStair);
 		if (couldGoToMap) {
 		    shopRoot.getChildren().remove(player);
-                    couldGoToMap = false;
+		    couldGoToMap = false;
 		}
 		clearAll();
 
@@ -692,10 +719,10 @@ public class Main extends Application {
 	    if (couldGoToMap) {
 		shopRoot.getChildren().remove(player);
 	    }
-            couldGoToShop = true;
-            couldGoToMap = false;
+	    couldGoToShop = true;
+	    couldGoToMap = false;
 	    clearAll();
-            newGame();
+	    newGame();
 	});
 
 	Button backBtn = new Button("Back to Menu");
