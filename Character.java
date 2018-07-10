@@ -1,5 +1,5 @@
-import java.util.List;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 
@@ -12,18 +12,25 @@ public class Character extends Pane {
     int height = 33;
     int x; //Character xPos
     int y; //Character yPos
+    int playerSpeed;
+    int shootSpeed;
 
     int health = 5;
+    int fullHealth = 5;
     boolean alive = true;
 
-    public Character(ImageView iv, int posX, int posY) {
-	this.iv = iv;
+    public Character(int posX, int posY) {
+	Image charImage = new Image("file:src/Sprites/Greenies.png");
+	ImageView charIV = new ImageView(charImage);
+	this.iv = charIV;
 	this.iv.setViewport(new Rectangle2D(offsetX, offsetY, width, height));
 	this.setTranslateX(posX);
 	this.setTranslateY(posY);
 	this.x = posX;
 	this.y = posY;
 	this.getChildren().addAll(iv);
+        this.playerSpeed = 3;
+	this.shootSpeed = 500;
     }
 
     public void setCharacterView(int offsetX, int offsetY) {
@@ -107,9 +114,17 @@ public class Character extends Pane {
     public void hit() {
 	health--;
     }
-
+    
+    public void setHealth(int i) {
+	health = i;
+    }
+    
     public int getHealth() {
 	return health;
+    }
+    
+    public int getFullHealth() {
+        return fullHealth;
     }
 
     public boolean isAlive() {
@@ -117,47 +132,23 @@ public class Character extends Pane {
 	return alive;
     }
     
-    public boolean isColliding(Stairs stair){
+    public boolean isColliding(Stairs stair) {
 	return this.getBoundsInParent().intersects(stair.getBoundsInParent());
     }
-
-    public boolean leftColliding(List<Enemy> enemies) {
-	boolean collide = false;
-	for (Enemy enemy : enemies) {
-	    if(this.getBoundsInParent().intersects(enemy.getBoundsInParent()) && enemy.x < this.x){
-		collide = true;
-	    }
-	}
-	return collide;
+    
+    public void setPlayerSpeed(int i) {
+        playerSpeed = i;
     }
     
-    public boolean rightColliding(List<Enemy> enemies) {
-	boolean collide = false;
-	for (Enemy enemy : enemies) {
-	    if(this.getBoundsInParent().intersects(enemy.getBoundsInParent()) && enemy.x > this.x){
-		collide = true;
-	    }
-	}
-	return collide;
+    public int getPlayerSpeed() {
+        return playerSpeed;
     }
     
-    public boolean upColliding(List<Enemy> enemies) {
-	boolean collide = false;
-	for (Enemy enemy : enemies) {
-	    if(this.getBoundsInParent().intersects(enemy.getBoundsInParent()) && enemy.y < this.y){
-		collide = true;
-	    }
-	}
-	return collide;
+    public void setShootSpeed(int i){
+	shootSpeed = i;
     }
     
-    public boolean downColliding(List<Enemy> enemies) {
-	boolean collide = false;
-	for (Enemy enemy : enemies) {
-	    if(this.getBoundsInParent().intersects(enemy.getBoundsInParent()) && enemy.y > this.y){
-		collide = true;
-	    }
-	}
-	return collide;
+    public int getShootSpeed(){
+	return shootSpeed;
     }
 }

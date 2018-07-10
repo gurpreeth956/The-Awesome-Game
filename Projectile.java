@@ -1,4 +1,5 @@
 import javafx.geometry.Rectangle2D;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 
@@ -16,8 +17,10 @@ public class Projectile extends Pane {
     int velocityY = 0;
     boolean alive = true;
     
-    public Projectile(ImageView iv, int posX, int posY) {
-        this.iv = iv;
+    public Projectile(int posX, int posY) {
+        Image projImage = new Image("file:src/Sprites/Shot.png");
+	ImageView projIV = new ImageView(projImage);
+        this.iv = projIV;
         this.iv.setViewport(new Rectangle2D(offsetX, offsetY, width, height));
         this.setTranslateX(posX);
         this.setTranslateY(posY);
