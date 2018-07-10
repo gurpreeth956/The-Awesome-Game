@@ -490,7 +490,6 @@ public class Main extends Application {
 	    scoreLabel.setText("Score: " + level.getScore());
 	}
     }
-    
     public void shieldUpdate() {
         if (player.hasShield()) {
             if (!shieldAdded) {
