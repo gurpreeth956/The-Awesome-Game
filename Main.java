@@ -67,6 +67,7 @@ public class Main extends Application {
     Rectangle healthBarOutline;
     Rectangle actualHealth;
     Rectangle lostHealth;
+    Rectangle shieldHealth;
     VBox health;
     VBox coinAndScore;
     Label coinLabel;
@@ -78,6 +79,7 @@ public class Main extends Application {
     boolean pause = false;
     boolean couldGoToShop = true;
     boolean couldGoToMap = false;
+    boolean shieldAdded = false;
     long pauseTime = 0;
     
     @Override
@@ -104,13 +106,15 @@ public class Main extends Application {
 	Label healthLabel = new Label("Health: ");
 	healthLabel.setFont(new Font("Arial", 20));
 	healthLabel.toFront();
-	healthBarOutline = new Rectangle(screenSize.getWidth() - 121, 9, 101, 22);
+	healthBarOutline = new Rectangle(screenSize.getWidth() - 121, 9, 102, 22);
 	healthBarOutline.setFill(Color.TRANSPARENT);
 	healthBarOutline.setStroke(Color.BLACK);
-	lostHealth = new Rectangle(screenSize.getWidth() - 120, 10, 99, 22);
+	lostHealth = new Rectangle(screenSize.getWidth() - 120, 10, 100, 22);
 	lostHealth.setFill(Color.RED);
-	actualHealth = new Rectangle(screenSize.getWidth() - 120, 10, 99, 22);
-	actualHealth.setFill(Color.GREEN);
+	actualHealth = new Rectangle(screenSize.getWidth() - 120, 10, 100, 22);
+	actualHealth.setFill(Color.web("#00F32C"));
+        shieldHealth = new Rectangle(screenSize.getWidth() - 120, 10, 100, 22);
+	shieldHealth.setFill(Color.web("#00E8FF"));
 	health = new VBox(10);
 	health.getChildren().addAll(healthLabel);
 	health.setTranslateX(screenSize.getWidth() - 200);
@@ -124,7 +128,7 @@ public class Main extends Application {
 	coinAndScore.setTranslateX(10);
 	coinAndScore.setTranslateY(10);
 
-  //Shop Root
+        //Shop Root
 	shopRoot = new BorderPane();
 	decUpStair = new Stairs("up", (int) screenSize.getWidth(), (int) screenSize.getHeight());
 	toGameStair = new Stairs("shop", (int) screenSize.getWidth() - 100, (int) screenSize.getHeight() - 100);
@@ -265,8 +269,8 @@ public class Main extends Application {
 	    } else {
 		player.setCharacterView(0, player.getOffsetY());
 		characterShooting();
-	    }
-    
+	    } 
+            
 	    while (portalCount < level.getLevel()) {
 		createPortal();
 		player.toFront();
@@ -275,17 +279,18 @@ public class Main extends Application {
 	    
 	    for (Portal portal : portals) {
 		if (portal.summon() && !level.isShopping() && level.getEnemiesSpawned() < level.getEnemiesToBeat()) {
-		    if (level.getEnemiesLeft() == 1 && bosses.size() >= level.getLevel()) {//bosses.size part is temp so game doesnt crash after we run out of bosses
-			createBoss(portal);
-		    } else {
-			if (level.getEnemiesToBeat() - level.getEnemiesSpawned() != 1||bosses.size() < level.getLevel()) {
-			    createEnemy(portal);
-			}
-		    }
+		//    if (level.getEnemiesLeft() == 1 && bosses.size() >= level.getLevel()) {//bosses.size part is temp so game doesnt crash after we run out of bosses
+		//	createBoss(portal);
+		//    } else {
+		//	if (level.getEnemiesToBeat() - level.getEnemiesSpawned() != 1||bosses.size() < level.getLevel()) {
+			createEnemy(portal);
+		//	}
+		//    }
 		}
 	    }
 
 	    shoppingUpdate(pStage);
+            shieldUpdate();
 
 	    if (time < 0 || time > 150) {
 		if (isPressed(KeyCode.ESCAPE)) {
@@ -424,6 +429,7 @@ public class Main extends Application {
 	lostHealth.toFront();
 	actualHealth.toFront();
 	level.enemySpawned();
+        if (player.hasShield()) shieldHealth.toFront();
     }
 
     public void createEnemy(Portal portal) {
@@ -439,6 +445,7 @@ public class Main extends Application {
 	lostHealth.toFront();
 	actualHealth.toFront();
 	level.enemySpawned();
+        if (player.hasShield()) shieldHealth.toFront();
     }
     
     public void updateEnemy(Enemy enemy) {
@@ -447,17 +454,27 @@ public class Main extends Application {
 	if (enemy.playerColliding(player)) {
 	    enemy.setCharacterView(128, 0);
 	    if (time < 0 || time > 1000) {
-		player.hit();
-		gameRoot.getChildren().remove(actualHealth);
-		actualHealth = new Rectangle(screenSize.getWidth() - 120, 10, player.getHealth() * 20, 22);
-		actualHealth.setFill(Color.GREEN);
-		gameRoot.getChildren().add(actualHealth);
-		actualHealth.toFront();
+                player.hit();
+                    
+                if (player.hasShield()) {
+                    gameRoot.getChildren().remove(shieldHealth);
+                    shieldHealth = new Rectangle(screenSize.getWidth() - 120, 10, player.getShieldHealth() * 33 + 1, 22);
+                    shieldHealth.setFill(Color.web("#00E8FF"));
+                    gameRoot.getChildren().add(shieldHealth);
+                    shieldHealth.toFront();
+                } else {
+                    gameRoot.getChildren().remove(actualHealth);
+                    actualHealth = new Rectangle(screenSize.getWidth() - 120, 10, player.getHealth() * 20, 22);
+                    actualHealth.setFill(Color.web("#00F32C"));
+                    gameRoot.getChildren().add(actualHealth);
+                    actualHealth.toFront();
+                }
+                
 		hitTime = timeNow;
 	    }
 	}
 
-	if (!enemy.playerColliding(player)) { //&&!enemy.enemyColliding(enemies)) { //need to fix this
+	if (!enemy.playerColliding(player)) {
 	    enemy.move(player, scene.getWidth(), scene.getHeight());
 	}
 	
@@ -473,6 +490,22 @@ public class Main extends Application {
 	    coinLabel.setText("Coins: " + level.getCoin());
 	    scoreLabel.setText("Score: " + level.getScore());
 	}
+    }
+    public void shieldUpdate() {
+        if (player.hasShield()) {
+            if (!shieldAdded) {
+                shieldAdded = true;
+                shieldHealth = new Rectangle(screenSize.getWidth() - 120, 10, 100, 22);
+                shieldHealth.setFill(Color.web("#00E8FF"));
+                shopRoot.getChildren().add(shieldHealth);
+                shieldHealth.toFront();
+            }
+            if (player.getShieldHealth() == 0) {
+                player.addShield(false);
+                shieldAdded = false;
+                gameRoot.getChildren().remove(shieldHealth);
+            }
+        }
     }
   
     public void shoppingUpdate(Stage pStage) {
@@ -495,14 +528,19 @@ public class Main extends Application {
 		    upgrade.setActive(true);
 		    shopRoot.getChildren().remove(actualHealth);
 		    actualHealth = new Rectangle(screenSize.getWidth() - 120, 10, player.getHealth() * 20, 22);
-		    actualHealth.setFill(Color.GREEN);
+		    actualHealth.setFill(Color.web("#00F32C"));
 		    shopRoot.getChildren().add(actualHealth);
 		    actualHealth.toFront();
+                    if (player.hasShield()) shieldHealth.toFront();
 		}
 	    }
 	    if (player.isColliding(toGameStair) && couldGoToMap) {
 		shopRoot.getChildren().removeAll(player, health, healthBarOutline, lostHealth, actualHealth, coinAndScore);
 		gameRoot.getChildren().addAll(player, health, healthBarOutline, lostHealth, actualHealth, coinAndScore);
+                if (player.hasShield()) {
+                    shopRoot.getChildren().remove(shieldHealth);
+                    gameRoot.getChildren().addAll(shieldHealth);
+                }
 		couldGoToShop = true;
 		couldGoToMap = false;
 		level.increaseLevel();
@@ -524,6 +562,10 @@ public class Main extends Application {
 		if (couldGoToShop) {
 		    gameRoot.getChildren().removeAll(player, health, healthBarOutline, lostHealth, actualHealth, coinAndScore);
 		    shopRoot.getChildren().addAll(player, health, healthBarOutline, lostHealth, actualHealth, coinAndScore);
+                    if (player.hasShield()) {
+                        gameRoot.getChildren().remove(shieldHealth);
+                        shopRoot.getChildren().addAll(shieldHealth);
+                    }
 		    couldGoToShop = false;
 		    couldGoToMap = true;
 		}
@@ -545,17 +587,22 @@ public class Main extends Application {
 	portals.clear();
 	portalCount = 0;
 	currentUpgrades.clear();
+        upgradesToRemove.clear();
+        shopUpgrades.clear();
 	level.clearScore();
 	level.clearCoins();
 	level.setShopping(false);
 	coinLabel.setText("Coins: " + level.getCoin());
 	scoreLabel.setText("Score: " + level.getScore());
 	gameRoot.getChildren().clear();
+        shopRoot.getChildren().clear();
     }
 
     public void newGame() {
 	level = new Level();
 	player = new Character((int) screenSize.getWidth() / 2, (int) screenSize.getHeight() / 2);
+        actualHealth = new Rectangle(screenSize.getWidth() - 120, 10, 100, 22);
+	actualHealth.setFill(Color.web("#00F32C"));
 	gameRoot.getChildren().addAll(player, health, healthBarOutline, lostHealth, actualHealth, coinAndScore);
 	shopRoot.getChildren().addAll(decUpStair, toGameStair);
 	shopBox = addShopButtons();
@@ -568,9 +615,11 @@ public class Main extends Application {
 	healthBarOutline.toFront();
 	lostHealth.toFront();
 	actualHealth.toFront();
+        player.addShield(false);
 	gameplay = true;
 	couldGoToShop = true;
 	couldGoToMap = false;
+        shieldAdded = false;
 	level.fillBoss(bosses);
     }
 
@@ -654,14 +703,7 @@ public class Main extends Application {
 	    
 	    yesReturn.setOnAction(eY -> {
 		pStage.getScene().setRoot(menuRoot);
-		shopRoot.getChildren().removeAll(decUpStair, toGameStair);
-		if (couldGoToMap) {
-		    shopRoot.getChildren().remove(player);
-		    couldGoToMap = false;
-		}
 		clearAll();
-		actualHealth = new Rectangle(screenSize.getWidth() - 120, 10, 99, 22);
-		actualHealth.setFill(Color.GREEN);
 		gameplay = false;
 		pause = false;
 	    });
@@ -693,16 +735,16 @@ public class Main extends Application {
 	hbox.setPadding(new Insets(30));
 	hbox.setSpacing(70);
 
-	HealthUpgrade healthup = new HealthUpgrade();
-	HealthPackUpgrade heal = new HealthPackUpgrade();
+	HealthPackUpgrade healthUp = new HealthPackUpgrade();
+        PlayerShieldUpgrade shield = new PlayerShieldUpgrade();
 	ShootSpeedUpgrade shoot = new ShootSpeedUpgrade();
-        UpgradePlayerSpeed speed = new UpgradePlayerSpeed();
-	shopUpgrades.add(healthup);
-	shopUpgrades.add(heal);
+        PlayerSpeedUpgrade speed = new PlayerSpeedUpgrade();
+	shopUpgrades.add(healthUp);
+        shopUpgrades.add(shield);
 	shopUpgrades.add(shoot);
         shopUpgrades.add(speed);
 
-	hbox.getChildren().addAll(healthup, shoot, speed, heal);
+	hbox.getChildren().addAll(healthUp, shield, shoot, speed);
 	return hbox;
     }
   
@@ -714,12 +756,6 @@ public class Main extends Application {
 	Button newBtn = new Button("New Game");
 	newBtn.setOnAction(e -> {
 	    pStage.getScene().setRoot(gameRoot);
-	    shopRoot.getChildren().removeAll(decUpStair, toGameStair);
-	    if (couldGoToMap) {
-		shopRoot.getChildren().remove(player);
-	    }
-	    couldGoToShop = true;
-	    couldGoToMap = false;
 	    clearAll();
 	    newGame();
 	});
@@ -730,10 +766,7 @@ public class Main extends Application {
 	    
 	    yesReturn.setOnAction(eY -> {
 		pStage.getScene().setRoot(menuRoot);
-		shopRoot.getChildren().removeAll(decUpStair, toGameStair);
 		clearAll();
-		actualHealth = new Rectangle(screenSize.getWidth() - 120, 10, 99, 22);
-		actualHealth.setFill(Color.GREEN);
 		gameplay = false;
 		pause = false;
 	    });

@@ -17,7 +17,9 @@ public class Character extends Pane {
 
     int health = 5;
     int fullHealth = 5;
+    int shieldHealth = 0;
     boolean alive = true;
+    boolean shield = false;
 
     public Character(int posX, int posY) {
 	Image charImage = new Image("file:src/Sprites/Greenies.png");
@@ -112,7 +114,11 @@ public class Character extends Pane {
     }
 
     public void hit() {
-	health--;
+        if (shield) {
+            shieldHealth--;
+        } else {
+            health--;
+        }
     }
     
     public void setHealth(int i) {
@@ -144,11 +150,25 @@ public class Character extends Pane {
         return playerSpeed;
     }
     
-    public void setShootSpeed(int i){
+    public void setShootSpeed(int i) {
 	shootSpeed = i;
     }
     
-    public int getShootSpeed(){
+    public int getShootSpeed() {
 	return shootSpeed;
+    }
+    
+    public void addShield(boolean a) {
+        shield = a;
+        if (a) shieldHealth = 3;
+        else shieldHealth = 0;
+    }
+    
+    public boolean hasShield() {
+        return shield;
+    }
+    
+    public int getShieldHealth() {
+        return shieldHealth;
     }
 }

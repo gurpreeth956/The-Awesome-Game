@@ -1,6 +1,6 @@
-public class UpgradePlayerSpeed extends Upgrades {
+public class PlayerSpeedUpgrade extends Upgrades {
 
-    public UpgradePlayerSpeed() {
+    public PlayerSpeedUpgrade() {
         super("file:src/Sprites/Speed.png", 2);
     }
     
