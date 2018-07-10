@@ -270,6 +270,7 @@ public class Main extends Application {
 		player.setCharacterView(0, player.getOffsetY());
 		characterShooting();
 	    } 
+            
 	    while (portalCount < level.getLevel()) {
 		createPortal();
 		player.toFront();
