@@ -434,6 +434,7 @@ public class Main extends Application {
         long time = timeNow - hitTime;
         
         if(proj.playerColliding(player)){//create enemy proj class
+            proj.setAlive(false);
             if (time < 0 || time > 1000) {
                 player.hit();
 
@@ -450,7 +451,7 @@ public class Main extends Application {
                     gameRoot.getChildren().add(actualHealth);
                     actualHealth.toFront();
                 }
-                proj.setAlive(false);
+                //proj.setAlive(false);
                 hitTime = timeNow;
             }
         }
@@ -490,7 +491,7 @@ public class Main extends Application {
     }
 
     public void createEnemy(Portal portal) {
-        Enemy enemy = new RangedEnemy("file:src/Sprites/Redies.png", 3, 1, 66, 33, 500);
+        Enemy enemy = new RangedEnemy("file:src/Sprites/Redies.png", 3, 1, 66, 33, 1000);
         enemy.summon(portal);
         gameRoot.getChildren().addAll(enemy, enemy.healthBarOutline, enemy.lostHealth, enemy.actualHealth);
         coinAndScore.toFront();

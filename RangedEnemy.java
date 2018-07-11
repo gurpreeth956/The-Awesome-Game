@@ -63,7 +63,7 @@ public class RangedEnemy extends Enemy{
             this.setCharacterView(128, 183);
             this.setOffsetY(183);
             if (time < 0 || time > this.getShootSpeed()) {
-                createProjectile(0, -9, projectiles, gameRoot);
+                createProjectile(0, -5, projectiles, gameRoot);
                 timeOfLastProjectile = timeNow;
             }
 
@@ -71,7 +71,7 @@ public class RangedEnemy extends Enemy{
             this.setCharacterView(128, 0);
             this.setOffsetY(0);
             if (time < 0 || time > this.getShootSpeed()) {
-                createProjectile(0, 9, projectiles, gameRoot);
+                createProjectile(0, 5, projectiles, gameRoot);
                 timeOfLastProjectile = timeNow;
             }
 
@@ -79,7 +79,7 @@ public class RangedEnemy extends Enemy{
             this.setCharacterView(128, 123);
             this.setOffsetY(123);
             if (time < 0 || time > this.getShootSpeed()) {
-                createProjectile(-9, 0, projectiles, gameRoot);
+                createProjectile(-5, 0, projectiles, gameRoot);
                 timeOfLastProjectile = timeNow;
             }
 
@@ -87,7 +87,7 @@ public class RangedEnemy extends Enemy{
             this.setCharacterView(128, 61);
             this.setOffsetY(61);
             if (time < 0 || time > this.getShootSpeed()) {
-                createProjectile(9, 0, projectiles, gameRoot);
+                createProjectile(5, 0, projectiles, gameRoot);
                 timeOfLastProjectile = timeNow;
             }
         }
@@ -110,15 +110,15 @@ public class RangedEnemy extends Enemy{
         int vert = player.y-this.y;
         int hori = player.x-this.x;
         
-        if(Math.abs(vert)<Math.abs(hori)){
+        if(Math.abs(vert)>Math.abs(hori)){
             if(vert<=0){
-                return "left";
+                return "up";
             }
-            return "right";
-        }
-        else if(hori<=0){
             return "down";
         }
-        return "up";
+        else if(hori<=0){
+            return "left";
+        }
+        return "right";
     }
 }
