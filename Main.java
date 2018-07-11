@@ -388,7 +388,7 @@ public class Main extends Application {
     }
 
     public void createProjectile(int x, int y) {
-        Projectile proj = new Projectile(player.getX() + 28, player.getY() + 16);
+        Projectile proj = new Projectile("file:src/Sprites/Shot.png", player.getX() + 28, player.getY() + 16, 12, 12);
         proj.setVelocityX(x);
         proj.setVelocityY(y);
         gameRoot.getChildren().addAll(proj);
@@ -485,6 +485,8 @@ public class Main extends Application {
         if (!enemy.playerColliding(player)) {
             enemy.move(player, scene.getWidth(), scene.getHeight());
         }
+        
+        enemy.shoot(player, scene.getWidth(), scene.getHeight());
 
         if (enemy.getHealth() == 0) {
             enemy.setAlive(false);

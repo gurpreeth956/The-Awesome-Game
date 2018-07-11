@@ -56,6 +56,10 @@ public class Enemy extends Pane{
 	//To be overridden by child classes
     }
     
+    public void shoot(Character player, double a, double b){
+        //To be overridden by child classes
+    }
+    
     public void moveX(int x, double width, int speed) {
         boolean right = x > 0;
         for (int i = 0; i < Math.abs(x); i++) {
