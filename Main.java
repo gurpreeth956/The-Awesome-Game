@@ -19,7 +19,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Screen;
-import javafx.stage.StageStyle;
 
 public class Main extends Application {
     
@@ -204,7 +203,7 @@ public class Main extends Application {
 	primaryStage.setFullScreen(true);
 	primaryStage.setFullScreenExitHint("");
 	primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
-	primaryStage.initStyle(StageStyle.UTILITY);
+	primaryStage.resizableProperty().setValue(Boolean.FALSE);
 	primaryStage.setResizable(false);
 	primaryStage.setScene(scene);
 	primaryStage.show();
