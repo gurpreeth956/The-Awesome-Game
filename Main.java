@@ -19,7 +19,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Screen;
-import javafx.stage.StageStyle;
 
 public class Main extends Application {
     
@@ -97,14 +96,14 @@ public class Main extends Application {
 	BorderPane.setAlignment(title, Pos.CENTER);
 
 	scene = new Scene(menuRoot, screenSize.getWidth(), screenSize.getHeight());
-	scene.getStylesheets().addAll(this.getClass().getResource("Menu.css").toExternalForm());
+	scene.getStylesheets().addAll(this.getClass().getResource("Design.css").toExternalForm());
 
 	//Game Root
 	gameRoot = new Pane();
-	gameRoot.setId("backgroundtrial");
-	gameRoot.getStylesheets().addAll(this.getClass().getResource("Style.css").toExternalForm());
+	gameRoot.setId("backgroundgame");
 	Label healthLabel = new Label("Health: ");
 	healthLabel.setFont(new Font("Arial", 20));
+        healthLabel.setTextFill(Color.WHITE);
 	healthLabel.toFront();
 	healthBarOutline = new Rectangle(screenSize.getWidth() - 121, 9, 102, 22);
 	healthBarOutline.setFill(Color.TRANSPARENT);
@@ -121,8 +120,10 @@ public class Main extends Application {
 	health.setTranslateY(10);
 	coinLabel = new Label("Coins: ");
 	coinLabel.setFont(new Font("Arial", 20));
+        coinLabel.setTextFill(Color.WHITE);
 	scoreLabel = new Label("Score: ");
 	scoreLabel.setFont(new Font("Arial", 20));
+        scoreLabel.setTextFill(Color.WHITE);
 	coinAndScore = new VBox(10);
 	coinAndScore.getChildren().addAll(coinLabel, scoreLabel);
 	coinAndScore.setTranslateX(10);
@@ -130,6 +131,7 @@ public class Main extends Application {
 
         //Shop Root
 	shopRoot = new BorderPane();
+        shopRoot.setId("backgroundshop");
 	decUpStair = new Stairs("up", (int) screenSize.getWidth(), (int) screenSize.getHeight());
 	toGameStair = new Stairs("shop", (int) screenSize.getWidth() - 100, (int) screenSize.getHeight() - 100);
 
@@ -201,7 +203,7 @@ public class Main extends Application {
 	primaryStage.setFullScreen(true);
 	primaryStage.setFullScreenExitHint("");
 	primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
-	primaryStage.initStyle(StageStyle.UTILITY);
+	primaryStage.resizableProperty().setValue(Boolean.FALSE);
 	primaryStage.setResizable(false);
 	primaryStage.setScene(scene);
 	primaryStage.show();
