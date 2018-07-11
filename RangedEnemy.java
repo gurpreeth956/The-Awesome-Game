@@ -57,8 +57,9 @@ public class RangedEnemy extends Enemy{
     public void shoot(Character player, List<Projectile> projectiles, Pane gameRoot){
         long timeNow = System.currentTimeMillis();
         long time = timeNow - timeOfLastProjectile;
+        String dist = distance(player);
 
-        if (player.y<this.y) {//Shoot up
+        if (dist.equals("up")) {//Shoot up
             this.setCharacterView(128, 183);
             this.setOffsetY(183);
             if (time < 0 || time > this.getShootSpeed()) {
@@ -66,7 +67,7 @@ public class RangedEnemy extends Enemy{
                 timeOfLastProjectile = timeNow;
             }
 
-        } else if (player.y>this.y) { //shoot down
+        } else if (dist.equals("down")) { //shoot down
             this.setCharacterView(128, 0);
             this.setOffsetY(0);
             if (time < 0 || time > this.getShootSpeed()) {
@@ -74,7 +75,7 @@ public class RangedEnemy extends Enemy{
                 timeOfLastProjectile = timeNow;
             }
 
-        } else if (player.x<this.x) {//shoot left
+        } else if (dist.equals("left")) {//shoot left
             this.setCharacterView(128, 123);
             this.setOffsetY(123);
             if (time < 0 || time > this.getShootSpeed()) {
@@ -82,7 +83,7 @@ public class RangedEnemy extends Enemy{
                 timeOfLastProjectile = timeNow;
             }
 
-        } else if (player.x>this.x) {//shoot right
+        } else if (dist.equals("right")) {//shoot right
             this.setCharacterView(128, 61);
             this.setOffsetY(61);
             if (time < 0 || time > this.getShootSpeed()) {
@@ -94,8 +95,8 @@ public class RangedEnemy extends Enemy{
     
     public void createProjectile(int a, int b, List<Projectile> projectiles, Pane root){
         Projectile proj = new Projectile("file:src/Sprites/EnemyShot.png", this.getX() + 28, this.getY() + 16, 12, 12);
-        proj.setVelocityX(x);
-        proj.setVelocityY(y);
+        proj.setVelocityX(a);
+        proj.setVelocityY(b);
         root.getChildren().addAll(proj);
         proj.toBack();
         projectiles.add(proj);
@@ -103,5 +104,21 @@ public class RangedEnemy extends Enemy{
     
     public int getShootSpeed(){
         return shootSpeed;
+    }
+    
+    public String distance(Character player){
+        int vert = player.y-this.y;
+        int hori = player.x-this.x;
+        
+        if(Math.abs(vert)<Math.abs(hori)){
+            if(vert<=0){
+                return "left";
+            }
+            return "right";
+        }
+        else if(hori<=0){
+            return "down";
+        }
+        return "up";
     }
 }

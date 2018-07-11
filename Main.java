@@ -450,7 +450,7 @@ public class Main extends Application {
                     gameRoot.getChildren().add(actualHealth);
                     actualHealth.toFront();
                 }
-
+                proj.setAlive(false);
                 hitTime = timeNow;
             }
         }
