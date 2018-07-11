@@ -1,4 +1,8 @@
 
+import java.util.List;
+import javafx.scene.layout.Pane;
+
+
 public class RangedEnemy extends Enemy{
     
     long timeOfLastProjectile = 0;
@@ -50,46 +54,51 @@ public class RangedEnemy extends Enemy{
         }
     }
     
-    public void shoot(){
+    public void shoot(Character player, List<Projectile> projectiles, Pane gameRoot){
         long timeNow = System.currentTimeMillis();
         long time = timeNow - timeOfLastProjectile;
 
-        if () {//Shoot up
+        if (player.y<this.y) {//Shoot up
             this.setCharacterView(128, 183);
             this.setOffsetY(183);
             if (time < 0 || time > this.getShootSpeed()) {
-                createProjectile(0, -9);
+                createProjectile(0, -9, projectiles, gameRoot);
                 timeOfLastProjectile = timeNow;
             }
 
-        } else if () { //shoot down
+        } else if (player.y>this.y) { //shoot down
             this.setCharacterView(128, 0);
             this.setOffsetY(0);
             if (time < 0 || time > this.getShootSpeed()) {
-                createProjectile(0, 9);
+                createProjectile(0, 9, projectiles, gameRoot);
                 timeOfLastProjectile = timeNow;
             }
 
-        } else if () {//shoot left
+        } else if (player.x<this.x) {//shoot left
             this.setCharacterView(128, 123);
             this.setOffsetY(123);
             if (time < 0 || time > this.getShootSpeed()) {
-                createProjectile(-9, 0);
+                createProjectile(-9, 0, projectiles, gameRoot);
                 timeOfLastProjectile = timeNow;
             }
 
-        } else if () {//shoot right
+        } else if (player.x>this.x) {//shoot right
             this.setCharacterView(128, 61);
             this.setOffsetY(61);
             if (time < 0 || time > this.getShootSpeed()) {
-                createProjectile(9, 0);
+                createProjectile(9, 0, projectiles, gameRoot);
                 timeOfLastProjectile = timeNow;
             }
         }
     }
     
-    public void createProjectile(int a, int b){
-        
+    public void createProjectile(int a, int b, List<Projectile> projectiles, Pane root){
+        Projectile proj = new Projectile("file:src/Sprites/EnemyShot.png", this.getX() + 28, this.getY() + 16, 12, 12);
+        proj.setVelocityX(x);
+        proj.setVelocityY(y);
+        root.getChildren().addAll(proj);
+        proj.toBack();
+        projectiles.add(proj);
     }
     
     public int getShootSpeed(){

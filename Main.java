@@ -49,6 +49,9 @@ public class Main extends Application {
     private List<Projectile> projectiles = new ArrayList<>();
     private List<Projectile> projToRemove = new ArrayList<>();
     private long timeOfLastProjectile = 0;
+    
+    private List<Projectile> enemyProj = new ArrayList<>();
+     private List<Projectile> enemyProjToRemove = new ArrayList<>();
 
     private List<Enemy> enemies = new ArrayList();
     private List<Enemy> enemToRemove = new ArrayList();
@@ -307,12 +310,18 @@ public class Main extends Application {
             for (Projectile proj : projectiles) {
                 updateProj(proj);
             }
+            for(Projectile proj:enemyProj){
+                updateEnemyProj(proj);
+            }
             for (Enemy enemy : enemies) {
                 updateEnemy(enemy);
             }
 
             projectiles.removeAll(projToRemove);
             projToRemove.clear();
+            
+            enemyProj.removeAll(enemyProjToRemove);
+            enemyProjToRemove.clear();
 
             enemies.removeAll(enemToRemove);
             enemToRemove.clear();
@@ -400,7 +409,7 @@ public class Main extends Application {
         proj.move();
 
         for (Enemy enemy : enemies) {
-            if (proj.isColliding(enemy)) {
+            if (proj.enemyColliding(enemy)) {
                 enemy.hit();
                 gameRoot.getChildren().remove(enemy.actualHealth);
                 gameRoot.getChildren().add(enemy.updateHealth());
@@ -417,6 +426,48 @@ public class Main extends Application {
         if (!proj.isAlive()) {
             gameRoot.getChildren().remove(proj);
             projToRemove.add(proj);
+        }
+    }
+    
+    public void updateEnemyProj(Projectile proj){
+        long timeNow = System.currentTimeMillis();
+        long time = timeNow - hitTime;
+        
+        if(proj.playerColliding(player)){//create enemy proj class
+            if (time < 0 || time > 1000) {
+                player.hit();
+
+                if (player.hasShield()) {
+                    gameRoot.getChildren().remove(shieldHealth);
+                    shieldHealth = new Rectangle(screenSize.getWidth() - 120, 10, player.getShieldHealth() * 33 + 1, 22);
+                    shieldHealth.setFill(Color.web("#00E8FF"));
+                    gameRoot.getChildren().add(shieldHealth);
+                    shieldHealth.toFront();
+                } else {
+                    gameRoot.getChildren().remove(actualHealth);
+                    actualHealth = new Rectangle(screenSize.getWidth() - 120, 10, player.getHealth() * 20, 22);
+                    actualHealth.setFill(Color.web("#00F32C"));
+                    gameRoot.getChildren().add(actualHealth);
+                    actualHealth.toFront();
+                }
+
+                hitTime = timeNow;
+            }
+        }
+        
+        if(!proj.playerColliding(player)){
+            proj.move();
+        }
+        
+        if (proj.getTranslateX() <= 0 || proj.getTranslateX() >= scene.getWidth()) {
+            proj.setAlive(false);
+        } else if (proj.getTranslateY() <= 0 || proj.getTranslateY() >= scene.getHeight()) {
+            proj.setAlive(false);
+        }
+
+        if (!proj.isAlive()) {
+            gameRoot.getChildren().remove(proj);
+            enemyProjToRemove.add(proj);
         }
     }
 
@@ -439,7 +490,7 @@ public class Main extends Application {
     }
 
     public void createEnemy(Portal portal) {
-        Enemy enemy = new MeleeEnemy("file:src/Sprites/Redies.png", 3, 1, 66, 33);
+        Enemy enemy = new RangedEnemy("file:src/Sprites/Redies.png", 3, 1, 66, 33, 500);
         enemy.summon(portal);
         gameRoot.getChildren().addAll(enemy, enemy.healthBarOutline, enemy.lostHealth, enemy.actualHealth);
         coinAndScore.toFront();
@@ -486,7 +537,7 @@ public class Main extends Application {
             enemy.move(player, scene.getWidth(), scene.getHeight());
         }
         
-        enemy.shoot(player, scene.getWidth(), scene.getHeight());
+        enemy.shoot(player, enemyProj, gameRoot);
 
         if (enemy.getHealth() == 0) {
             enemy.setAlive(false);

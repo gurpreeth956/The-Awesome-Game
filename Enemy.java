@@ -56,7 +56,7 @@ public class Enemy extends Pane{
 	//To be overridden by child classes
     }
     
-    public void shoot(Character player, double a, double b){
+    public void shoot(Character player, List<Projectile> list, Pane root){
         //To be overridden by child classes
     }
     
@@ -181,5 +181,13 @@ public class Enemy extends Pane{
         this.setTranslateY(portal.getY());
         this.x = portal.getX();
         this.y = portal.getY();
+    }
+    
+    public void setOffsetX(int offsetX) {
+	this.offsetX = offsetX;
+    }
+
+    public void setOffsetY(int offsetY) {
+	this.offsetY = offsetY;
     }
 }

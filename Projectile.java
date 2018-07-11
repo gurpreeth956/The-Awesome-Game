@@ -60,7 +60,11 @@ public class Projectile extends Pane {
         this.alive = alive;
     }
     
-    public boolean isColliding(Enemy enemy) {
+    public boolean enemyColliding(Enemy enemy) {
         return this.getBoundsInParent().intersects(enemy.getBoundsInParent());
+    }
+    
+    public boolean playerColliding(Character player){
+        return this.getBoundsInParent().intersects(player.getBoundsInParent());
     }
 }
