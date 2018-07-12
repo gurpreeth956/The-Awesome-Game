@@ -841,7 +841,7 @@ public class Main extends Application {
                 pause = false;
             });
             noReturn.setOnAction(eN -> {
-                pStage.getScene().setRoot(gameOptionsRoot);
+                pStage.getScene().setRoot(gameOverRoot);
             });
         });
 
@@ -855,7 +855,7 @@ public class Main extends Application {
                 clearAll();
             });
             noExit.setOnAction(eN -> {
-                pStage.getScene().setRoot(gameOptionsRoot);
+                pStage.getScene().setRoot(gameOverRoot);
             });
         });
 
