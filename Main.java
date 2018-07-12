@@ -491,7 +491,7 @@ public class Main extends Application {
     }
 
     public void createEnemy(Portal portal) {
-        Enemy enemy = new RangedEnemy("file:src/Sprites/Redies.png", 3, 1, 66, 33, 1000);
+        Enemy enemy = new SpikeEnemy("file:src/Sprites/Redies.png", 3, 1, 66, 33, 1000);
         enemy.summon(portal);
         gameRoot.getChildren().addAll(enemy, enemy.healthBarOutline, enemy.lostHealth, enemy.actualHealth);
         coinAndScore.toFront();

@@ -63,7 +63,7 @@ public class RangedEnemy extends Enemy{
             this.setCharacterView(128, 183);
             this.setOffsetY(183);
             if (time < 0 || time > this.getShootSpeed()) {
-                createProjectile(0, -5, projectiles, gameRoot);
+                createProjectile(0, -5, projectiles, gameRoot, "file:src/Sprites/EnemyShot.png", 12, 12);
                 timeOfLastProjectile = timeNow;
             }
 
@@ -71,7 +71,7 @@ public class RangedEnemy extends Enemy{
             this.setCharacterView(128, 0);
             this.setOffsetY(0);
             if (time < 0 || time > this.getShootSpeed()) {
-                createProjectile(0, 5, projectiles, gameRoot);
+                createProjectile(0, 5, projectiles, gameRoot, "file:src/Sprites/EnemyShot.png", 12, 12);
                 timeOfLastProjectile = timeNow;
             }
 
@@ -79,7 +79,7 @@ public class RangedEnemy extends Enemy{
             this.setCharacterView(128, 123);
             this.setOffsetY(123);
             if (time < 0 || time > this.getShootSpeed()) {
-                createProjectile(-5, 0, projectiles, gameRoot);
+                createProjectile(-5, 0, projectiles, gameRoot, "file:src/Sprites/EnemyShot.png", 12, 12);
                 timeOfLastProjectile = timeNow;
             }
 
@@ -87,14 +87,14 @@ public class RangedEnemy extends Enemy{
             this.setCharacterView(128, 61);
             this.setOffsetY(61);
             if (time < 0 || time > this.getShootSpeed()) {
-                createProjectile(5, 0, projectiles, gameRoot);
+                createProjectile(5, 0, projectiles, gameRoot, "file:src/Sprites/EnemyShot.png", 12, 12);
                 timeOfLastProjectile = timeNow;
             }
         }
     }
     
-    public void createProjectile(int a, int b, List<Projectile> projectiles, Pane root){
-        Projectile proj = new Projectile("file:src/Sprites/EnemyShot.png", this.getX() + 28, this.getY() + 16, 12, 12);
+    public void createProjectile(int a, int b, List<Projectile> projectiles, Pane root, String img, int width, int height){
+        Projectile proj = new Projectile(img, this.getX() + 28, this.getY() + 16, width, height);
         proj.setVelocityX(a);
         proj.setVelocityY(b);
         root.getChildren().addAll(proj);
