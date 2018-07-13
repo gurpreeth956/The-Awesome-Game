@@ -492,7 +492,8 @@ public class Main extends Application {
 
     public void createEnemy(Portal portal) {
         //Enemy enemy = new SpikeEnemy("file:src/Sprites/Redies.png", 3, 1, 66, 33, 1000);
-        Enemy enemy = new Licker("file:src/CharlesSpriteSheet.png", 3, 1, 80, 80);
+        //Enemy enemy = new Licker("file:src/Sprites/CharlesSpriteSheet.png", 3, 1, 80, 80);
+        Enemy enemy = level.generate();
         enemy.summon(portal);
         gameRoot.getChildren().addAll(enemy, enemy.healthBarOutline, enemy.lostHealth, enemy.actualHealth);
         coinAndScore.toFront();
