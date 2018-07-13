@@ -49,9 +49,9 @@ public class Main extends Application {
     private List<Projectile> projectiles = new ArrayList<>();
     private List<Projectile> projToRemove = new ArrayList<>();
     private long timeOfLastProjectile = 0;
-    
+
     private List<Projectile> enemyProj = new ArrayList<>();
-     private List<Projectile> enemyProjToRemove = new ArrayList<>();
+    private List<Projectile> enemyProjToRemove = new ArrayList<>();
 
     private List<Enemy> enemies = new ArrayList();
     private List<Enemy> enemToRemove = new ArrayList();
