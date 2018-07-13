@@ -5,6 +5,7 @@ public class MeleeEnemy extends Enemy {
 	super(img, health, coin, width, height);
     }
     
+    @Override
     public void move(Character player, double width, double height) {
 	if (player.getX() > this.getX() && player.getY() == this.getY()) { //right
             this.setCharacterView(0, 61);
