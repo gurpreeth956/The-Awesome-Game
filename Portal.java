@@ -6,10 +6,10 @@ import javafx.scene.layout.Pane;
 public class Portal extends Pane {
     
     ImageView iv;
-    int offsetX = 32;
-    int offsetY = 20;
-    int width = 36;
-    int height = 60;
+    int offsetX = 0;
+    int offsetY = 0;
+    int width = 44;
+    int height = 92;
     int x; //Portal xPos
     int y; //Portal yPos
     
