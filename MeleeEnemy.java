@@ -45,4 +45,9 @@ public class MeleeEnemy extends Enemy {
             this.moveY(1, height, 1);
         }
     }
+    
+    //Override me
+    public void hitView(Enemy enemy){
+        this.setCharacterView(0,0);
+    }   
 }

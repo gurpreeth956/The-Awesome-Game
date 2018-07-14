@@ -1,13 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
-/**
- *
- * @author rhuan
- */
 //A.K.A Charles
 import javafx.animation.Animation;
 import javafx.geometry.Rectangle2D;
@@ -31,6 +22,10 @@ public class Licker extends MeleeEnemy{
             iv = charles.getIV();
             iv.setViewport(new Rectangle2D(offsetX,offsetY,width,height));
             getChildren().addAll(iv);          
+    }
+    
+    public void hitView(Enemy enemy){
+        charles.setOffset(0,0);
     }
     
     @Override

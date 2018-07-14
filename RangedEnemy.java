@@ -1,5 +1,4 @@
 
-
 import java.util.List;
 import javafx.scene.layout.Pane;
 
@@ -122,4 +121,9 @@ public class RangedEnemy extends Enemy{
         }
         return "right";
     }
+    
+    //Override for different sprites
+    /*public void hitView(Enemy enemy){
+        this.setCharacterView(0,0);
+    }*/
 }

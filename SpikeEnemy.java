@@ -19,4 +19,9 @@ public class SpikeEnemy extends RangedEnemy {
             timeOfLastProjectile = timeNow;
         }
     }
+    
+    //Override for different sprites
+    /*public void hitView(Enemy enemy){
+        this.setCharacterView(0,0);
+    }*/
 }

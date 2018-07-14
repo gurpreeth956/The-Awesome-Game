@@ -52,6 +52,10 @@ public class Enemy extends Pane{
         this.iv.setViewport(new Rectangle2D(offsetX,offsetY,width,height));
     }
     
+    public void hitView(Enemy enemy){
+        enemy.setCharacterView(128, 0);
+    }
+    
     public void move(Character player, double a, double b){
 	//To be overridden by child classes
     }

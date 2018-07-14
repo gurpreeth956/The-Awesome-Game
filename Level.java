@@ -7,14 +7,14 @@ public class Level {
     public static int enemiesToBeat;
     public static int enemiesLeft;
     public static int enemiesSpawned;
-    public static int coins = 100; //temporary
+    public static int coins; //temporary
     public static int highScore;
     static boolean shopping;
 
     public Level() {
         currentLevel = 1;
-        enemiesToBeat = 2;
-        enemiesLeft = 2;
+        enemiesToBeat = 5;
+        enemiesLeft = 5;
         enemiesSpawned = 0;
         shopping = false;
     }

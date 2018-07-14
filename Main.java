@@ -49,7 +49,7 @@ public class Main extends Application {
     private List<Projectile> projectiles = new ArrayList<>();
     private List<Projectile> projToRemove = new ArrayList<>();
     private long timeOfLastProjectile = 0;
-
+    
     private List<Projectile> enemyProj = new ArrayList<>();
     private List<Projectile> enemyProjToRemove = new ArrayList<>();
 
@@ -288,7 +288,7 @@ public class Main extends Application {
                 if (portal.summon() && !level.isShopping() && level.getEnemiesSpawned() < level.getEnemiesToBeat()) {
                     //    if (level.getEnemiesLeft() == 1 && bosses.size() >= level.getLevel()) {//bosses.size part is temp so game doesnt crash after we run out of bosses
                     //	createBoss(portal);
-                    //    } else {
+                    //   } else {
                     //	if (level.getEnemiesToBeat() - level.getEnemiesSpawned() != 1||bosses.size() < level.getLevel()) {
                     createEnemy(portal);
                     //	}
@@ -491,8 +491,6 @@ public class Main extends Application {
     }
 
     public void createEnemy(Portal portal) {
-        //Enemy enemy = new SpikeEnemy("file:src/Sprites/Redies.png", 3, 1, 66, 33, 1000);
-        //Enemy enemy = new Licker("file:src/Sprites/CharlesSpriteSheet.png", 3, 1, 80, 80);
         Enemy enemy = level.generate();
         enemy.summon(portal);
         gameRoot.getChildren().addAll(enemy, enemy.healthBarOutline, enemy.lostHealth, enemy.actualHealth);
@@ -514,7 +512,7 @@ public class Main extends Application {
         long timeNow = System.currentTimeMillis();
         long time = timeNow - hitTime;
         if (enemy.playerColliding(player)) {
-            enemy.setCharacterView(128, 0);
+            enemy.hitView(enemy);
             if (time < 0 || time > 1000) {
                 player.hit();
 
