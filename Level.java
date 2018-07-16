@@ -88,6 +88,7 @@ public class Level {
 
     public void fillBoss(List<Enemy> bosses) {
         bosses.add(new Boss("file:src/Sprites/test.png", 30, 20, 200, 200));
+        bosses.add(new Boss("file:src/Sprites/Redies.png",30,20,66,33));
     }
 
     public Enemy generate() {

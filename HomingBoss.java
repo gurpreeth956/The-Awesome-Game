@@ -58,14 +58,6 @@ public class HomingBoss extends RangedEnemy{
         String dist = distance(player);
 
         if (dist.equals("up")) {//Shoot up
-            this.setCharacterView(128, 183);
-            this.setOffsetY(183);
-            if (time < 0 || time > this.getShootSpeed()) {
-                createProjectile(5, 5, projectiles, gameRoot, "file:src/Sprites/EnemyShot.png", 12, 12);
-                timeOfLastProjectile = timeNow;
-            }
-
-        } else if (dist.equals("down")) { //shoot down
             this.setCharacterView(128, 0);
             this.setOffsetY(0);
             if (time < 0 || time > this.getShootSpeed()) {
@@ -73,26 +65,11 @@ public class HomingBoss extends RangedEnemy{
                 timeOfLastProjectile = timeNow;
             }
 
-        } else if (dist.equals("left")) {//shoot left
-            this.setCharacterView(128, 123);
-            this.setOffsetY(123);
-            if (time < 0 || time > this.getShootSpeed()) {
-                createProjectile(5, 5, projectiles, gameRoot, "file:src/Sprites/EnemyShot.png", 12, 12);
-                timeOfLastProjectile = timeNow;
-            }
-
-        } else if (dist.equals("right")) {//shoot right
-            this.setCharacterView(128, 61);
-            this.setOffsetY(61);
-            if (time < 0 || time > this.getShootSpeed()) {
-                createProjectile(5, 5, projectiles, gameRoot, "file:src/Sprites/EnemyShot.png", 12, 12);
-                timeOfLastProjectile = timeNow;
-            }
         }
     }
     
     public void createProjectile(int a, int b, List<Projectile> projectiles, Pane root, String img, int width, int height){
-        Projectile proj = new Projectile(img, this.getX() + 28, this.getY() + 16, width, height);
+        Projectile proj = new HomingProjectile(img, this.getX() + 28, this.getY() + 16, width, height);
         proj.setVelocityX(a);
         proj.setVelocityY(b);
         root.getChildren().addAll(proj);
@@ -104,19 +81,4 @@ public class HomingBoss extends RangedEnemy{
         return shootSpeed;
     }
     
-    public String distance(Character player){
-        int vert = player.y-this.y;
-        int hori = player.x-this.x;
-        
-        if(Math.abs(vert)>Math.abs(hori)){
-            if(vert<=0){
-                return "up";
-            }
-            return "down";
-        }
-        else if(hori<=0){
-            return "left";
-        }
-        return "right";
-    }
 }

@@ -49,7 +49,7 @@ public class Main extends Application {
     private List<Projectile> projectiles = new ArrayList<>();
     private List<Projectile> projToRemove = new ArrayList<>();
     private long timeOfLastProjectile = 0;
-    
+
     private List<Projectile> enemyProj = new ArrayList<>();
     private List<Projectile> enemyProjToRemove = new ArrayList<>();
 
@@ -286,13 +286,13 @@ public class Main extends Application {
 
             for (Portal portal : portals) {
                 if (portal.summon() && !level.isShopping() && level.getEnemiesSpawned() < level.getEnemiesToBeat()) {
-                    //    if (level.getEnemiesLeft() == 1 && bosses.size() >= level.getLevel()) {//bosses.size part is temp so game doesnt crash after we run out of bosses
-                    //	createBoss(portal);
-                    //   } else {
-                    //	if (level.getEnemiesToBeat() - level.getEnemiesSpawned() != 1||bosses.size() < level.getLevel()) {
-                    createEnemy(portal);
-                    //	}
-                    //    }
+                    if (level.getEnemiesLeft() == 1 && bosses.size() >= level.getLevel()) {//bosses.size part is temp so game doesnt crash after we run out of bosses
+                        createBoss(portal);
+                    } else {
+                        if (level.getEnemiesToBeat() - level.getEnemiesSpawned() != 1 || bosses.size() < level.getLevel()) {
+                            createEnemy(portal);
+                        }
+                    }
                 }
             }
 
@@ -310,7 +310,7 @@ public class Main extends Application {
             for (Projectile proj : projectiles) {
                 updateProj(proj);
             }
-            for(Projectile proj:enemyProj){
+            for (Projectile proj : enemyProj) {
                 updateEnemyProj(proj);
             }
             for (Enemy enemy : enemies) {
@@ -319,7 +319,7 @@ public class Main extends Application {
 
             projectiles.removeAll(projToRemove);
             projToRemove.clear();
-            
+
             enemyProj.removeAll(enemyProjToRemove);
             enemyProjToRemove.clear();
 
@@ -428,12 +428,12 @@ public class Main extends Application {
             projToRemove.add(proj);
         }
     }
-    
-    public void updateEnemyProj(Projectile proj){
+
+    public void updateEnemyProj(Projectile proj) {
         long timeNow = System.currentTimeMillis();
         long time = timeNow - hitTime;
-        
-        if(proj.playerColliding(player)){//create enemy proj class
+
+        if (proj.playerColliding(player)) {//create enemy proj class
             proj.setAlive(false);
             if (time < 0 || time > 1000) {
                 player.hit();
@@ -454,11 +454,11 @@ public class Main extends Application {
                 hitTime = timeNow;
             }
         }
-        
-        if(!proj.playerColliding(player)){
+
+        if (!proj.playerColliding(player)) {
             proj.move(player);
         }
-        
+
         if (proj.getTranslateX() <= 0 || proj.getTranslateX() >= scene.getWidth()) {
             proj.setAlive(false);
         } else if (proj.getTranslateY() <= 0 || proj.getTranslateY() >= scene.getHeight()) {
@@ -536,7 +536,7 @@ public class Main extends Application {
         if (!enemy.playerColliding(player)) {
             enemy.move(player, scene.getWidth(), scene.getHeight());
         }
-        
+
         enemy.shoot(player, enemyProj, gameRoot);
 
         if (enemy.getHealth() == 0) {
