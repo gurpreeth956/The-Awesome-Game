@@ -310,7 +310,7 @@ public class Main extends Application {
             for (Projectile proj : projectiles) {
                 updateProj(proj);
             }
-            for(Projectile proj:enemyProj){
+            for (Projectile proj : enemyProj) {
                 updateEnemyProj(proj);
             }
             for (Enemy enemy : enemies) {
@@ -339,7 +339,7 @@ public class Main extends Application {
         } else if (pause) {
             if (time < 0 || time > 150) {
                 if (isPressed(KeyCode.ESCAPE)) {
-                    if (couldGoToShop == true) {
+                    if (!level.isShopping()) {
                         pStage.getScene().setRoot(gameRoot);
                     } else {
                         pStage.getScene().setRoot(shopRoot);
@@ -433,7 +433,7 @@ public class Main extends Application {
         long timeNow = System.currentTimeMillis();
         long time = timeNow - hitTime;
         
-        if(proj.playerColliding(player)){//create enemy proj class
+        if(proj.playerColliding(player)){ //create enemy proj class
             proj.setAlive(false);
             if (time < 0 || time > 1000) {
                 player.hit();
@@ -451,12 +451,12 @@ public class Main extends Application {
                     gameRoot.getChildren().add(actualHealth);
                     actualHealth.toFront();
                 }
-                //proj.setAlive(false);
+                
                 hitTime = timeNow;
             }
         }
         
-        if(!proj.playerColliding(player)){
+        if (!proj.playerColliding(player)) {
             proj.move();
         }
         
@@ -605,11 +605,13 @@ public class Main extends Application {
                 }
             }
             if (player.isColliding(toGameStair) && couldGoToMap) {
-                shopRoot.getChildren().removeAll(player, health, healthBarOutline, lostHealth, actualHealth, coinAndScore);
+                shopRoot.getChildren().clear();
                 gameRoot.getChildren().addAll(player, health, healthBarOutline, lostHealth, actualHealth, coinAndScore);
                 if (player.hasShield()) {
-                    shopRoot.getChildren().remove(shieldHealth);
                     gameRoot.getChildren().addAll(shieldHealth);
+                }
+                for (Portal port : portals) {
+                    gameRoot.getChildren().addAll(port);
                 }
                 couldGoToShop = true;
                 couldGoToMap = false;
@@ -630,10 +632,11 @@ public class Main extends Application {
             if (player.isColliding(toShopStair)) {
                 pStage.getScene().setRoot(shopRoot);
                 if (couldGoToShop) {
-                    gameRoot.getChildren().removeAll(player, health, healthBarOutline, lostHealth, actualHealth, coinAndScore);
-                    shopRoot.getChildren().addAll(player, health, healthBarOutline, lostHealth, actualHealth, coinAndScore);
+                    gameRoot.getChildren().clear();
+                    shopRoot.getChildren().addAll(player, health, healthBarOutline, lostHealth, actualHealth, 
+                                                  coinAndScore, decUpStair, toGameStair);
+                    shopRoot.setCenter(shopBox);
                     if (player.hasShield()) {
-                        gameRoot.getChildren().remove(shieldHealth);
                         shopRoot.getChildren().addAll(shieldHealth);
                     }
                     couldGoToShop = false;
@@ -674,10 +677,8 @@ public class Main extends Application {
         actualHealth = new Rectangle(screenSize.getWidth() - 120, 10, 100, 22);
         actualHealth.setFill(Color.web("#00F32C"));
         gameRoot.getChildren().addAll(player, health, healthBarOutline, lostHealth, actualHealth, coinAndScore);
-        shopRoot.getChildren().addAll(decUpStair, toGameStair);
         shopBox = addShopButtons();
         shopBox.setAlignment(Pos.CENTER);
-        shopRoot.setCenter(shopBox);
         coinAndScore.toFront();
         coinLabel.toFront();
         scoreLabel.toFront();
@@ -702,6 +703,7 @@ public class Main extends Application {
         Button startBtn = new Button("Start");
         startBtn.setOnAction(e -> {
             pStage.getScene().setRoot(gameRoot);
+            clearAll();
             newGame();
         });
 
@@ -759,7 +761,7 @@ public class Main extends Application {
 
         Button gameBtn = new Button("Back to Game");
         gameBtn.setOnAction(e -> {
-            if (couldGoToShop == true) {
+            if (!level.isShopping()) {
                 pStage.getScene().setRoot(gameRoot);
             } else {
                 pStage.getScene().setRoot(shopRoot);

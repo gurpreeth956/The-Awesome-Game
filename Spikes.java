@@ -1,0 +1,49 @@
+import java.util.List;
+import javafx.geometry.Rectangle2D;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
+
+public class Spikes extends Pane {
+    
+    ImageView iv;
+    int offsetX = 0;
+    int offsetY = 0;
+    int width = 28;
+    int height = 28;
+    int x; //Spike xPos
+    int y; //Spike yPos
+    boolean alive;
+
+    public Spikes(Pane gameRoot, int posX, int posY) {
+        Image spikeImage = new Image("file:src/Sprites/Spikes.png");
+        ImageView spikeIV = new ImageView(spikeImage);
+        this.iv = spikeIV;
+        this.iv.setViewport(new Rectangle2D(offsetX, offsetY, width, height));
+        this.alive = true;
+        this.setTranslateX(posX);
+	this.setTranslateY(posY);
+        this.x = posX;
+        this.y = posY;
+        this.getChildren().addAll(iv);
+    }
+    
+    public boolean isAlive() {
+        return alive;
+    }
+    
+    public void setAlive(boolean a) {
+        alive = a;
+    }
+    
+    public boolean playerShotColliding(List<Projectile> projs) {
+        boolean colliding = false;
+        for (Projectile proj : projs) {
+            if (this.getBoundsInParent().intersects(proj.getBoundsInParent())) {
+                colliding = true;
+                alive = false;
+            }
+        }
+        return colliding;
+    }
+}

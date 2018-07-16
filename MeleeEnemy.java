@@ -1,4 +1,3 @@
-
 public class MeleeEnemy extends Enemy {
     
     public MeleeEnemy(String img, int health, int coin, int width, int height) {
@@ -34,19 +33,18 @@ public class MeleeEnemy extends Enemy {
             this.moveX(-1, width, 1);
             this.moveY(-1, height, 1);
         }
-        if (player.getX() > this.getX() && player.getY() > this.getY()) { //quadrant3
-            this.setCharacterView(0, 61);
+        if (player.getX() < this.getX() && player.getY() > this.getY()) { //quadrant3
+            this.setCharacterView(0, 123);
             this.moveX(1, width, 1);
             this.moveY(1, height, 1);
         }
-        if (player.getX() < this.getX() && player.getY() > this.getY()) { //quadrant4
-            this.setCharacterView(0, 123);
+        if (player.getX() > this.getX() && player.getY() > this.getY()) { //quadrant4
+            this.setCharacterView(0, 61);
             this.moveX(-1, width, 1);
             this.moveY(1, height, 1);
         }
     }
     
-    //Override me
     public void hitView(Enemy enemy){
         this.setCharacterView(0,0);
     }   

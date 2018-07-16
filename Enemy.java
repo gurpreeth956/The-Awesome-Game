@@ -6,7 +6,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
-public class Enemy extends Pane{
+public class Enemy extends Pane {
     
     ImageView iv;
     int offsetX = 0;
@@ -49,18 +49,18 @@ public class Enemy extends Pane{
     }
     
     public void setCharacterView(int offsetX, int offsetY) {
-        this.iv.setViewport(new Rectangle2D(offsetX,offsetY,width,height));
+        this.iv.setViewport(new Rectangle2D(offsetX, offsetY, width, height));
     }
     
-    public void hitView(Enemy enemy){
+    public void hitView(Enemy enemy) {
         enemy.setCharacterView(128, 0);
     }
     
-    public void move(Character player, double a, double b){
+    public void move(Character player, double a, double b) {
 	//To be overridden by child classes
     }
     
-    public void shoot(Character player, List<Projectile> list, Pane root){
+    public void shoot(Character player, List<Projectile> list, Pane root) {
         //To be overridden by child classes
     }
     
@@ -143,7 +143,7 @@ public class Enemy extends Pane{
     }
     
     public Rectangle updateHealth() {
-	actualHealth = new Rectangle(x, y, this.getHealth() * width/this.totalHealth, 3);
+	actualHealth = new Rectangle(x, y, this.getHealth() * width / this.totalHealth, 3);
 	actualHealth.setFill(Color.GREEN);
 	return actualHealth;
     }
@@ -163,7 +163,7 @@ public class Enemy extends Pane{
     
     public boolean enemyColliding(List<Enemy> enemies) {
 	boolean colliding = false;
-	for (Enemy enemy : enemies){
+	for (Enemy enemy : enemies) {
 	    if (this.x == enemy.x && this.y == enemy.y) continue;
 	    if (this.getBoundsInParent().intersects(enemy.getBoundsInParent())){
 		colliding = true;
@@ -180,7 +180,7 @@ public class Enemy extends Pane{
 	return score;
     }
     
-    public void summon(Portal portal){
+    public void summon(Portal portal) {
 	this.setTranslateX(portal.getX());
         this.setTranslateY(portal.getY());
         this.x = portal.getX();

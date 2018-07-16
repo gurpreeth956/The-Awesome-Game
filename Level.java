@@ -1,4 +1,3 @@
-
 import java.util.List;
 
 public class Level {
@@ -7,7 +6,7 @@ public class Level {
     public static int enemiesToBeat;
     public static int enemiesLeft;
     public static int enemiesSpawned;
-    public static int coins; //temporary
+    public static int coins;
     public static int highScore;
     static boolean shopping;
 
@@ -92,7 +91,7 @@ public class Level {
 
     public Enemy generate() {
         int randomNum = 10;
-        while(randomNum>3){
+        while(randomNum > 3) {
             randomNum = (int) (Math.random() * this.getLevel() + 1);
         }
         Enemy enemy = null;
@@ -101,10 +100,10 @@ public class Level {
                 enemy = new Licker("file:src/Sprites/CharlesSpriteSheet.png", 3, 1, 80, 80);
                 break;
             case 2:
-                enemy = new RangedEnemy("file:src/Sprites/Redies.png", 3, 1, 66, 33, 1000);
+                enemy = new RangedEnemy("file:src/Sprites/Redies.png", 3, 1, 66, 33, 3000);
                 break;
             case 3:
-                enemy = new SpikeEnemy("file:src/Sprites/Redies.png", 3, 1, 66, 33, 1000);
+                enemy = new SpikeEnemy("file:src/Sprites/SpikeySpriteSheet.png", 3, 1, 72, 65, 3000);
                 break;
         }
         return enemy;
