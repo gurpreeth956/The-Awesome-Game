@@ -54,12 +54,12 @@ public class SpikeEnemy extends RangedEnemy {
         long time = timeNow - timeOfLastProjectile;
 
         if (time < 0 || time > this.getShootSpeed()) {
-            Spikes spike = new Spikes(gameRoot, this.x, this.y);
-            //createProjectile(0, 0, projectiles, gameRoot, "file:src/Sprites/Spikes.png", 28, 28);
+            Spikes spike = new Spikes(this.x, this.y, gameRoot);
+            gameRoot.getChildren().addAll(spike);
             timeOfLastProjectile = timeNow;
         }
     }
-    
+
     public void hitView(Enemy enemy){
         this.setCharacterView(3, 0);
     }

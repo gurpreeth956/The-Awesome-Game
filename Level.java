@@ -96,13 +96,13 @@ public class Level {
         }
         Enemy enemy = null;
         switch (randomNum) {
-            case 1:
+            case 3:
                 enemy = new Licker("file:src/Sprites/CharlesSpriteSheet.png", 3, 1, 80, 80);
                 break;
             case 2:
                 enemy = new RangedEnemy("file:src/Sprites/Redies.png", 3, 1, 66, 33, 3000);
                 break;
-            case 3:
+            case 1:
                 enemy = new SpikeEnemy("file:src/Sprites/SpikeySpriteSheet.png", 3, 1, 72, 65, 3000);
                 break;
         }

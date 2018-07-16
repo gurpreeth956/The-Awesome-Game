@@ -46,7 +46,7 @@ public class Main extends Application {
     Stairs decUpStair;
     Stairs toGameStair;
 
-    private List<Projectile> projectiles = new ArrayList<>();
+    public static List<Projectile> projectiles = new ArrayList<>();
     private List<Projectile> projToRemove = new ArrayList<>();
     private long timeOfLastProjectile = 0;
     
@@ -56,6 +56,7 @@ public class Main extends Application {
     private List<Enemy> enemies = new ArrayList();
     private List<Enemy> enemToRemove = new ArrayList();
     private long hitTime = 0;
+    private long spikeHitTime = 0;
 
     private List<Enemy> bosses = new ArrayList();
 
@@ -316,6 +317,9 @@ public class Main extends Application {
             for (Enemy enemy : enemies) {
                 updateEnemy(enemy);
             }
+            for (Spikes spike : Spikes.spikes) {
+                updateSpikes(spike);
+            }
 
             projectiles.removeAll(projToRemove);
             projToRemove.clear();
@@ -325,6 +329,10 @@ public class Main extends Application {
 
             enemies.removeAll(enemToRemove);
             enemToRemove.clear();
+            
+            //lists from spikes class
+            Spikes.spikes.removeAll(Spikes.spikeToRemove);
+            Spikes.spikeToRemove.clear();
 
             shopUpgrades.removeAll(upgradesToRemove);
             upgradesToRemove.clear();
@@ -336,6 +344,7 @@ public class Main extends Application {
                 }
                 enemies.clear();
             }
+            
         } else if (pause) {
             if (time < 0 || time > 150) {
                 if (isPressed(KeyCode.ESCAPE)) {
@@ -437,21 +446,7 @@ public class Main extends Application {
             proj.setAlive(false);
             if (time < 0 || time > 1000) {
                 player.hit();
-
-                if (player.hasShield()) {
-                    gameRoot.getChildren().remove(shieldHealth);
-                    shieldHealth = new Rectangle(screenSize.getWidth() - 120, 10, player.getShieldHealth() * 33 + 1, 22);
-                    shieldHealth.setFill(Color.web("#00E8FF"));
-                    gameRoot.getChildren().add(shieldHealth);
-                    shieldHealth.toFront();
-                } else {
-                    gameRoot.getChildren().remove(actualHealth);
-                    actualHealth = new Rectangle(screenSize.getWidth() - 120, 10, player.getHealth() * 20, 22);
-                    actualHealth.setFill(Color.web("#00F32C"));
-                    gameRoot.getChildren().add(actualHealth);
-                    actualHealth.toFront();
-                }
-                
+                playerReceiveHit();
                 hitTime = timeNow;
             }
         }
@@ -469,6 +464,26 @@ public class Main extends Application {
         if (!proj.isAlive()) {
             gameRoot.getChildren().remove(proj);
             enemyProjToRemove.add(proj);
+        }
+    }
+    
+    public void updateSpikes(Spikes spike) {
+        long timeNow = System.currentTimeMillis();
+        long time = timeNow - spikeHitTime;
+        
+        if (spike.playerShotColliding(projectiles)) {
+            Spikes.spikeToRemove.add(spike);
+            gameRoot.getChildren().removeAll(spike);
+        }
+        
+        if (spike.playerColliding(player) && !level.isShopping()) {
+            if (time < 0 || time > 500) {
+                player.hit();
+                playerReceiveHit();
+                Spikes.spikeToRemove.add(spike);
+                gameRoot.getChildren().removeAll(spike);
+                spikeHitTime = timeNow;
+            }
         }
     }
 
@@ -515,21 +530,7 @@ public class Main extends Application {
             enemy.hitView(enemy);
             if (time < 0 || time > 1000) {
                 player.hit();
-
-                if (player.hasShield()) {
-                    gameRoot.getChildren().remove(shieldHealth);
-                    shieldHealth = new Rectangle(screenSize.getWidth() - 120, 10, player.getShieldHealth() * 33 + 1, 22);
-                    shieldHealth.setFill(Color.web("#00E8FF"));
-                    gameRoot.getChildren().add(shieldHealth);
-                    shieldHealth.toFront();
-                } else {
-                    gameRoot.getChildren().remove(actualHealth);
-                    actualHealth = new Rectangle(screenSize.getWidth() - 120, 10, player.getHealth() * 20, 22);
-                    actualHealth.setFill(Color.web("#00F32C"));
-                    gameRoot.getChildren().add(actualHealth);
-                    actualHealth.toFront();
-                }
-
+                playerReceiveHit();
                 hitTime = timeNow;
             }
         }
@@ -539,8 +540,10 @@ public class Main extends Application {
         }
         
         enemy.shoot(player, enemyProj, gameRoot);
+        enemy.update(gameRoot);
 
         if (enemy.getHealth() == 0) {
+            enemy.update(gameRoot);
             enemy.setAlive(false);
         }
         if (!enemy.isAlive()) {
@@ -568,6 +571,22 @@ public class Main extends Application {
                 shieldAdded = false;
                 gameRoot.getChildren().remove(shieldHealth);
             }
+        }
+    }
+    
+    public void playerReceiveHit() {
+        if (player.hasShield()) {
+            gameRoot.getChildren().remove(shieldHealth);
+            shieldHealth = new Rectangle(screenSize.getWidth() - 120, 10, player.getShieldHealth() * 33 + 1, 22);
+            shieldHealth.setFill(Color.web("#00E8FF"));
+            gameRoot.getChildren().add(shieldHealth);
+            shieldHealth.toFront();
+        } else {
+            gameRoot.getChildren().remove(actualHealth);
+            actualHealth = new Rectangle(screenSize.getWidth() - 120, 10, player.getHealth() * 20, 22);
+            actualHealth.setFill(Color.web("#00F32C"));
+            gameRoot.getChildren().add(actualHealth);
+            actualHealth.toFront();
         }
     }
 
@@ -605,6 +624,9 @@ public class Main extends Application {
                 }
             }
             if (player.isColliding(toGameStair) && couldGoToMap) {
+                for (Spikes spike : Spikes.spikes) {
+                    Spikes.spikeToRemove.add(spike);
+                }
                 shopRoot.getChildren().clear();
                 gameRoot.getChildren().addAll(player, health, healthBarOutline, lostHealth, actualHealth, coinAndScore);
                 if (player.hasShield()) {
@@ -656,6 +678,10 @@ public class Main extends Application {
         projToRemove.clear();
         enemies.clear();
         enemToRemove.clear();
+        enemyProj.clear();
+        enemyProjToRemove.clear();
+        Spikes.spikes.clear();
+        Spikes.spikeToRemove.clear();
         bosses.clear();
         portals.clear();
         portalCount = 0;
@@ -703,7 +729,7 @@ public class Main extends Application {
         Button startBtn = new Button("Start");
         startBtn.setOnAction(e -> {
             pStage.getScene().setRoot(gameRoot);
-            clearAll();
+            //clearAll();
             newGame();
         });
 

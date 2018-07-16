@@ -65,6 +65,10 @@ public class Enemy extends Pane {
         //To be overridden by child classes
     }
     
+    public void update(Pane root) {
+        //To be overridden by child classes
+    }
+    
     public void moveX(int x, double width) { //x is horizontal speed
         boolean right = x > 0;
         for (int i = 0; i < Math.abs(x); i++) {
