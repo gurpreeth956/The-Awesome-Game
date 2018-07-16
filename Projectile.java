@@ -64,7 +64,7 @@ public class Projectile extends Pane {
         return this.getBoundsInParent().intersects(enemy.getBoundsInParent());
     }
     
-    public boolean playerColliding(Character player){
+    public boolean playerColliding(Character player) {
         return this.getBoundsInParent().intersects(player.getBoundsInParent());
     }
 }

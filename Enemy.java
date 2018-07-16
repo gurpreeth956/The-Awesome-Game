@@ -6,7 +6,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
-public class Enemy extends Pane{
+public class Enemy extends Pane {
     
     ImageView iv;
     int offsetX = 0;
@@ -17,6 +17,7 @@ public class Enemy extends Pane{
     int y; //Enemy yPos
     int coin;
     int score;
+    int enemySpeed;
     
     Rectangle healthBarOutline;
     Rectangle actualHealth;
@@ -49,61 +50,65 @@ public class Enemy extends Pane{
     }
     
     public void setCharacterView(int offsetX, int offsetY) {
-        this.iv.setViewport(new Rectangle2D(offsetX,offsetY,width,height));
+        this.iv.setViewport(new Rectangle2D(offsetX, offsetY, width, height));
     }
     
-    public void hitView(Enemy enemy){
+    public void hitView(Enemy enemy) {
         enemy.setCharacterView(128, 0);
     }
     
-    public void move(Character player, double a, double b){
+    public void move(Character player, double a, double b) {
 	//To be overridden by child classes
     }
     
-    public void shoot(Character player, List<Projectile> list, Pane root){
+    public void shoot(Character player, List<Projectile> list, Pane root) {
         //To be overridden by child classes
     }
     
-    public void moveX(int x, double width, int speed) {
+    public void update(Pane root) {
+        //To be overridden by child classes
+    }
+    
+    public void moveX(int x, double width) { //x is horizontal speed
         boolean right = x > 0;
         for (int i = 0; i < Math.abs(x); i++) {
             if (right) {
                 if(this.x > width - this.width)
                     this.setTranslateX(width - this.width);
                 else {
-                    this.setTranslateX(this.getTranslateX() + speed);
-                    this.x+=speed;
+                    this.setTranslateX(this.getTranslateX() + 1);
+                    this.x++;
                 }
             }
             else  {
                 if(this.x < 0)
                     this.setTranslateX(0);
                 else {
-                    this.setTranslateX(this.getTranslateX() - speed);
-                    this.x-=speed;
+                    this.setTranslateX(this.getTranslateX() - 1);
+                    this.x--;
                 }
             }
 	    this.healthPos();
         }
     }
     
-    public void moveY(int y, double height, int speed) {
+    public void moveY(int y, double height) { //y is vertical speed
         boolean down = y > 0;
         for (int i = 0; i < Math.abs(y); i++) {
             if (down) {
-                if(this.y > height - this.height)
+                if (this.y > height - this.height)
                     this.setTranslateY(height - this.height);
                 else {
-                    this.setTranslateY(this.getTranslateY() + speed);
-                    this.y+=speed;
+                    this.setTranslateY(this.getTranslateY() + 1);
+                    this.y++;
                 }
             }
             else {
-                if(this.y < 0)
+                if (this.y < 0)
                     this.setTranslateY(0);
                 else {
-                    this.setTranslateY(this.getTranslateY() - speed);
-                    this.y-=speed;
+                    this.setTranslateY(this.getTranslateY() - 1);
+                    this.y--;
                 }
             }
 	    this.healthPos();
@@ -125,6 +130,14 @@ public class Enemy extends Pane{
     public void setY(int y) {
         this.y = y;
     }
+
+    public int getEnemySpeed() {
+        return enemySpeed;
+    }
+
+    public void setEnemySpeed(int enemySpeed) {
+        this.enemySpeed = enemySpeed;
+    }
     
     public boolean isAlive() {
 	return alive;
@@ -143,7 +156,7 @@ public class Enemy extends Pane{
     }
     
     public Rectangle updateHealth() {
-	actualHealth = new Rectangle(x, y, this.getHealth() * width/this.totalHealth, 3);
+	actualHealth = new Rectangle(x, y, this.getHealth() * width / this.totalHealth, 3);
 	actualHealth.setFill(Color.GREEN);
 	return actualHealth;
     }
@@ -163,7 +176,7 @@ public class Enemy extends Pane{
     
     public boolean enemyColliding(List<Enemy> enemies) {
 	boolean colliding = false;
-	for (Enemy enemy : enemies){
+	for (Enemy enemy : enemies) {
 	    if (this.x == enemy.x && this.y == enemy.y) continue;
 	    if (this.getBoundsInParent().intersects(enemy.getBoundsInParent())){
 		colliding = true;
@@ -180,7 +193,7 @@ public class Enemy extends Pane{
 	return score;
     }
     
-    public void summon(Portal portal){
+    public void summon(Portal portal) {
 	this.setTranslateX(portal.getX());
         this.setTranslateY(portal.getY());
         this.x = portal.getX();

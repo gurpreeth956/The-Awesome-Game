@@ -1,4 +1,3 @@
-
 import java.util.List;
 
 public class Level {
@@ -7,7 +6,7 @@ public class Level {
     public static int enemiesToBeat;
     public static int enemiesLeft;
     public static int enemiesSpawned;
-    public static int coins; //temporary
+    public static int coins;
     public static int highScore;
     static boolean shopping;
 
@@ -62,8 +61,8 @@ public class Level {
         return coins;
     }
 
-    public void spend(int a) {
-        coins -= a;
+    public void spend(int i) {
+        coins -= i;
     }
 
     public int getScore() {
@@ -78,8 +77,8 @@ public class Level {
         coins = 0;
     }
 
-    public void setShopping(boolean i) {
-        shopping = i;
+    public void setShopping(boolean a) {
+        shopping = a;
     }
 
     public boolean isShopping() {
@@ -88,24 +87,24 @@ public class Level {
 
     public void fillBoss(List<Enemy> bosses) {
         bosses.add(new Boss("file:src/Sprites/test.png", 30, 20, 200, 200));
-        bosses.add(new Boss("file:src/Sprites/Redies.png",30,20,66,33));
+        bosses.add(new Boss("file:src/Sprites/Redies.png", 30, 20, 66, 33));
     }
 
     public Enemy generate() {
         int randomNum = 10;
-        while(randomNum>3){
+        while(randomNum > 3) {
             randomNum = (int) (Math.random() * this.getLevel() + 1);
         }
         Enemy enemy = null;
         switch (randomNum) {
-            case 1:
+            case 3:
                 enemy = new Licker("file:src/Sprites/CharlesSpriteSheet.png", 3, 1, 80, 80);
                 break;
             case 2:
-                enemy = new RangedEnemy("file:src/Sprites/Redies.png", 3, 1, 66, 33, 1000);
+                enemy = new RangedEnemy("file:src/Sprites/Redies.png", 3, 1, 66, 33, 3000);
                 break;
-            case 3:
-                enemy = new SpikeEnemy("file:src/Sprites/Redies.png", 3, 1, 66, 33, 1000);
+            case 1: //for testing reasons
+                enemy = new SpikeEnemy("file:src/Sprites/SpikeySpriteSheet.png", 3, 1, 72, 65, 3000);
                 break;
         }
         return enemy;

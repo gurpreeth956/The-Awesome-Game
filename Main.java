@@ -1,4 +1,3 @@
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -46,7 +45,7 @@ public class Main extends Application {
     Stairs decUpStair;
     Stairs toGameStair;
 
-    private List<Projectile> projectiles = new ArrayList<>();
+    public static List<Projectile> projectiles = new ArrayList<>();
     private List<Projectile> projToRemove = new ArrayList<>();
     private long timeOfLastProjectile = 0;
 
@@ -56,6 +55,7 @@ public class Main extends Application {
     private List<Enemy> enemies = new ArrayList();
     private List<Enemy> enemToRemove = new ArrayList();
     private long hitTime = 0;
+    private long spikeHitTime = 0;
 
     private List<Enemy> bosses = new ArrayList();
 
@@ -316,6 +316,9 @@ public class Main extends Application {
             for (Enemy enemy : enemies) {
                 updateEnemy(enemy);
             }
+            for (Spikes spike : Spikes.spikes) {
+                updateSpikes(spike);
+            }
 
             projectiles.removeAll(projToRemove);
             projToRemove.clear();
@@ -325,6 +328,10 @@ public class Main extends Application {
 
             enemies.removeAll(enemToRemove);
             enemToRemove.clear();
+            
+            //lists from spikes class
+            Spikes.spikes.removeAll(Spikes.spikeToRemove);
+            Spikes.spikeToRemove.clear();
 
             shopUpgrades.removeAll(upgradesToRemove);
             upgradesToRemove.clear();
@@ -336,10 +343,11 @@ public class Main extends Application {
                 }
                 enemies.clear();
             }
+            
         } else if (pause) {
             if (time < 0 || time > 150) {
                 if (isPressed(KeyCode.ESCAPE)) {
-                    if (couldGoToShop == true) {
+                    if (!level.isShopping()) {
                         pStage.getScene().setRoot(gameRoot);
                     } else {
                         pStage.getScene().setRoot(shopRoot);
@@ -432,29 +440,16 @@ public class Main extends Application {
     public void updateEnemyProj(Projectile proj) {
         long timeNow = System.currentTimeMillis();
         long time = timeNow - hitTime;
-
-        if (proj.playerColliding(player)) {//create enemy proj class
+        
+        if(proj.playerColliding(player)){ //create enemy proj class
             proj.setAlive(false);
             if (time < 0 || time > 1000) {
                 player.hit();
-
-                if (player.hasShield()) {
-                    gameRoot.getChildren().remove(shieldHealth);
-                    shieldHealth = new Rectangle(screenSize.getWidth() - 120, 10, player.getShieldHealth() * 33 + 1, 22);
-                    shieldHealth.setFill(Color.web("#00E8FF"));
-                    gameRoot.getChildren().add(shieldHealth);
-                    shieldHealth.toFront();
-                } else {
-                    gameRoot.getChildren().remove(actualHealth);
-                    actualHealth = new Rectangle(screenSize.getWidth() - 120, 10, player.getHealth() * 20, 22);
-                    actualHealth.setFill(Color.web("#00F32C"));
-                    gameRoot.getChildren().add(actualHealth);
-                    actualHealth.toFront();
-                }
+                playerReceiveHit();
                 hitTime = timeNow;
             }
         }
-
+        
         if (!proj.playerColliding(player)) {
             proj.move(player);
         }
@@ -468,6 +463,26 @@ public class Main extends Application {
         if (!proj.isAlive()) {
             gameRoot.getChildren().remove(proj);
             enemyProjToRemove.add(proj);
+        }
+    }
+    
+    public void updateSpikes(Spikes spike) {
+        long timeNow = System.currentTimeMillis();
+        long time = timeNow - spikeHitTime;
+        
+        if (spike.playerShotColliding(projectiles)) {
+            Spikes.spikeToRemove.add(spike);
+            gameRoot.getChildren().removeAll(spike);
+        }
+        
+        if (spike.playerColliding(player) && !level.isShopping()) {
+            if (time < 0 || time > 500) {
+                player.hit();
+                playerReceiveHit();
+                Spikes.spikeToRemove.add(spike);
+                gameRoot.getChildren().removeAll(spike);
+                spikeHitTime = timeNow;
+            }
         }
     }
 
@@ -514,21 +529,7 @@ public class Main extends Application {
             enemy.hitView(enemy);
             if (time < 0 || time > 1000) {
                 player.hit();
-
-                if (player.hasShield()) {
-                    gameRoot.getChildren().remove(shieldHealth);
-                    shieldHealth = new Rectangle(screenSize.getWidth() - 120, 10, player.getShieldHealth() * 33 + 1, 22);
-                    shieldHealth.setFill(Color.web("#00E8FF"));
-                    gameRoot.getChildren().add(shieldHealth);
-                    shieldHealth.toFront();
-                } else {
-                    gameRoot.getChildren().remove(actualHealth);
-                    actualHealth = new Rectangle(screenSize.getWidth() - 120, 10, player.getHealth() * 20, 22);
-                    actualHealth.setFill(Color.web("#00F32C"));
-                    gameRoot.getChildren().add(actualHealth);
-                    actualHealth.toFront();
-                }
-
+                playerReceiveHit();
                 hitTime = timeNow;
             }
         }
@@ -538,8 +539,10 @@ public class Main extends Application {
         }
 
         enemy.shoot(player, enemyProj, gameRoot);
+        enemy.update(gameRoot);
 
         if (enemy.getHealth() == 0) {
+            enemy.update(gameRoot);
             enemy.setAlive(false);
         }
         if (!enemy.isAlive()) {
@@ -567,6 +570,22 @@ public class Main extends Application {
                 shieldAdded = false;
                 gameRoot.getChildren().remove(shieldHealth);
             }
+        }
+    }
+    
+    public void playerReceiveHit() {
+        if (player.hasShield()) {
+            gameRoot.getChildren().remove(shieldHealth);
+            shieldHealth = new Rectangle(screenSize.getWidth() - 120, 10, player.getShieldHealth() * 33 + 1, 22);
+            shieldHealth.setFill(Color.web("#00E8FF"));
+            gameRoot.getChildren().add(shieldHealth);
+            shieldHealth.toFront();
+        } else {
+            gameRoot.getChildren().remove(actualHealth);
+            actualHealth = new Rectangle(screenSize.getWidth() - 120, 10, player.getHealth() * 20, 22);
+            actualHealth.setFill(Color.web("#00F32C"));
+            gameRoot.getChildren().add(actualHealth);
+            actualHealth.toFront();
         }
     }
 
@@ -604,11 +623,13 @@ public class Main extends Application {
                 }
             }
             if (player.isColliding(toGameStair) && couldGoToMap) {
-                shopRoot.getChildren().removeAll(player, health, healthBarOutline, lostHealth, actualHealth, coinAndScore);
+                shopRoot.getChildren().clear();
                 gameRoot.getChildren().addAll(player, health, healthBarOutline, lostHealth, actualHealth, coinAndScore);
                 if (player.hasShield()) {
-                    shopRoot.getChildren().remove(shieldHealth);
                     gameRoot.getChildren().addAll(shieldHealth);
+                }
+                for (Portal port : portals) {
+                    gameRoot.getChildren().addAll(port);
                 }
                 couldGoToShop = true;
                 couldGoToMap = false;
@@ -621,18 +642,25 @@ public class Main extends Application {
         }
 
         if (level.getEnemiesLeft() <= 0) {
-            if (!level.isShopping()) {
-                toShopStair = new Stairs("down", (int) scene.getWidth(), (int) scene.getHeight());
-                gameRoot.getChildren().add(toShopStair);
-                level.setShopping(true);
-            }
+            do {
+                if (!level.isShopping()) {
+                    toShopStair = new Stairs("down", (int) scene.getWidth(), (int) scene.getHeight());
+                    gameRoot.getChildren().add(toShopStair);
+                }
+            } while (-1 > 0);
+            
             if (player.isColliding(toShopStair)) {
+                level.setShopping(true);
+                for (Spikes spike : Spikes.spikes) {
+                    Spikes.spikeToRemove.add(spike);
+                }
                 pStage.getScene().setRoot(shopRoot);
                 if (couldGoToShop) {
-                    gameRoot.getChildren().removeAll(player, health, healthBarOutline, lostHealth, actualHealth, coinAndScore);
-                    shopRoot.getChildren().addAll(player, health, healthBarOutline, lostHealth, actualHealth, coinAndScore);
+                    gameRoot.getChildren().clear();
+                    shopRoot.getChildren().addAll(player, health, healthBarOutline, lostHealth, actualHealth, 
+                                                  coinAndScore, decUpStair, toGameStair);
+                    shopRoot.setCenter(shopBox);
                     if (player.hasShield()) {
-                        gameRoot.getChildren().remove(shieldHealth);
                         shopRoot.getChildren().addAll(shieldHealth);
                     }
                     couldGoToShop = false;
@@ -652,6 +680,10 @@ public class Main extends Application {
         projToRemove.clear();
         enemies.clear();
         enemToRemove.clear();
+        enemyProj.clear();
+        enemyProjToRemove.clear();
+        Spikes.spikes.clear();
+        Spikes.spikeToRemove.clear();
         bosses.clear();
         portals.clear();
         portalCount = 0;
@@ -673,10 +705,8 @@ public class Main extends Application {
         actualHealth = new Rectangle(screenSize.getWidth() - 120, 10, 100, 22);
         actualHealth.setFill(Color.web("#00F32C"));
         gameRoot.getChildren().addAll(player, health, healthBarOutline, lostHealth, actualHealth, coinAndScore);
-        shopRoot.getChildren().addAll(decUpStair, toGameStair);
         shopBox = addShopButtons();
         shopBox.setAlignment(Pos.CENTER);
-        shopRoot.setCenter(shopBox);
         coinAndScore.toFront();
         coinLabel.toFront();
         scoreLabel.toFront();
@@ -701,6 +731,7 @@ public class Main extends Application {
         Button startBtn = new Button("Start");
         startBtn.setOnAction(e -> {
             pStage.getScene().setRoot(gameRoot);
+            //clearAll();
             newGame();
         });
 
@@ -758,7 +789,7 @@ public class Main extends Application {
 
         Button gameBtn = new Button("Back to Game");
         gameBtn.setOnAction(e -> {
-            if (couldGoToShop == true) {
+            if (!level.isShopping()) {
                 pStage.getScene().setRoot(gameRoot);
             } else {
                 pStage.getScene().setRoot(shopRoot);
