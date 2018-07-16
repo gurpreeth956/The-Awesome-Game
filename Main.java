@@ -406,7 +406,7 @@ public class Main extends Application {
     }
 
     public void updateProj(Projectile proj) {
-        proj.move();
+        proj.move(player);
 
         for (Enemy enemy : enemies) {
             if (proj.enemyColliding(enemy)) {
@@ -451,13 +451,12 @@ public class Main extends Application {
                     gameRoot.getChildren().add(actualHealth);
                     actualHealth.toFront();
                 }
-                //proj.setAlive(false);
                 hitTime = timeNow;
             }
         }
         
         if(!proj.playerColliding(player)){
-            proj.move();
+            proj.move(player);
         }
         
         if (proj.getTranslateX() <= 0 || proj.getTranslateX() >= scene.getWidth()) {
