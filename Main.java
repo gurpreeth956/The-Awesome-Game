@@ -624,9 +624,6 @@ public class Main extends Application {
                 }
             }
             if (player.isColliding(toGameStair) && couldGoToMap) {
-                for (Spikes spike : Spikes.spikes) {
-                    Spikes.spikeToRemove.add(spike);
-                }
                 shopRoot.getChildren().clear();
                 gameRoot.getChildren().addAll(player, health, healthBarOutline, lostHealth, actualHealth, coinAndScore);
                 if (player.hasShield()) {
@@ -652,6 +649,9 @@ public class Main extends Application {
                 level.setShopping(true);
             }
             if (player.isColliding(toShopStair)) {
+                for (Spikes spike : Spikes.spikes) {
+                    Spikes.spikeToRemove.add(spike);
+                }
                 pStage.getScene().setRoot(shopRoot);
                 if (couldGoToShop) {
                     gameRoot.getChildren().clear();
