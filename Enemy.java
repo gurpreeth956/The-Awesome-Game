@@ -17,6 +17,7 @@ public class Enemy extends Pane {
     int y; //Enemy yPos
     int coin;
     int score;
+    int enemySpeed;
     
     Rectangle healthBarOutline;
     Rectangle actualHealth;
@@ -64,46 +65,46 @@ public class Enemy extends Pane {
         //To be overridden by child classes
     }
     
-    public void moveX(int x, double width, int speed) {
+    public void moveX(int x, double width) { //x is horizontal speed
         boolean right = x > 0;
         for (int i = 0; i < Math.abs(x); i++) {
             if (right) {
                 if(this.x > width - this.width)
                     this.setTranslateX(width - this.width);
                 else {
-                    this.setTranslateX(this.getTranslateX() + speed);
-                    this.x+=speed;
+                    this.setTranslateX(this.getTranslateX() + 1);
+                    this.x++;
                 }
             }
             else  {
                 if(this.x < 0)
                     this.setTranslateX(0);
                 else {
-                    this.setTranslateX(this.getTranslateX() - speed);
-                    this.x-=speed;
+                    this.setTranslateX(this.getTranslateX() - 1);
+                    this.x--;
                 }
             }
 	    this.healthPos();
         }
     }
     
-    public void moveY(int y, double height, int speed) {
+    public void moveY(int y, double height) { //y is vertical speed
         boolean down = y > 0;
         for (int i = 0; i < Math.abs(y); i++) {
             if (down) {
-                if(this.y > height - this.height)
+                if (this.y > height - this.height)
                     this.setTranslateY(height - this.height);
                 else {
-                    this.setTranslateY(this.getTranslateY() + speed);
-                    this.y+=speed;
+                    this.setTranslateY(this.getTranslateY() + 1);
+                    this.y++;
                 }
             }
             else {
-                if(this.y < 0)
+                if (this.y < 0)
                     this.setTranslateY(0);
                 else {
-                    this.setTranslateY(this.getTranslateY() - speed);
-                    this.y-=speed;
+                    this.setTranslateY(this.getTranslateY() - 1);
+                    this.y--;
                 }
             }
 	    this.healthPos();
@@ -124,6 +125,14 @@ public class Enemy extends Pane {
 
     public void setY(int y) {
         this.y = y;
+    }
+
+    public int getEnemySpeed() {
+        return enemySpeed;
+    }
+
+    public void setEnemySpeed(int enemySpeed) {
+        this.enemySpeed = enemySpeed;
     }
     
     public boolean isAlive() {
