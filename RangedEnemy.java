@@ -90,11 +90,11 @@ public class RangedEnemy extends Enemy {
         }
     }
     
-    public void createProjectile(int a, int b, List<Projectile> projectiles, Pane root, 
+    public void createProjectile(int x, int y, List<Projectile> projectiles, Pane root, 
                                  String img, int width, int height) {
         Projectile proj = new Projectile(img, this.getX() + 28, this.getY() + 16, width, height);
-        proj.setVelocityX(a);
-        proj.setVelocityY(b);
+        proj.setVelocityX(x);
+        proj.setVelocityY(y);
         root.getChildren().addAll(proj);
         proj.toBack();
         projectiles.add(proj);
@@ -109,19 +109,18 @@ public class RangedEnemy extends Enemy {
         int hori = player.x - this.x;
         
         if(Math.abs(vert) > Math.abs(hori)) {
-            if(vert <= 0){
+            if(vert <= 0) {
                 return "up";
             }
             return "down";
         }
-        else if(hori <= 0){
+        else if(hori <= 0) {
             return "left";
         }
         return "right";
     }
     
-    //Override for different sprites
-    /*public void hitView(Enemy enemy){
-        this.setCharacterView(0,0);
+    /*public void hitView(Enemy enemy) {
+        this.setCharacterView(0, 0);
     }*/
 }
