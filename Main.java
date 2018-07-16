@@ -1,4 +1,3 @@
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -49,7 +48,7 @@ public class Main extends Application {
     public static List<Projectile> projectiles = new ArrayList<>();
     private List<Projectile> projToRemove = new ArrayList<>();
     private long timeOfLastProjectile = 0;
-    
+
     private List<Projectile> enemyProj = new ArrayList<>();
     private List<Projectile> enemyProjToRemove = new ArrayList<>();
 
@@ -287,13 +286,13 @@ public class Main extends Application {
 
             for (Portal portal : portals) {
                 if (portal.summon() && !level.isShopping() && level.getEnemiesSpawned() < level.getEnemiesToBeat()) {
-                    //    if (level.getEnemiesLeft() == 1 && bosses.size() >= level.getLevel()) {//bosses.size part is temp so game doesnt crash after we run out of bosses
-                    //	createBoss(portal);
-                    //   } else {
-                    //	if (level.getEnemiesToBeat() - level.getEnemiesSpawned() != 1||bosses.size() < level.getLevel()) {
-                    createEnemy(portal);
-                    //	}
-                    //    }
+                    if (level.getEnemiesLeft() == 1 && bosses.size() >= level.getLevel()) {//bosses.size part is temp so game doesnt crash after we run out of bosses
+                        createBoss(portal);
+                    } else {
+                        if (level.getEnemiesToBeat() - level.getEnemiesSpawned() != 1 || bosses.size() < level.getLevel()) {
+                            createEnemy(portal);
+                        }
+                    }
                 }
             }
 
@@ -323,7 +322,7 @@ public class Main extends Application {
 
             projectiles.removeAll(projToRemove);
             projToRemove.clear();
-            
+
             enemyProj.removeAll(enemyProjToRemove);
             enemyProjToRemove.clear();
 
@@ -415,7 +414,7 @@ public class Main extends Application {
     }
 
     public void updateProj(Projectile proj) {
-        proj.move();
+        proj.move(player);
 
         for (Enemy enemy : enemies) {
             if (proj.enemyColliding(enemy)) {
@@ -437,8 +436,8 @@ public class Main extends Application {
             projToRemove.add(proj);
         }
     }
-    
-    public void updateEnemyProj(Projectile proj){
+
+    public void updateEnemyProj(Projectile proj) {
         long timeNow = System.currentTimeMillis();
         long time = timeNow - hitTime;
         
@@ -452,9 +451,9 @@ public class Main extends Application {
         }
         
         if (!proj.playerColliding(player)) {
-            proj.move();
+            proj.move(player);
         }
-        
+
         if (proj.getTranslateX() <= 0 || proj.getTranslateX() >= scene.getWidth()) {
             proj.setAlive(false);
         } else if (proj.getTranslateY() <= 0 || proj.getTranslateY() >= scene.getHeight()) {
@@ -538,7 +537,7 @@ public class Main extends Application {
         if (!enemy.playerColliding(player)) {
             enemy.move(player, scene.getWidth(), scene.getHeight());
         }
-        
+
         enemy.shoot(player, enemyProj, gameRoot);
         enemy.update(gameRoot);
 
@@ -643,12 +642,15 @@ public class Main extends Application {
         }
 
         if (level.getEnemiesLeft() <= 0) {
-            if (!level.isShopping()) {
-                toShopStair = new Stairs("down", (int) scene.getWidth(), (int) scene.getHeight());
-                gameRoot.getChildren().add(toShopStair);
-                level.setShopping(true);
-            }
+            do {
+                if (!level.isShopping()) {
+                    toShopStair = new Stairs("down", (int) scene.getWidth(), (int) scene.getHeight());
+                    gameRoot.getChildren().add(toShopStair);
+                }
+            } while (-1 > 0);
+            
             if (player.isColliding(toShopStair)) {
+                level.setShopping(true);
                 for (Spikes spike : Spikes.spikes) {
                     Spikes.spikeToRemove.add(spike);
                 }
