@@ -441,7 +441,7 @@ public class Main extends Application {
         long timeNow = System.currentTimeMillis();
         long time = timeNow - hitTime;
         
-        if(proj.playerColliding(player)){ //create enemy proj class
+        if (proj.playerColliding(player)) { //create enemy proj class
             proj.setAlive(false);
             if (time < 0 || time > 1000) {
                 player.hit();
@@ -502,6 +502,10 @@ public class Main extends Application {
         if (player.hasShield()) {
             shieldHealth.toFront();
         }
+    }
+    
+    public void updateBoss(Boss boss) {
+        boss.update(gameRoot);
     }
 
     public void createEnemy(Portal portal) {

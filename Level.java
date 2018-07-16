@@ -86,8 +86,9 @@ public class Level {
     }
 
     public void fillBoss(List<Enemy> bosses) {
+        //testing phase - we will decide bosses order eventually
+        bosses.add(new HomingBoss("file:src/Sprites/Redies.png", 30, 20, 66, 33, 1000));
         bosses.add(new Boss("file:src/Sprites/test.png", 30, 20, 200, 200));
-        bosses.add(new Boss("file:src/Sprites/Redies.png", 30, 20, 66, 33));
     }
 
     public Enemy generate() {
@@ -100,10 +101,10 @@ public class Level {
             case 3:
                 enemy = new Licker("file:src/Sprites/CharlesSpriteSheet.png", 3, 1, 80, 80);
                 break;
-            case 2:
+            case 1:
                 enemy = new RangedEnemy("file:src/Sprites/Redies.png", 3, 1, 66, 33, 3000);
                 break;
-            case 1: //for testing reasons
+            case 2: //for testing reasons
                 enemy = new SpikeEnemy("file:src/Sprites/SpikeySpriteSheet.png", 3, 1, 72, 65, 3000);
                 break;
         }
