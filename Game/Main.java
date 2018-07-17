@@ -1,3 +1,8 @@
+package Game;
+import Enemies.*;
+import Environment.*;
+import Upgrades.*;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -338,7 +343,7 @@ public class Main extends Application {
             //to clear enemies (temporary)
             if (isPressed(KeyCode.P)) {
                 for (Enemy enemy : enemies) {
-                    gameRoot.getChildren().removeAll(enemy, enemy.healthBarOutline, enemy.lostHealth, enemy.actualHealth);
+                    gameRoot.getChildren().removeAll(enemy, enemy.getHealthBarOutline(), enemy.getLostHealth(), enemy.getActualHealth());
                 }
                 enemies.clear();
             }
@@ -418,7 +423,7 @@ public class Main extends Application {
         for (Enemy enemy : enemies) {
             if (proj.enemyColliding(enemy)) {
                 enemy.hit();
-                gameRoot.getChildren().remove(enemy.actualHealth);
+                gameRoot.getChildren().remove(enemy.getActualHealth());
                 gameRoot.getChildren().add(enemy.updateHealth());
                 proj.setAlive(false);
             }
@@ -488,7 +493,7 @@ public class Main extends Application {
     public void createBoss(Portal portal) {
         Enemy enemy = bosses.get(level.getLevel() - 1);
         enemy.summon(portal);
-        gameRoot.getChildren().addAll(enemy, enemy.healthBarOutline, enemy.lostHealth, enemy.actualHealth);
+        gameRoot.getChildren().addAll(enemy, enemy.getHealthBarOutline(), enemy.getLostHealth(), enemy.getActualHealth());
         coinAndScore.toFront();
         coinLabel.toFront();
         scoreLabel.toFront();
@@ -510,7 +515,7 @@ public class Main extends Application {
     public void createEnemy(Portal portal) {
         Enemy enemy = level.generate();
         enemy.summon(portal);
-        gameRoot.getChildren().addAll(enemy, enemy.healthBarOutline, enemy.lostHealth, enemy.actualHealth);
+        gameRoot.getChildren().addAll(enemy, enemy.getHealthBarOutline(), enemy.getLostHealth(), enemy.getActualHealth());
         coinAndScore.toFront();
         coinLabel.toFront();
         scoreLabel.toFront();
@@ -550,7 +555,7 @@ public class Main extends Application {
         }
         if (!enemy.isAlive()) {
             enemToRemove.add(enemy);
-            gameRoot.getChildren().removeAll(enemy, enemy.actualHealth, enemy.lostHealth, enemy.healthBarOutline);
+            gameRoot.getChildren().removeAll(enemy, enemy.getActualHealth(), enemy.getLostHealth(), enemy.getHealthBarOutline());
             level.enemyBeat();
             level.coinUp(enemy);
             level.scoreUp(enemy);
