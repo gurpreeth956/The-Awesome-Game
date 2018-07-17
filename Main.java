@@ -719,9 +719,10 @@ public class Main extends Application {
         actualHealth.toFront();
         player.addShield(false);
         gameplay = true;
+        shieldAdded = false;
         couldGoToShop = true;
         couldGoToMap = false;
-        shieldAdded = false;
+        addShopStair = true;
         level.fillBoss(bosses);
     }
 
