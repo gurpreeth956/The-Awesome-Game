@@ -555,7 +555,7 @@ public class Main extends Application {
         }
         if (!enemy.isAlive()) {
             enemToRemove.add(enemy);
-            gameRoot.getChildren().removeAll(enemy, enemy.getHealthBarOutline(), enemy.getLostHealth(), enemy.getActualHealth());
+            gameRoot.getChildren().removeAll(enemy, enemy.getActualHealth(), enemy.getLostHealth(), enemy.getHealthBarOutline());
             level.enemyBeat();
             level.coinUp(enemy);
             level.scoreUp(enemy);
