@@ -10,4 +10,12 @@ public class PlayerShieldUpgrade extends Upgrades {
     public void activeAbility(Character player) {
 	player.addShield(true);
     }
+    
+    public String getListView() {
+        return "Add Shield";
+    }
+    
+    public String getSummary() {
+        return "";
+    }
 }

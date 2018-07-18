@@ -10,4 +10,12 @@ public class PlayerSpeedUpgrade extends Upgrades {
     public void activeAbility(Character player) {
         player.setPlayerSpeed(player.getPlayerSpeed() + 1);
     }
+    
+    public String getListView() {
+        return "Player Speed";
+    }
+    
+    public String getSummary() {
+        return "";
+    }
 }

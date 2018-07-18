@@ -49,3 +49,7 @@
     -fx-font-weight: bold;
     -fx-font-size: 1.1em;
 }
+
+.list-cell {
+    -fx-font: 15pt "Arial";
+}

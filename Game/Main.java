@@ -31,6 +31,7 @@ public class Main extends Application {
     static Pane gameRoot;
     static BorderPane menuRoot;
     static BorderPane shopRoot;
+    static BorderPane shopBuyingRoot;
     static BorderPane optionsRoot;
     static BorderPane gameOptionsRoot;
     static BorderPane gameOverRoot;
@@ -70,6 +71,7 @@ public class Main extends Application {
     private List<Upgrades> shopUpgrades = new ArrayList();
     private List<Upgrades> upgradesToRemove = new ArrayList();
     private List<Upgrades> currentUpgrades = new ArrayList();
+    private ListView<String> shopUpgradesView = new ListView<>();
     HBox shopBox;
     private long shopTime = 0;
 
@@ -95,108 +97,8 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
 
-        //Menu Root
-        Text title = new Text("The Awesome Game");
-        title.setFont(Font.font("Arial", 40));
-        VBox vbox = addMenuButtons(primaryStage);
-        vbox.setAlignment(Pos.CENTER);
-        menuRoot = new BorderPane();
-        menuRoot.setId("menu");
-        menuRoot.setCenter(vbox);
-        menuRoot.setTop(title);
-        BorderPane.setAlignment(title, Pos.CENTER);
-
-        scene = new Scene(menuRoot, screenSize.getWidth(), screenSize.getHeight());
-        scene.getStylesheets().addAll(this.getClass().getResource("Design.css").toExternalForm());
-
-        //Game Root
-        gameRoot = new Pane();
-        gameRoot.setId("backgroundgame");
-        Label healthLabel = new Label("Health: ");
-        healthLabel.setFont(new Font("Arial", 20));
-        healthLabel.setTextFill(Color.WHITE);
-        healthLabel.toFront();
-        healthBarOutline = new Rectangle(screenSize.getWidth() - 121, 9, 102, 22);
-        healthBarOutline.setFill(Color.TRANSPARENT);
-        healthBarOutline.setStroke(Color.BLACK);
-        lostHealth = new Rectangle(screenSize.getWidth() - 120, 10, 100, 22);
-        lostHealth.setFill(Color.RED);
-        actualHealth = new Rectangle(screenSize.getWidth() - 120, 10, 100, 22);
-        actualHealth.setFill(Color.web("#00F32C"));
-        shieldHealth = new Rectangle(screenSize.getWidth() - 120, 10, 100, 22);
-        shieldHealth.setFill(Color.web("#00E8FF"));
-        health = new VBox(10);
-        health.getChildren().addAll(healthLabel);
-        health.setTranslateX(screenSize.getWidth() - 200);
-        health.setTranslateY(10);
-        coinLabel = new Label("Coins: ");
-        coinLabel.setFont(new Font("Arial", 20));
-        coinLabel.setTextFill(Color.WHITE);
-        scoreLabel = new Label("Score: ");
-        scoreLabel.setFont(new Font("Arial", 20));
-        scoreLabel.setTextFill(Color.WHITE);
-        coinAndScore = new VBox(10);
-        coinAndScore.getChildren().addAll(coinLabel, scoreLabel);
-        coinAndScore.setTranslateX(10);
-        coinAndScore.setTranslateY(10);
-
-        //Shop Root
-        shopRoot = new BorderPane();
-        shopRoot.setId("backgroundshop");
-        decUpStair = new Stairs("up", (int) screenSize.getWidth(), (int) screenSize.getHeight());
-        toGameStair = new Stairs("shop", (int) screenSize.getWidth() - 100, (int) screenSize.getHeight() - 100);
-
-        //Options Root
-        Text opTitle = new Text("Game Options");
-        opTitle.setFont(Font.font("Arial", 40));
-        VBox optionsBox = addOptionButtons(primaryStage);
-        optionsBox.setAlignment(Pos.CENTER);
-        optionsRoot = new BorderPane();
-        optionsRoot.setId("menu");
-        optionsRoot.setCenter(optionsBox);
-        optionsRoot.setTop(opTitle);
-        BorderPane.setAlignment(opTitle, Pos.CENTER);
-
-        //Game Options Root
-        Text gameOpTitle = new Text("Game Options");
-        gameOpTitle.setFont(Font.font("Arial", 40));
-        VBox gameOptionsBox = addGameOptionsButtons(primaryStage);
-        gameOptionsBox.setAlignment(Pos.CENTER);
-        gameOptionsRoot = new BorderPane();
-        gameOptionsRoot.setId("menu");
-        gameOptionsRoot.setCenter(gameOptionsBox);
-        gameOptionsRoot.setTop(gameOpTitle);
-        BorderPane.setAlignment(gameOpTitle, Pos.CENTER);
-
-        //Game Over Root
-        VBox gameOverBox = addGameOverButtons(primaryStage);
-        gameOverBox.setAlignment(Pos.CENTER);
-        gameOverRoot = new BorderPane();
-        gameOverRoot.setId("menu");
-        gameOverRoot.setCenter(gameOverBox);
-
-        //Exit Root
-        exitRoot = new VBox(20);
-        Label exitString = new Label("Are you sure you want to exit?");
-        exitString.setFont(Font.font("Arial", 25));
-        HBox exitButtons = new HBox(10);
-        exitButtons.getChildren().addAll(yesExit, noExit);
-        exitButtons.setAlignment(Pos.CENTER);
-        exitRoot.getChildren().addAll(exitString, exitButtons);
-        exitRoot.setId("menu");
-        exitRoot.setAlignment(Pos.CENTER);
-
-        //Are You Sure Root
-        areYouSureRoot = new VBox(20);
-        Label areYouSureString = new Label("Are you sure you want to return to the menu?");
-        areYouSureString.setFont(Font.font("Arial", 25));
-        HBox returnButtons = new HBox(10);
-        returnButtons.getChildren().addAll(yesReturn, noReturn);
-        returnButtons.setAlignment(Pos.CENTER);
-        areYouSureRoot.getChildren().addAll(areYouSureString, returnButtons);
-        areYouSureRoot.setId("menu");
-        areYouSureRoot.setAlignment(Pos.CENTER);
-
+        createRoots(primaryStage);
+        
         //Gameplay
         scene.setOnKeyPressed(e -> keys.put(e.getCode(), true));
         scene.setOnKeyReleased(e -> keys.put(e.getCode(), false));
@@ -246,9 +148,10 @@ public class Main extends Application {
         if (gameplay && !pause) {
             if (player.getHealth() == 0) {
                 Text gameOver = new Text("Game Over \n Score:  " + level.getScore());
-                gameOver.setFont(Font.font("Arial", 40));
+                gameOver.setFont(Font.font("Arial", 50));
                 gameOverRoot.setTop(gameOver);
                 BorderPane.setAlignment(gameOver, Pos.CENTER);
+                BorderPane.setMargin(gameOver, new Insets(100));
                 pStage.getScene().setRoot(gameOverRoot);
                 gameplay = false;
             }
@@ -662,7 +565,7 @@ public class Main extends Application {
                 for (Spikes spike : Spikes.spikes) {
                     Spikes.spikeToRemove.add(spike);
                 }
-                pStage.getScene().setRoot(shopRoot);
+                pStage.getScene().setRoot(shopBuyingRoot); //for testing
                 if (couldGoToShop) {
                     gameRoot.getChildren().clear();
                     shopRoot.getChildren().addAll(player, health, healthBarOutline, lostHealth, actualHealth, 
@@ -678,11 +581,7 @@ public class Main extends Application {
             }
         }
     }
-
-    public boolean isPressed(KeyCode key) {
-        return keys.getOrDefault(key, false);
-    }
-
+    
     public void clearAll() {
         projectiles.clear();
         projToRemove.clear();
@@ -698,6 +597,7 @@ public class Main extends Application {
         currentUpgrades.clear();
         upgradesToRemove.clear();
         shopUpgrades.clear();
+        shopUpgradesView.getItems().clear();
         level.clearScore();
         level.clearCoins();
         level.setShopping(false);
@@ -730,11 +630,182 @@ public class Main extends Application {
         addShopStair = true;
         level.fillBoss(bosses);
     }
+    
+    public HBox addShopButtons() {
+        //remember to delete
+        HBox hbox = new HBox();
+        hbox.setPadding(new Insets(30));
+        hbox.setSpacing(70);
 
-    //Button Layouts
+        HealthPackUpgrade healthUp = new HealthPackUpgrade();
+        PlayerShieldUpgrade shield = new PlayerShieldUpgrade();
+        ShootSpeedUpgrade shoot = new ShootSpeedUpgrade();
+        PlayerSpeedUpgrade speed = new PlayerSpeedUpgrade();
+        shopUpgrades.add(healthUp);
+        shopUpgrades.add(shield);
+        shopUpgrades.add(shoot);
+        shopUpgrades.add(speed);
+
+        for (Upgrades upgrade : shopUpgrades) {
+            shopUpgradesView.getItems().addAll(upgrade.getListView());
+        }
+        
+        shopBuyingRoot.setCenter(shopUpgradesView);
+        BorderPane.setAlignment(shopUpgradesView, Pos.TOP_CENTER);
+        BorderPane.setMargin(shopUpgradesView, new Insets(10));
+        hbox.getChildren().addAll(healthUp, shield, shoot, speed);
+        return hbox;
+    }
+    
+    public VBox getPlayerData() {
+        VBox vbox = new VBox();
+        vbox.setPadding(new Insets(10));
+        vbox.setSpacing(10);
+        
+        
+        
+        return vbox;
+    }
+
+    public boolean isPressed(KeyCode key) {
+        return keys.getOrDefault(key, false);
+    }
+    
+    
+    //Layouts
+    public void createRoots(Stage pStage) {
+        
+        //Menu Root
+        Text title = new Text("THE AWESOME GAME");
+        title.setFont(Font.font("Arial", 50));
+        VBox vbox = addMenuButtons(pStage);
+        vbox.setAlignment(Pos.TOP_CENTER);
+        menuRoot = new BorderPane();
+        menuRoot.setId("menu");
+        menuRoot.setCenter(vbox);
+        menuRoot.setTop(title);
+        BorderPane.setAlignment(title, Pos.TOP_CENTER);
+        BorderPane.setMargin(title, new Insets(100));
+
+        scene = new Scene(menuRoot, screenSize.getWidth(), screenSize.getHeight());
+        scene.getStylesheets().addAll(this.getClass().getResource("Design.css").toExternalForm());
+
+        //Game Root
+        gameRoot = new Pane();
+        gameRoot.setId("backgroundgame");
+        Label healthLabel = new Label("Health: ");
+        healthLabel.setFont(new Font("Arial", 20));
+        healthLabel.setTextFill(Color.WHITE);
+        healthLabel.toFront();
+        healthBarOutline = new Rectangle(screenSize.getWidth() - 121, 9, 102, 22);
+        healthBarOutline.setFill(Color.TRANSPARENT);
+        healthBarOutline.setStroke(Color.BLACK);
+        lostHealth = new Rectangle(screenSize.getWidth() - 120, 10, 100, 22);
+        lostHealth.setFill(Color.RED);
+        actualHealth = new Rectangle(screenSize.getWidth() - 120, 10, 100, 22);
+        actualHealth.setFill(Color.web("#00F32C"));
+        shieldHealth = new Rectangle(screenSize.getWidth() - 120, 10, 100, 22);
+        shieldHealth.setFill(Color.web("#00E8FF"));
+        health = new VBox(10);
+        health.getChildren().addAll(healthLabel);
+        health.setTranslateX(screenSize.getWidth() - 200);
+        health.setTranslateY(10);
+        coinLabel = new Label("Coins: ");
+        coinLabel.setFont(new Font("Arial", 20));
+        coinLabel.setTextFill(Color.WHITE);
+        scoreLabel = new Label("Score: ");
+        scoreLabel.setFont(new Font("Arial", 20));
+        scoreLabel.setTextFill(Color.WHITE);
+        coinAndScore = new VBox(10);
+        coinAndScore.getChildren().addAll(coinLabel, scoreLabel);
+        coinAndScore.setTranslateX(10);
+        coinAndScore.setTranslateY(10);
+
+        //Shop Root
+        shopRoot = new BorderPane();
+        shopRoot.setId("backgroundshop");
+        decUpStair = new Stairs("up", (int) screenSize.getWidth(), (int) screenSize.getHeight());
+        toGameStair = new Stairs("shop", (int) screenSize.getWidth() - 100, (int) screenSize.getHeight() - 100);
+        
+        //Shop Buying Root
+        Text shopTitle = new Text("SHOP");
+        shopTitle.setFont(Font.font("Arial", 50));
+        Button buyButton = new Button("BUY");
+        Text itemSummary = new Text("SUMMARY");
+        itemSummary.setFont(Font.font("Arial", 30));
+        VBox playerData = getPlayerData();
+        shopBuyingRoot = new BorderPane();
+        shopBuyingRoot.setTop(shopTitle);
+        shopBuyingRoot.setBottom(buyButton);
+        shopBuyingRoot.setRight(itemSummary);
+        shopBuyingRoot.setLeft(playerData);
+        BorderPane.setAlignment(shopTitle, Pos.CENTER);
+        BorderPane.setMargin(shopTitle, new Insets(50));
+        BorderPane.setAlignment(buyButton, Pos.CENTER);
+        BorderPane.setMargin(buyButton, new Insets(20));
+        BorderPane.setAlignment(itemSummary, Pos.TOP_LEFT);
+        BorderPane.setMargin(itemSummary, new Insets(10, 200, 10, 10));
+        BorderPane.setAlignment(playerData, Pos.TOP_LEFT);
+        BorderPane.setMargin(playerData, new Insets(0, 100, 0, 0));
+
+        //Options Root
+        Text opTitle = new Text("GAME OPTIONS");
+        opTitle.setFont(Font.font("Arial", 50));
+        VBox optionsBox = addOptionButtons(pStage);
+        optionsBox.setAlignment(Pos.TOP_CENTER);
+        optionsRoot = new BorderPane();
+        optionsRoot.setId("menu");
+        optionsRoot.setCenter(optionsBox);
+        optionsRoot.setTop(opTitle);
+        BorderPane.setAlignment(opTitle, Pos.CENTER);
+        BorderPane.setMargin(opTitle, new Insets(100));
+
+        //Game Options Root
+        Text gameOpTitle = new Text("GAMEOPTIONS");
+        gameOpTitle.setFont(Font.font("Arial", 50));
+        VBox gameOptionsBox = addGameOptionsButtons(pStage);
+        gameOptionsBox.setAlignment(Pos.TOP_CENTER);
+        gameOptionsRoot = new BorderPane();
+        gameOptionsRoot.setId("menu");
+        gameOptionsRoot.setCenter(gameOptionsBox);
+        gameOptionsRoot.setTop(gameOpTitle);
+        BorderPane.setAlignment(gameOpTitle, Pos.CENTER);
+        BorderPane.setMargin(gameOpTitle, new Insets(100));
+
+        //Game Over Root
+        VBox gameOverBox = addGameOverButtons(pStage);
+        gameOverBox.setAlignment(Pos.TOP_CENTER);
+        gameOverRoot = new BorderPane();
+        gameOverRoot.setId("menu");
+        gameOverRoot.setCenter(gameOverBox);
+
+        //Exit Root
+        exitRoot = new VBox(20);
+        Label exitString = new Label("Are you sure you want to exit?");
+        exitString.setFont(Font.font("Arial", 25));
+        HBox exitButtons = new HBox(10);
+        exitButtons.getChildren().addAll(yesExit, noExit);
+        exitButtons.setAlignment(Pos.CENTER);
+        exitRoot.getChildren().addAll(exitString, exitButtons);
+        exitRoot.setId("menu");
+        exitRoot.setAlignment(Pos.CENTER);
+
+        //Are You Sure Root
+        areYouSureRoot = new VBox(20);
+        Label areYouSureString = new Label("Are you sure you want to return to the menu?");
+        areYouSureString.setFont(Font.font("Arial", 25));
+        HBox returnButtons = new HBox(10);
+        returnButtons.getChildren().addAll(yesReturn, noReturn);
+        returnButtons.setAlignment(Pos.CENTER);
+        areYouSureRoot.getChildren().addAll(areYouSureString, returnButtons);
+        areYouSureRoot.setId("menu");
+        areYouSureRoot.setAlignment(Pos.CENTER);
+
+    }
+
     public VBox addMenuButtons(Stage pStage) {
         VBox vbox = new VBox();
-        vbox.setPadding(new Insets(15));
+        vbox.setPadding(new Insets(20));
         vbox.setSpacing(10);
 
         Button startBtn = new Button("Start");
@@ -766,7 +837,7 @@ public class Main extends Application {
 
     public VBox addOptionButtons(Stage pStage) {
         VBox vbox = new VBox();
-        vbox.setPadding(new Insets(15));
+        vbox.setPadding(new Insets(20));
         vbox.setSpacing(10);
 
         CheckBox musicBox = new CheckBox("Music");
@@ -786,7 +857,7 @@ public class Main extends Application {
 
     public VBox addGameOptionsButtons(Stage pStage) {
         VBox vbox = new VBox();
-        vbox.setPadding(new Insets(15));
+        vbox.setPadding(new Insets(20));
         vbox.setSpacing(10);
 
         CheckBox musicBox = new CheckBox("Music");
@@ -838,27 +909,9 @@ public class Main extends Application {
         return vbox;
     }
 
-    public HBox addShopButtons() {
-        HBox hbox = new HBox();
-        hbox.setPadding(new Insets(30));
-        hbox.setSpacing(70);
-
-        HealthPackUpgrade healthUp = new HealthPackUpgrade();
-        PlayerShieldUpgrade shield = new PlayerShieldUpgrade();
-        ShootSpeedUpgrade shoot = new ShootSpeedUpgrade();
-        PlayerSpeedUpgrade speed = new PlayerSpeedUpgrade();
-        shopUpgrades.add(healthUp);
-        shopUpgrades.add(shield);
-        shopUpgrades.add(shoot);
-        shopUpgrades.add(speed);
-
-        hbox.getChildren().addAll(healthUp, shield, shoot, speed);
-        return hbox;
-    }
-
     public VBox addGameOverButtons(Stage pStage) {
         VBox vbox = new VBox();
-        vbox.setPadding(new Insets(15));
+        vbox.setPadding(new Insets(20));
         vbox.setSpacing(10);
 
         Button newBtn = new Button("New Game");

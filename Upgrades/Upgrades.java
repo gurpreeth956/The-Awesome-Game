@@ -49,4 +49,14 @@ public class Upgrades extends Pane {
     public void activeAbility(Character player) {
 	//To be overridden by child classes
     }
+    
+    public String getListView() {
+        //To be overridden by child classes
+        return "";
+    }
+    
+    public String getSummary() {
+        //To be overridden by child classes
+        return "";
+    }
 }

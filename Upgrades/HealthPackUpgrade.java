@@ -10,4 +10,12 @@ public class HealthPackUpgrade extends Upgrades {
     public void activeAbility(Character player) {
 	player.setHealth(player.getFullHealth());
     }
+    
+    public String getListView() {
+        return "Health Pack";
+    }
+    
+    public String getSummary() {
+        return "";
+    }
 }

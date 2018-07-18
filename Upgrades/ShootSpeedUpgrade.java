@@ -10,4 +10,12 @@ public class ShootSpeedUpgrade extends Upgrades {
     public void activeAbility(Character player) {
 	player.setShootSpeed(player.getShootSpeed() / 2);
     }
+    
+    public String getListView() {
+        return "Shooting Speed";
+    }
+    
+    public String getSummary() {
+        return "";
+    }
 }
