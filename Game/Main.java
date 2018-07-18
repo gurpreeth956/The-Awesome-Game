@@ -20,6 +20,7 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.shape.Rectangle;
@@ -650,9 +651,34 @@ public class Main extends Application {
             shopUpgradesView.getItems().addAll(upgrade.getListView());
         }
         
+        shopUpgradesView.setCellFactory(e -> new ListCell<String>() {
+            private ImageView iv = new ImageView();
+            
+            public void updateItem(String name, boolean empty) {
+                super.updateItem(name, empty);
+                
+                if (empty) {
+                    setText(null);
+                    setGraphic(null);
+                } else {
+                    if (name.equals("Health Pack")) 
+                        iv.setImage(healthUp.getImage());
+                    else if (name.equals("Add Shield")) 
+                        iv.setImage(shield.getImage());
+                    else if (name.equals("Player Speed")) 
+                        iv.setImage(speed.getImage());
+                    else if (name.equals("Shooting Speed")) 
+                        iv.setImage(shoot.getImage());
+                    setText(name);
+                    setGraphic(iv);
+                }
+            }
+        });
+        
         shopBuyingRoot.setCenter(shopUpgradesView);
         BorderPane.setAlignment(shopUpgradesView, Pos.TOP_CENTER);
         BorderPane.setMargin(shopUpgradesView, new Insets(10));
+        
         hbox.getChildren().addAll(healthUp, shield, shoot, speed);
         return hbox;
     }

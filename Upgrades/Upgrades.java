@@ -59,4 +59,9 @@ public class Upgrades extends Pane {
         //To be overridden by child classes
         return "";
     }
+    
+    public Image getImage() {
+        //To be overridden by child classes
+        return new Image("");
+    }
 }

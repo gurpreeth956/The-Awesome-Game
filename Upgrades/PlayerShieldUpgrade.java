@@ -1,5 +1,6 @@
 package Upgrades;
 import Game.Character;
+import javafx.scene.image.Image;
 
 public class PlayerShieldUpgrade extends Upgrades {
     
@@ -17,5 +18,9 @@ public class PlayerShieldUpgrade extends Upgrades {
     
     public String getSummary() {
         return "";
+    }
+    
+    public Image getImage() {
+        return new Image("file:src/Sprites/Shield.png");
     }
 }
