@@ -1,7 +1,4 @@
 package Game;
-
-
-
 import Environment.Stairs;
 
 import javafx.geometry.Rectangle2D;

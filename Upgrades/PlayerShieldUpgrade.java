@@ -6,6 +6,7 @@ public class PlayerShieldUpgrade extends Upgrades {
     
     public PlayerShieldUpgrade() {
 	super("file:src/Sprites/Shield.png", 2);
+        cost = 2;
     }
     
     public void activeAbility(Character player) {
@@ -13,7 +14,7 @@ public class PlayerShieldUpgrade extends Upgrades {
     }
     
     public String getListView() {
-        return "Add Shield";
+        return "Add Shield   -   " + cost;
     }
     
     public String getSummary() {

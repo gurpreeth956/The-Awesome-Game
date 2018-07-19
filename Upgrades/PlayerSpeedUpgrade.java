@@ -6,6 +6,7 @@ public class PlayerSpeedUpgrade extends Upgrades {
 
     public PlayerSpeedUpgrade() {
         super("file:src/Sprites/Speed.png", 2);
+        cost = 2;
     }
     
     public void activeAbility(Character player) {
@@ -13,7 +14,7 @@ public class PlayerSpeedUpgrade extends Upgrades {
     }
     
     public String getListView() {
-        return "Player Speed";
+        return "Player Speed   -   " + cost;
     }
     
     public String getSummary() {

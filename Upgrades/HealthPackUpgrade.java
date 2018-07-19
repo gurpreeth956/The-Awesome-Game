@@ -6,6 +6,7 @@ public class HealthPackUpgrade extends Upgrades {
     
     public HealthPackUpgrade() {
 	super("file:src/Sprites/HealthPack.png", 2);
+        cost = 2;
     }
     
     public void activeAbility(Character player) {
@@ -13,7 +14,7 @@ public class HealthPackUpgrade extends Upgrades {
     }
     
     public String getListView() {
-        return "Health Pack";
+        return "Health Pack   -   " + cost;
     }
     
     public String getSummary() {

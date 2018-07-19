@@ -6,6 +6,7 @@ public class ShootSpeedUpgrade extends Upgrades {
     
     public ShootSpeedUpgrade() {
 	super("file:src/Sprites/ShootSpeed.png", 100);
+        cost = 100;
     }
     
     public void activeAbility(Character player) {
@@ -13,7 +14,7 @@ public class ShootSpeedUpgrade extends Upgrades {
     }
     
     public String getListView() {
-        return "Shooting Speed";
+        return "Shooting Speed   -   " + cost;
     }
     
     public String getSummary() {

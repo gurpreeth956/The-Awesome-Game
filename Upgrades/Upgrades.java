@@ -52,7 +52,7 @@ public class Upgrades extends Pane {
     
     public String getListView() {
         //To be overridden by child classes
-        return "";
+        return "Upgrade   -   " + cost;
     }
     
     public String getSummary() {
