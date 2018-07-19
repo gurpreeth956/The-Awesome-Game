@@ -34,6 +34,10 @@ public class Upgrades extends Pane {
 	purchased = a;
     }
     
+    public boolean getBought() {
+        return purchased;
+    }
+    
     public boolean isActive() {
 	return active;
     }

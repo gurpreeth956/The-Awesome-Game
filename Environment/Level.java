@@ -20,8 +20,8 @@ public class Level {
 
     public Level() {
         currentLevel = 1;
-        enemiesToBeat = 5;
-        enemiesLeft = 5;
+        enemiesToBeat = 2;
+        enemiesLeft = 2;
         enemiesSpawned = 0;
         shopping = false;
     }
