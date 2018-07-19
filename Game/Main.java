@@ -31,27 +31,21 @@ public class Main extends Application {
 
     Scene scene;
     static Pane gameRoot;
-    static BorderPane menuRoot;
-    static BorderPane shopRoot;
-    static BorderPane shopBuyingRoot;
-    static BorderPane optionsRoot;
-    static BorderPane gameOptionsRoot;
-    static BorderPane gameOverRoot;
-    static VBox areYouSureRoot;
-    static VBox exitRoot;
+    static BorderPane menuRoot, shopRoot, shopBuyingRoot, optionsRoot, gameOptionsRoot, gameOverRoot;
+    static VBox areYouSureRoot, exitRoot;
+
+    private final HashMap<KeyCode, Boolean> keys = new HashMap();
+    static Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
 
     Button yesExit = new Button("Yes");
     Button noExit = new Button("No");
     Button yesReturn = new Button("Yes");
     Button noReturn = new Button("No");
 
-    private final HashMap<KeyCode, Boolean> keys = new HashMap();
-    
-    static Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
-
     Character player;
     Level level;
     Stairs toShopStair, decUpStair, toGameStair;
+    Friends shopKeeper;
 
     public static List<Projectile> projectiles = new ArrayList<>();
     private List<Projectile> projToRemove = new ArrayList<>();
@@ -73,24 +67,22 @@ public class Main extends Application {
     private List<Upgrades> upgradesToRemove = new ArrayList();
     private List<Upgrades> currentUpgrades = new ArrayList();
     private ListView<String> shopUpgradesView = new ListView<>();
-    HBox shopBox;
-    private long shopTime = 0;
 
     Rectangle healthBarOutline, actualHealth, lostHealth, shieldHealth;
+    Label coinLabel, scoreLabel, shopBuyingHealthLabel, shopBuyingShieldLabel, shopBuyingCoinLabel, 
+        shopBuyingScoreLabel;
     VBox health, coinAndScore;
-    Label coinLabel, scoreLabel;
     
-    //for shopBuyingRoot
-    Label shopBuyingHealthLabel, shopBuyingShieldLabel, shopBuyingCoinLabel, shopBuyingScoreLabel;
-
-    boolean gameplay = false;
-    boolean pause = false;
-    boolean shieldAdded = false;
-    boolean couldGoToShop = true;
-    boolean couldGoToMap = false;
-    boolean addShopStair = true;
+    boolean gameplay = false, pause = false, shieldAdded = false, couldGoToShop = true, 
+        couldGoToMap = false, addShopStair = true;
     private long pauseTime = 0;
 
+    
+    //Main
+    public static void main(String[] args) {
+        launch(args);
+    }
+    
     @Override
     public void start(Stage primaryStage) {
 
@@ -138,8 +130,10 @@ public class Main extends Application {
             }
         });
     }
-
-    //This is where the gameplay is updated 
+    //Main
+    
+    
+    //Gameplay
     public void update(Stage pStage) {
         long timeNow = System.currentTimeMillis();
         long time = timeNow - pauseTime;
@@ -191,11 +185,14 @@ public class Main extends Application {
             }
 
             for (Portal portal : portals) {
-                if (portal.summon() && !level.isShopping() && level.getEnemiesSpawned() < level.getEnemiesToBeat()) {
-                    if (level.getEnemiesLeft() == 1 && bosses.size() >= level.getLevel()) {//bosses.size part is temp so game doesnt crash after we run out of bosses
+                if (level.getEnemiesSpawned() < level.getEnemiesToBeat() && portal.summon() && 
+                    !level.isShopping()) {
+                    if (level.getEnemiesLeft() == 1 && bosses.size() >= level.getLevel()) {
+                        //bosses.size part is temp so game doesnt crash after we run out of bosses
                         createBoss(portal);
                     } else {
-                        if (level.getEnemiesToBeat() - level.getEnemiesSpawned() != 1 || bosses.size() < level.getLevel()) {
+                        if (level.getEnemiesToBeat() - level.getEnemiesSpawned() != 1 || 
+                            bosses.size() < level.getLevel()) {
                             createEnemy(portal);
                         }
                     }
@@ -241,14 +238,6 @@ public class Main extends Application {
 
             shopUpgrades.removeAll(upgradesToRemove);
             upgradesToRemove.clear();
-
-            //to clear enemies (temporary)
-            if (isPressed(KeyCode.P)) {
-                for (Enemy enemy : enemies) {
-                    gameRoot.getChildren().removeAll(enemy, enemy.getHealthBarOutline(), enemy.getLostHealth(), enemy.getActualHealth());
-                }
-                enemies.clear();
-            }
             
         } else if (pause) {
             if (time < 0 || time > 150) {
@@ -311,7 +300,8 @@ public class Main extends Application {
     }
 
     public void createProjectile(int x, int y) {
-        Projectile proj = new Projectile("file:src/Sprites/Shot.png", player.getX() + 28, player.getY() + 16, 12, 12);
+        Projectile proj = new Projectile("file:src/Sprites/Shot.png", player.getX() + 28, 
+            player.getY() + 16, 12, 12);
         proj.setVelocityX(x);
         proj.setVelocityY(y);
         gameRoot.getChildren().addAll(proj);
@@ -395,7 +385,8 @@ public class Main extends Application {
     public void createBoss(Portal portal) {
         Enemy enemy = bosses.get(level.getLevel() - 1);
         enemy.summon(portal);
-        gameRoot.getChildren().addAll(enemy, enemy.getHealthBarOutline(), enemy.getLostHealth(), enemy.getActualHealth());
+        gameRoot.getChildren().addAll(enemy, enemy.getHealthBarOutline(), enemy.getLostHealth(), 
+            enemy.getActualHealth());
         coinAndScore.toFront();
         coinLabel.toFront();
         scoreLabel.toFront();
@@ -417,7 +408,8 @@ public class Main extends Application {
     public void createEnemy(Portal portal) {
         Enemy enemy = level.generate();
         enemy.summon(portal);
-        gameRoot.getChildren().addAll(enemy, enemy.getHealthBarOutline(), enemy.getLostHealth(), enemy.getActualHealth());
+        gameRoot.getChildren().addAll(enemy, enemy.getHealthBarOutline(), enemy.getLostHealth(), 
+            enemy.getActualHealth());
         coinAndScore.toFront();
         coinLabel.toFront();
         scoreLabel.toFront();
@@ -457,7 +449,8 @@ public class Main extends Application {
         }
         if (!enemy.isAlive()) {
             enemToRemove.add(enemy);
-            gameRoot.getChildren().removeAll(enemy, enemy.getActualHealth(), enemy.getLostHealth(), enemy.getHealthBarOutline());
+            gameRoot.getChildren().removeAll(enemy, enemy.getActualHealth(), enemy.getLostHealth(),
+                enemy.getHealthBarOutline());
             level.enemyBeat();
             level.coinUp(enemy);
             level.scoreUp(enemy);
@@ -498,47 +491,18 @@ public class Main extends Application {
             actualHealth.toFront();
         }
     }
+    //Gameplay
     
-    public boolean upgradeSelected(String upgrade) {
-        String[] upgradeNameSplit = upgrade.split("-");
-        String upgradeName = upgradeNameSplit[0];
-        boolean bought = false;
-        
-        //must keep number of spaces correct(3)
-        if (upgradeName.equals("Health Pack   ")) {
-            if (level.getCoin() >= healthUp.getPrice()) {
-                healthUp.setBought(true);
-                bought = true;
-            }
-        } else if (upgradeName.equals("Add Shield   ")) {
-            if (level.getCoin() >= shieldUp.getPrice()) {
-                shieldUp.setBought(true);
-                bought = true;
-            }
-        } else if (upgradeName.equals("Player Speed   ")) {
-            if (level.getCoin() >= speedUp.getPrice()) {
-                speedUp.setBought(true);
-                bought = true;
-            }
-        } else if (upgradeName.equals("Shooting Speed   ")) {
-            if (level.getCoin() >= shootUp.getPrice()) {
-                shootUp.setBought(true);
-                bought = true;
-            }
-        }
-        
-        return bought;
-    }
-
-    public void shoppingUpdate(Stage pStage) {if (level.isShopping()) {
+    
+    //Shop
+    public void shoppingUpdate(Stage pStage) {
+        if (level.isShopping()) {
             for (Upgrades upgrade : shopUpgrades) {
-                //if (upgrade.isColliding(player) && isPressed(KeyCode.ENTER)) {
                 if (upgrade.getBought()) {
                     upgradesToRemove.add(upgrade);
                     currentUpgrades.add(upgrade);
                     level.spend(upgrade.getPrice());
                     coinLabel.setText("Coins: " + level.getCoin());
-                //    }
                 }
             }
             for (Upgrades upgrade : currentUpgrades) {
@@ -558,7 +522,8 @@ public class Main extends Application {
             }
             if (player.isColliding(toGameStair) && couldGoToMap) {
                 shopRoot.getChildren().clear();
-                gameRoot.getChildren().addAll(player, health, healthBarOutline, lostHealth, actualHealth, coinAndScore);
+                gameRoot.getChildren().addAll(player, health, healthBarOutline, lostHealth, 
+                    actualHealth, coinAndScore);
                 if (player.hasShield()) {
                     gameRoot.getChildren().addAll(shieldHealth);
                 }
@@ -587,16 +552,16 @@ public class Main extends Application {
                     Spikes.spikeToRemove.add(spike);
                 }
                 
-                //pStage.getScene().setRoot(shopRoot);
-                pStage.getScene().setRoot(shopBuyingRoot); //for testing
-                updateShopBuyingRoot();
-                //
+                pStage.getScene().setRoot(shopRoot);
+                // if (player.isColliding(shopKeeper) {
+                //    pStage.getScene().setRoot(shopBuyingRoot);
+                //    updateShopBuyingRoot();
+                //}
                 
                 if (couldGoToShop) {
                     gameRoot.getChildren().clear();
-                    shopRoot.getChildren().addAll(player, health, healthBarOutline, lostHealth, actualHealth, 
-                                                  coinAndScore, decUpStair, toGameStair);
-                    shopRoot.setCenter(shopBox);
+                    shopRoot.getChildren().addAll(player, health, healthBarOutline, lostHealth, 
+                        actualHealth, coinAndScore, decUpStair, toGameStair, shopKeeper);
                     if (player.hasShield()) {
                         shopRoot.getChildren().addAll(shieldHealth);
                     }
@@ -608,7 +573,6 @@ public class Main extends Application {
         }
     }
     
-    //Upgrades
     HealthPackUpgrade healthUp;
     PlayerShieldUpgrade shieldUp;
     ShootSpeedUpgrade shootUp;
@@ -665,6 +629,38 @@ public class Main extends Application {
         shopBuyingScoreLabel.setText("Score: " + level.getScore());
     }
     
+    public void upgradeSelected(String upgrade) {
+        String[] upgradeNameSplit = upgrade.split("-");
+        String upgradeName = upgradeNameSplit[0];
+        
+        //must keep number of spaces correct(3)
+        if (upgradeName.equals("Health Pack   ")) {
+            if (level.getCoin() >= healthUp.getPrice()) {
+                healthUp.setBought(true);
+                removeUpgrade(healthUp);
+            }
+        } else if (upgradeName.equals("Add Shield   ")) {
+            if (level.getCoin() >= shieldUp.getPrice()) {
+                shieldUp.setBought(true);
+                removeUpgrade(shieldUp);
+            }
+        } else if (upgradeName.equals("Player Speed   ")) {
+            if (level.getCoin() >= speedUp.getPrice()) {
+                speedUp.setBought(true);
+                removeUpgrade(speedUp);
+            }
+        } else if (upgradeName.equals("Shooting Speed   ")) {
+            if (level.getCoin() >= shootUp.getPrice()) {
+                shootUp.setBought(true);
+                removeUpgrade(shootUp);
+            }
+        }
+    }
+    
+    public void removeUpgrade(Upgrades upgrade) {
+        shopUpgradesView.getItems().remove(upgrade.getListView());
+    }
+    
     public VBox getPlayerData() {
         VBox vbox = new VBox();
         vbox.setPadding(new Insets(10));
@@ -673,23 +669,70 @@ public class Main extends Application {
         shopBuyingHealthLabel = new Label();
         shopBuyingHealthLabel.setText("Health: ");
         shopBuyingHealthLabel.setFont(new Font("Arial", 30));
-        shopBuyingHealthLabel.setTextFill(Color.WHITE);
+        shopBuyingHealthLabel.setTextFill(Color.BLACK);
         shopBuyingShieldLabel = new Label();
         shopBuyingShieldLabel.setText("Shield: ");
         shopBuyingShieldLabel.setFont(new Font("Arial", 30));
-        shopBuyingShieldLabel.setTextFill(Color.WHITE);
+        shopBuyingShieldLabel.setTextFill(Color.BLACK);
         shopBuyingCoinLabel = new Label();
         shopBuyingCoinLabel.setText("Coins: ");
         shopBuyingCoinLabel.setFont(new Font("Arial", 30));
-        shopBuyingCoinLabel.setTextFill(Color.WHITE);
+        shopBuyingCoinLabel.setTextFill(Color.BLACK);
         shopBuyingScoreLabel = new Label();
         shopBuyingScoreLabel.setText("Score: ");
         shopBuyingScoreLabel.setFont(new Font("Arial", 30));
-        shopBuyingScoreLabel.setTextFill(Color.WHITE);
+        shopBuyingScoreLabel.setTextFill(Color.BLACK);
         
-        vbox.getChildren().addAll(shopBuyingHealthLabel, shopBuyingShieldLabel, 
-                                  shopBuyingCoinLabel, shopBuyingScoreLabel);
+        vbox.getChildren().addAll(shopBuyingHealthLabel, shopBuyingShieldLabel, shopBuyingCoinLabel, 
+            shopBuyingScoreLabel);
         return vbox;
+    }
+    
+    public HBox addShopViewButtons(Stage pStage) {
+        HBox hbox = new HBox();
+        hbox.setAlignment(Pos.CENTER);
+        hbox.setSpacing(100);
+        
+        Button buyButton = new Button("BUY");
+        Button exitButton = new Button("EXIT");
+        
+        buyButton.setOnAction(e -> {
+            ObservableList<String> upgrade = shopUpgradesView.getSelectionModel().getSelectedItems();
+            for (String up : upgrade) {
+                upgradeSelected(up);
+            }
+        });
+        exitButton.setOnAction(e-> {
+            pStage.getScene().setRoot(shopRoot);
+        });
+        hbox.getChildren().addAll(buyButton, exitButton);
+        return hbox;
+    }
+    //Shop
+    
+    
+    //General
+    public void newGame() {
+        level = new Level();
+        player = new Character((int) screenSize.getWidth() / 2, (int) screenSize.getHeight() / 2);
+        actualHealth = new Rectangle(screenSize.getWidth() - 120, 10, 100, 22);
+        actualHealth.setFill(Color.web("#00F32C"));
+        gameRoot.getChildren().addAll(player, health, healthBarOutline, lostHealth, actualHealth, coinAndScore);
+        addShopButtons();
+        coinAndScore.toFront();
+        coinLabel.toFront();
+        scoreLabel.toFront();
+        health.toFront();
+        healthBarOutline.toFront();
+        lostHealth.toFront();
+        actualHealth.toFront();
+        player.addShield(false);
+        gameplay = true;
+        shieldAdded = false;
+        couldGoToShop = true;
+        couldGoToMap = false;
+        addShopStair = true;
+        level.fillBoss(bosses);
     }
     
     public void clearAll() {
@@ -717,42 +760,14 @@ public class Main extends Application {
         shopRoot.getChildren().clear();
     }
 
-    public void newGame() {
-        level = new Level();
-        player = new Character((int) screenSize.getWidth() / 2, (int) screenSize.getHeight() / 2);
-        actualHealth = new Rectangle(screenSize.getWidth() - 120, 10, 100, 22);
-        actualHealth.setFill(Color.web("#00F32C"));
-        gameRoot.getChildren().addAll(player, health, healthBarOutline, lostHealth, actualHealth, coinAndScore);
-        addShopButtons();
-        VBox playerData = getPlayerData();
-        shopBuyingRoot.setLeft(playerData);
-        BorderPane.setAlignment(playerData, Pos.TOP_LEFT);
-        BorderPane.setMargin(playerData, new Insets(10, 100, 10, 20));
-        coinAndScore.toFront();
-        coinLabel.toFront();
-        scoreLabel.toFront();
-        health.toFront();
-        healthBarOutline.toFront();
-        lostHealth.toFront();
-        actualHealth.toFront();
-        player.addShield(false);
-        gameplay = true;
-        shieldAdded = false;
-        couldGoToShop = true;
-        couldGoToMap = false;
-        addShopStair = true;
-        level.fillBoss(bosses);
-    }
-
     public boolean isPressed(KeyCode key) {
         return keys.getOrDefault(key, false);
     }
-    
+    //General
     
     
     //Layouts
     public void createRoots(Stage pStage) {
-        
         //Menu Root
         Text title = new Text("THE AWESOME GAME");
         title.setFont(Font.font("Arial", 50));
@@ -804,6 +819,7 @@ public class Main extends Application {
         shopRoot.setId("backgroundshop");
         decUpStair = new Stairs("up", (int) screenSize.getWidth(), (int) screenSize.getHeight());
         toGameStair = new Stairs("shop", (int) screenSize.getWidth() - 100, (int) screenSize.getHeight() - 100);
+        shopKeeper = new ShopKeeper("file:src/Sprites/ShopKeeper.png", 65, 40);
         
         //Shop Buying Root
         Text shopTitle = new Text("SHOP");
@@ -811,16 +827,20 @@ public class Main extends Application {
         HBox shopButtons = addShopViewButtons(pStage);
         Text itemSummary = new Text("SUMMARY");
         itemSummary.setFont(Font.font("Arial", 30));
+        VBox playerData = getPlayerData();
         shopBuyingRoot = new BorderPane();
         shopBuyingRoot.setTop(shopTitle);
         shopBuyingRoot.setBottom(shopButtons);
         shopBuyingRoot.setRight(itemSummary);
+        shopBuyingRoot.setLeft(playerData);
         BorderPane.setAlignment(shopTitle, Pos.CENTER);
         BorderPane.setMargin(shopTitle, new Insets(50));
         BorderPane.setAlignment(shopButtons, Pos.TOP_CENTER);
         BorderPane.setMargin(shopButtons, new Insets(20, 0, 40, 0));
         BorderPane.setAlignment(itemSummary, Pos.TOP_LEFT);
         BorderPane.setMargin(itemSummary, new Insets(10, 200, 10, 10));
+        BorderPane.setAlignment(playerData, Pos.TOP_LEFT);
+        BorderPane.setMargin(playerData, new Insets(10, 100, 10, 20));
 
         //Options Root
         Text opTitle = new Text("GAME OPTIONS");
@@ -874,30 +894,6 @@ public class Main extends Application {
         areYouSureRoot.getChildren().addAll(areYouSureString, returnButtons);
         areYouSureRoot.setId("menu");
         areYouSureRoot.setAlignment(Pos.CENTER);
-    }
-    
-    public HBox addShopViewButtons(Stage pStage) {
-        HBox hbox = new HBox();
-        hbox.setAlignment(Pos.CENTER);
-        hbox.setSpacing(100);
-        
-        Button buyButton = new Button("BUY");
-        Button exitButton = new Button("EXIT");
-        
-        buyButton.setOnAction(e -> {
-            ObservableList<String> upgrade = shopUpgradesView.getSelectionModel().getSelectedItems();
-            for (String up : upgrade) {
-                boolean bought = upgradeSelected(up);
-                //if (bought) upgradeRemove(up);
-            }
-            //upgrade.clear();
-        });
-        exitButton.setOnAction(e-> {
-            Platform.exit();
-            //pStage.getScene().setRoot(gameRoot);
-        });
-        hbox.getChildren().addAll(buyButton, exitButton);
-        return hbox;
     }
 
     public VBox addMenuButtons(Stage pStage) {
@@ -1049,9 +1045,5 @@ public class Main extends Application {
 
         vbox.getChildren().addAll(newBtn, backBtn, exitBtn);
         return vbox;
-    }
-
-    public static void main(String[] args) {
-        launch(args);
     }
 }
