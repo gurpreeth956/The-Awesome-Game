@@ -441,7 +441,7 @@ public class Main extends Application {
         enemy.shoot(player, enemyProj, gameRoot);
         enemy.update(gameRoot);
 
-        if (enemy.getHealth() == 0) {
+        if (enemy.getHealth() <= 0) {
             enemy.update(gameRoot);
             enemy.setAlive(false);
         }
