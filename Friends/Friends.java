@@ -1,4 +1,4 @@
-package Game;
+package Friends;
 
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;

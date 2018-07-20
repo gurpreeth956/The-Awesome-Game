@@ -1,5 +1,6 @@
 package Game;
 import Environment.Stairs;
+import Friends.*;
 
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;

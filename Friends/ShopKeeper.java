@@ -1,4 +1,4 @@
-package Game;
+package Friends;
 
 public class ShopKeeper extends Friends {
 
