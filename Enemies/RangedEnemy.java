@@ -1,6 +1,6 @@
 package Enemies;
 import Game.Character;
-import Game.Projectile;
+import Projectiles.Projectile;
 
 import java.util.List;
 import javafx.scene.layout.Pane;

@@ -1,6 +1,8 @@
 package Game;
 import Enemies.*;
 import Environment.*;
+import Friends.*;
+import Projectiles.*;
 import Upgrades.*;
 
 import java.util.ArrayList;
@@ -74,7 +76,7 @@ public class Main extends Application {
     VBox health, coinAndScore;
     
     boolean gameplay = false, pause = false, shieldAdded = false, couldGoToShop = true, 
-        couldGoToMap = false, addShopStair = true;
+        couldGoToMap = false, addShopStair = true, inShopBuyingView = false;
     private long pauseTime = 0;
 
     
@@ -85,7 +87,6 @@ public class Main extends Application {
     
     @Override
     public void start(Stage primaryStage) {
-
         createRoots(primaryStage);
         
         //Gameplay
@@ -497,6 +498,7 @@ public class Main extends Application {
             if (player.isColliding(shopKeeper) && isPressed(KeyCode.ENTER)) {
                 pStage.getScene().setRoot(shopBuyingRoot);
                 updateShopBuyingRoot();
+                inShopBuyingView = true;
             }
             
             for (Upgrades upgrade : shopUpgrades) {
@@ -707,6 +709,7 @@ public class Main extends Application {
         });
         exitButton.setOnAction(e-> {
             pStage.getScene().setRoot(shopRoot);
+            inShopBuyingView = false;
         });
         hbox.getChildren().addAll(buyButton, exitButton);
         return hbox;
@@ -965,7 +968,12 @@ public class Main extends Application {
 
         Button gameBtn = new Button("BACK TO GAME");
         gameBtn.setOnAction(e -> {
-            pStage.getScene().setRoot(currentRoot);
+            if (!level.isShopping()) {
+                pStage.getScene().setRoot(gameRoot);
+            } else {
+                if (inShopBuyingView) pStage.getScene().setRoot(shopBuyingRoot);
+                else pStage.getScene().setRoot(shopRoot);
+            }
             pause = false;
         });
 

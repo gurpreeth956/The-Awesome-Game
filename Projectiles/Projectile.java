@@ -1,5 +1,6 @@
-package Game;
+package Projectiles;
 import Enemies.Enemy;
+import Game.Character;
 
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;

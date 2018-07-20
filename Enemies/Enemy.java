@@ -1,7 +1,7 @@
 package Enemies;
-import Game.Projectile;
 import Environment.Portal;
 import Game.Character;
+import Projectiles.Projectile;
 
 import java.util.List;
 import javafx.geometry.Rectangle2D;
