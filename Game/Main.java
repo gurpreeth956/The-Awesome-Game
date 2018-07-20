@@ -30,7 +30,7 @@ import javafx.stage.Screen;
 public class Main extends Application {
 
     Scene scene;
-    static Pane gameRoot;
+    static Pane gameRoot, currentRoot;
     static BorderPane menuRoot, shopRoot, shopBuyingRoot, optionsRoot, gameOptionsRoot, gameOverRoot;
     static VBox areYouSureRoot, exitRoot;
 
@@ -114,7 +114,7 @@ public class Main extends Application {
             e.consume();
             pause = true;
             
-            Pane currentRoot = (Pane)primaryStage.getScene().getRoot();
+            currentRoot = (Pane)primaryStage.getScene().getRoot();
             if (!currentRoot.equals(exitRoot)) {
                 primaryStage.getScene().setRoot(exitRoot);
                 
@@ -205,6 +205,7 @@ public class Main extends Application {
             if (time < 0 || time > 150) {
                 if (isPressed(KeyCode.ESCAPE)) {
                     pause = true;
+                    currentRoot = (Pane)pStage.getScene().getRoot();
                     pStage.getScene().setRoot(gameOptionsRoot);
                 }
                 pauseTime = timeNow;
@@ -242,11 +243,7 @@ public class Main extends Application {
         } else if (pause) {
             if (time < 0 || time > 150) {
                 if (isPressed(KeyCode.ESCAPE)) {
-                    if (!level.isShopping()) {
-                        pStage.getScene().setRoot(gameRoot);
-                    } else {
-                        pStage.getScene().setRoot(shopRoot);
-                    }
+                    pStage.getScene().setRoot(currentRoot);
                     pause = false;
                 }
                 pauseTime = timeNow;
@@ -497,6 +494,11 @@ public class Main extends Application {
     //Shop
     public void shoppingUpdate(Stage pStage) {
         if (level.isShopping()) {
+            if (player.isColliding(shopKeeper) && isPressed(KeyCode.ENTER)) {
+                pStage.getScene().setRoot(shopBuyingRoot);
+                updateShopBuyingRoot();
+            }
+            
             for (Upgrades upgrade : shopUpgrades) {
                 if (upgrade.getBought()) {
                     upgradesToRemove.add(upgrade);
@@ -505,6 +507,7 @@ public class Main extends Application {
                     coinLabel.setText("Coins: " + level.getCoin());
                 }
             }
+            
             for (Upgrades upgrade : currentUpgrades) {
                 if (!upgrade.isActive()) {
                     upgrade.activeAbility(player);
@@ -520,22 +523,26 @@ public class Main extends Application {
                     }
                 }
             }
+            
             if (player.isColliding(toGameStair) && couldGoToMap) {
                 shopRoot.getChildren().clear();
                 gameRoot.getChildren().addAll(player, health, healthBarOutline, lostHealth, 
                     actualHealth, coinAndScore);
+                
                 if (player.hasShield()) {
                     gameRoot.getChildren().addAll(shieldHealth);
                 }
                 for (Portal port : portals) {
                     gameRoot.getChildren().addAll(port);
                 }
+                
                 couldGoToShop = true;
                 couldGoToMap = false;
                 addShopStair = true;
                 level.increaseLevel();
                 level.setShopping(false);
                 pStage.getScene().setRoot(gameRoot);
+                currentRoot = gameRoot;
             }
         }
 
@@ -551,12 +558,8 @@ public class Main extends Application {
                 for (Spikes spike : Spikes.spikes) {
                     Spikes.spikeToRemove.add(spike);
                 }
-                
                 pStage.getScene().setRoot(shopRoot);
-                // if (player.isColliding(shopKeeper) {
-                //    pStage.getScene().setRoot(shopBuyingRoot);
-                //    updateShopBuyingRoot();
-                //}
+                currentRoot = shopRoot;
                 
                 if (couldGoToShop) {
                     gameRoot.getChildren().clear();
@@ -733,6 +736,7 @@ public class Main extends Application {
         couldGoToMap = false;
         addShopStair = true;
         level.fillBoss(bosses);
+        currentRoot = gameRoot;
     }
     
     public void clearAll() {
@@ -961,11 +965,7 @@ public class Main extends Application {
 
         Button gameBtn = new Button("BACK TO GAME");
         gameBtn.setOnAction(e -> {
-            if (!level.isShopping()) {
-                pStage.getScene().setRoot(gameRoot);
-            } else {
-                pStage.getScene().setRoot(shopRoot);
-            }
+            pStage.getScene().setRoot(currentRoot);
             pause = false;
         });
 
@@ -1046,4 +1046,5 @@ public class Main extends Application {
         vbox.getChildren().addAll(newBtn, backBtn, exitBtn);
         return vbox;
     }
+    //Layouts
 }
