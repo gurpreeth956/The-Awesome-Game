@@ -1,8 +1,6 @@
 package Game;
-
-
-
 import Environment.Stairs;
+import Friends.*;
 
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
@@ -104,10 +102,12 @@ public class Character extends Pane {
     }
 
     public void setX(int x) {
+        this.setTranslateX(x);
 	this.x = x;
     }
 
     public void setY(int y) {
+        this.setTranslateX(y);
 	this.y = y;
     }
 
@@ -146,6 +146,10 @@ public class Character extends Pane {
     
     public boolean isColliding(Stairs stair) {
 	return this.getBoundsInParent().intersects(stair.getBoundsInParent());
+    }
+    
+    public boolean isColliding(Friends friend) {
+        return this.getBoundsInParent().intersects(friend.getBoundsInParent());
     }
     
     public void setPlayerSpeed(int i) {

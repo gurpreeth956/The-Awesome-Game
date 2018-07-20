@@ -1,6 +1,6 @@
 package Enemies;
-import Game.Projectile;
 import Game.Character;
+import Projectiles.Projectile;
 
 //A.K.A Spikey
 import java.util.List;

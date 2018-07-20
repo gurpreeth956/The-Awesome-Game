@@ -1,13 +1,12 @@
 package Enemies;
 import Game.Character;
 
-
 public class Boss extends Enemy {
   
-    public Boss(String img, int health, int coin, int width, int height){
+    public Boss(String img, int health, int coin, int width, int height) {
 	super(img, health, coin, width, height);
     }
-//    
+    
     public void move(Character player, double width, double height) {
 	if (player.getX() > this.getX() && player.getY() == this.getY()) { //right
             this.setCharacterView(240, 222);

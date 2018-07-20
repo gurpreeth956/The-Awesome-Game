@@ -34,6 +34,10 @@ public class Upgrades extends Pane {
 	purchased = a;
     }
     
+    public boolean getBought() {
+        return purchased;
+    }
+    
     public boolean isActive() {
 	return active;
     }
@@ -42,11 +46,22 @@ public class Upgrades extends Pane {
 	return cost;
     }
     
-    public boolean isColliding(Character player) {
-	return this.getBoundsInParent().intersects(player.getBoundsInParent());
-    }
-    
     public void activeAbility(Character player) {
 	//To be overridden by child classes
+    }
+    
+    public String getListView() {
+        //To be overridden by child classes
+        return "Upgrade   -   " + cost;
+    }
+    
+    public String getSummary() {
+        //To be overridden by child classes
+        return "";
+    }
+    
+    public Image getImage() {
+        //To be overridden by child classes
+        return new Image("");
     }
 }
