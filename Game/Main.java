@@ -734,6 +734,7 @@ public class Main extends Application {
         actualHealth.toFront();
         player.addShield(false);
         gameplay = true;
+        pause = false;
         shieldAdded = false;
         couldGoToShop = true;
         couldGoToMap = false;
