@@ -32,8 +32,8 @@ import javafx.stage.Screen;
 public class Main extends Application {
 
     Scene scene;
-    static Pane gameRoot, currentRoot;
-    static BorderPane menuRoot, shopRoot, shopBuyingRoot, optionsRoot, gameOptionsRoot, gameOverRoot;
+    static Pane gameRoot, shopRoot, currentRoot;
+    static BorderPane menuRoot, shopBuyingRoot, optionsRoot, gameOptionsRoot, gameOverRoot;
     static VBox areYouSureRoot, exitRoot;
 
     private final HashMap<KeyCode, Boolean> keys = new HashMap();
@@ -767,8 +767,8 @@ public class Main extends Application {
         level.clearScore();
         level.clearCoins();
         level.setShopping(false);
-        coinLabel.setText("Coins: " + level.getCoin());
-        scoreLabel.setText("Score: " + level.getScore());
+        coinLabel.setText("Coins: ");
+        scoreLabel.setText("Score: ");
         gameRoot.getChildren().clear();
         shopRoot.getChildren().clear();
     }
@@ -828,7 +828,7 @@ public class Main extends Application {
         coinAndScore.setTranslateY(10);
 
         //Shop Root
-        shopRoot = new BorderPane();
+        shopRoot = new Pane();
         shopRoot.setId("backgroundshop");
         decUpStair = new Stairs("up", (int) screenSize.getWidth(), (int) screenSize.getHeight());
         toGameStair = new Stairs("shop", (int) screenSize.getWidth() - 100, (int) screenSize.getHeight() - 100);
@@ -846,14 +846,15 @@ public class Main extends Application {
         shopBuyingRoot.setBottom(shopButtons);
         shopBuyingRoot.setRight(itemSummary);
         shopBuyingRoot.setLeft(playerData);
+        playerData.setPrefWidth((int) screenSize.getWidth() / 5);
         BorderPane.setAlignment(shopTitle, Pos.CENTER);
         BorderPane.setMargin(shopTitle, new Insets(50));
         BorderPane.setAlignment(shopButtons, Pos.TOP_CENTER);
-        BorderPane.setMargin(shopButtons, new Insets(20, 0, 40, 0));
+        BorderPane.setMargin(shopButtons, new Insets(20, 0, 20, 0));
         BorderPane.setAlignment(itemSummary, Pos.TOP_LEFT);
         BorderPane.setMargin(itemSummary, new Insets(10, 200, 10, 10));
         BorderPane.setAlignment(playerData, Pos.TOP_LEFT);
-        BorderPane.setMargin(playerData, new Insets(10, 100, 10, 20));
+        BorderPane.setMargin(playerData, new Insets(10, 10, 10, 20));
 
         //Options Root
         Text opTitle = new Text("GAME OPTIONS");
