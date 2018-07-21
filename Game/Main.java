@@ -150,6 +150,7 @@ public class Main extends Application {
                 gameplay = false;
             }
 
+            //Controls
             if (isPressed(KeyCode.W)) {
                 player.setCharacterView(0, 183);
                 player.moveY(-player.getPlayerSpeed(), scene.getHeight());
@@ -178,7 +179,8 @@ public class Main extends Application {
                 player.setCharacterView(0, player.getOffsetY());
                 characterShooting();
             }
-
+            
+            //Updates
             while (portalCount < level.getLevel()) {
                 createPortal();
                 player.toFront();
@@ -211,7 +213,7 @@ public class Main extends Application {
                 }
                 pauseTime = timeNow;
             }
-
+            
             for (Projectile proj : projectiles) {
                 updateProj(proj);
             }
@@ -335,7 +337,7 @@ public class Main extends Application {
         long timeNow = System.currentTimeMillis();
         long time = timeNow - hitTime;
         
-        if (proj.playerColliding(player)) { //create enemy proj class
+        if (proj.playerColliding(player)) { //create enemy proj class !note!
             proj.setAlive(false);
             if (time < 0 || time > 1000) {
                 player.hit();
@@ -494,6 +496,7 @@ public class Main extends Application {
     
     //Shop
     public void shoppingUpdate(Stage pStage) {
+        //Shopping
         if (level.isShopping()) {
             if (player.isColliding(shopKeeper) && isPressed(KeyCode.ENTER)) {
                 pStage.getScene().setRoot(shopBuyingRoot);
@@ -547,7 +550,8 @@ public class Main extends Application {
                 currentRoot = gameRoot;
             }
         }
-
+        
+        //Round End
         if (level.getEnemiesLeft() <= 0) {
             if (!level.isShopping() && addShopStair) {
                 toShopStair = new Stairs("down", (int) scene.getWidth(), (int) scene.getHeight());
@@ -597,6 +601,7 @@ public class Main extends Application {
             shopUpgradesView.getItems().addAll(upgrade.getListView());
         }
         
+        //Add Icons
         shopUpgradesView.setCellFactory(e -> new ListCell<String>() {
             private ImageView iv = new ImageView();
             
@@ -638,7 +643,7 @@ public class Main extends Application {
         String[] upgradeNameSplit = upgrade.split("-");
         String upgradeName = upgradeNameSplit[0];
         
-        //must keep number of spaces correct(3)
+        //must keep number of spaces correct (currently 3)
         if (upgradeName.equals("Health Pack   ")) {
             if (level.getCoin() >= healthUp.getPrice()) {
                 healthUp.setBought(true);
