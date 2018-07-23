@@ -1,4 +1,5 @@
-package Enemies;
+package Bosses;
+import Enemies.MeleeEnemy;
 
 public class ChargeBoss extends MeleeEnemy {
     

@@ -1,11 +1,7 @@
 package Environment;
 
-import Enemies.HomingBoss;
-import Enemies.Boss;
-import Enemies.RangedEnemy;
-import Enemies.SpikeEnemy;
-import Enemies.Licker;
-import Enemies.Enemy;
+import Bosses.*;
+import Enemies.*;
 import java.util.List;
 
 public class Level {
@@ -95,25 +91,28 @@ public class Level {
 
     public void fillBoss(List<Enemy> bosses) {
         //testing phase - we will decide bosses order eventually
-        bosses.add(new HomingBoss("file:src/Sprites/Redies.png", 3, 20, 66, 33, 1000));
         bosses.add(new Boss("file:src/Sprites/test.png", 3, 20, 200, 200));
+        bosses.add(new HomingBoss("file:src/Sprites/Redies.png", 3, 20, 66, 33, 1000));
     }
 
     public Enemy generate() {
         int randomNum = 10;
-        while(randomNum > 3) {
+        while(randomNum > 4) {
             randomNum = (int) (Math.random() * this.getLevel() + 1);
         }
         Enemy enemy = null;
         switch (randomNum) {
-            case 3:
+            case 3: //for testing reasons numbers will vary
                 enemy = new Licker("file:src/Sprites/CharlesSpriteSheet.png", 3, 1, 80, 80);
                 break;
             case 1:
-                enemy = new RangedEnemy("file:src/Sprites/Redies.png", 1, 1, 66, 33, 3000);
+                enemy = new RangedEnemy("file:src/Sprites/Redies.png", 1, 1, 66, 33, 2000);
                 break;
-            case 2: //for testing reasons
+            case 4:
                 enemy = new SpikeEnemy("file:src/Sprites/SpikeySpriteSheet.png", 3, 1, 72, 65, 3000);
+                break;
+            case 2:
+                enemy = new FourWayShooter("file:src/Sprites/Redies.png", 1, 1, 66, 33, 3000);
                 break;
         }
         return enemy;

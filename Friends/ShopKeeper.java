@@ -1,5 +1,7 @@
 package Friends;
 
+//A.K.A Gandhi
+
 public class ShopKeeper extends Friends {
 
     public ShopKeeper(String img, int width, int height) {
