@@ -4,7 +4,6 @@ import Game.Character;
 //A.K.A Charles
 
 import Game.SpriteAnimation;
-import Enemies.Enemy;
 import javafx.animation.Animation;
 import javafx.geometry.Rectangle2D;
 import javafx.util.Duration;

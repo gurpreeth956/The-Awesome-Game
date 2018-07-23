@@ -3,6 +3,7 @@ import Game.Character;
 import Projectiles.Projectile;
 
 //A.K.A Spikey
+
 import java.util.List;
 import javafx.scene.layout.Pane;
 
@@ -63,7 +64,7 @@ public class SpikeEnemy extends RangedEnemy {
         }
     }
 
-    public void hitView(Enemy enemy){
+    public void hitView(Enemy enemy) {
         this.setCharacterView(3, 0);
     }
 }
