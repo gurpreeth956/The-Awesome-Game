@@ -20,8 +20,9 @@ public class Character extends Pane {
     int shootSpeed;
 
     int health = 5;
-    int fullHealth = 5;
     int shieldHealth = 0;
+    final int fullHealth = 5;
+    final int fullShieldHealth = 3;
     boolean alive = true;
     boolean shield = false;
 
@@ -152,16 +153,16 @@ public class Character extends Pane {
         return this.getBoundsInParent().intersects(friend.getBoundsInParent());
     }
     
-    public void setPlayerSpeed(int i) {
-        playerSpeed = i;
+    public void setPlayerSpeed(int playerSpeed) {
+        this.playerSpeed = playerSpeed;
     }
     
     public int getPlayerSpeed() {
         return playerSpeed;
     }
     
-    public void setShootSpeed(int i) {
-	shootSpeed = i;
+    public void setShootSpeed(int shootSpeed) {
+	this.shootSpeed = shootSpeed;
     }
     
     public int getShootSpeed() {
@@ -170,7 +171,7 @@ public class Character extends Pane {
     
     public void addShield(boolean a) {
         shield = a;
-        if (a) shieldHealth = 3;
+        if (a) shieldHealth = fullShieldHealth;
         else shieldHealth = 0;
     }
     
@@ -180,5 +181,9 @@ public class Character extends Pane {
     
     public int getShieldHealth() {
         return shieldHealth;
+    }
+    
+    public int getFullShieldHealth() {
+        return fullShieldHealth;
     }
 }

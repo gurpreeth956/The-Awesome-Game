@@ -1,5 +1,6 @@
-package Enemies;
+package Bosses;
 import Game.Character;
+import Enemies.Enemy;
 
 public class Boss extends Enemy {
   

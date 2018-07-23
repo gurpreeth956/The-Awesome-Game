@@ -1,4 +1,5 @@
 package Game;
+import Bosses.*;
 import Enemies.*;
 import Environment.*;
 import Friends.*;
@@ -372,11 +373,11 @@ public class Main extends Application {
         }
         
         if (spike.playerColliding(player) && !level.isShopping()) {
+            Spikes.spikeToRemove.add(spike);
+            gameRoot.getChildren().removeAll(spike);
             if (time < 0 || time > 500) {
                 player.hit();
                 playerReceiveHit();
-                Spikes.spikeToRemove.add(spike);
-                gameRoot.getChildren().removeAll(spike);
                 spikeHitTime = timeNow;
             }
         }
@@ -646,13 +647,21 @@ public class Main extends Application {
         //must keep number of spaces correct (currently 3)
         if (upgradeName.equals("Health Pack   ")) {
             if (level.getCoin() >= healthUp.getPrice()) {
-                healthUp.setBought(true);
-                removeUpgrade(healthUp);
+                if (player.getHealth() != player.getFullHealth())  {
+                    healthUp.setBought(true);
+                    removeUpgrade(healthUp);
+                } else {
+                    //Need to add some kind of pop up message
+                }
             }
         } else if (upgradeName.equals("Add Shield   ")) {
             if (level.getCoin() >= shieldUp.getPrice()) {
-                shieldUp.setBought(true);
-                removeUpgrade(shieldUp);
+                if (!player.hasShield() || player.getShieldHealth() < player.getFullShieldHealth()) {
+                    shieldUp.setBought(true);
+                    removeUpgrade(shieldUp);
+                } else {
+                    //Need to add some kind of pop up message
+                }
             }
         } else if (upgradeName.equals("Player Speed   ")) {
             if (level.getCoin() >= speedUp.getPrice()) {
