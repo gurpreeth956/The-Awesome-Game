@@ -192,19 +192,19 @@ public class Enemy extends Pane {
 	return colliding;
     }
     
+    public void summon(Portal portal) {
+	this.setTranslateX(portal.getX());
+        this.setTranslateY(portal.getY());
+        this.x = portal.getX();
+        this.y = portal.getY();
+    }
+    
     public int getCoin() {
 	return coin;
     }
     
     public int getScore() {
 	return score;
-    }
-    
-    public void summon(Portal portal) {
-	this.setTranslateX(portal.getX());
-        this.setTranslateY(portal.getY());
-        this.x = portal.getX();
-        this.y = portal.getY();
     }
     
     public void setOffsetX(int offsetX) {

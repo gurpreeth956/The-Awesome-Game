@@ -7,7 +7,7 @@ import javafx.scene.layout.Pane;
 
 public class RangedEnemy extends Enemy {
     
-    long timeOfLastProjectile = 0;
+    public long timeOfLastProjectile = 0;
     int shootSpeed;
     
     public RangedEnemy(String img, int health, int coin, int width, int height, int shootSpeed) {
@@ -128,8 +128,7 @@ public class RangedEnemy extends Enemy {
         this.setCharacterView(0, 0);
     }*/
     
-    public long getTimeofLastProjectile(){
+    public long getTimeofLastProjectile() {
         return timeOfLastProjectile;
     }
-    
 }
