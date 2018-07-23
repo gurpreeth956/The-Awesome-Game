@@ -97,7 +97,7 @@ public class Level {
 
     public Enemy generate() {
         int randomNum = 10;
-        while(randomNum > 4) {
+        while(randomNum > 5) {
             randomNum = (int) (Math.random() * this.getLevel() + 1);
         }
         Enemy enemy = null;
@@ -105,7 +105,7 @@ public class Level {
             case 3: //for testing reasons numbers will vary
                 enemy = new Licker("file:src/Sprites/CharlesSpriteSheet.png", 3, 1, 80, 80);
                 break;
-            case 1:
+            case 5:
                 enemy = new RangedEnemy("file:src/Sprites/Redies.png", 1, 1, 66, 33, 2000);
                 break;
             case 4:
@@ -114,6 +114,8 @@ public class Level {
             case 2:
                 enemy = new FourWayShooter("file:src/Sprites/Redies.png", 1, 1, 66, 33, 3000);
                 break;
+            case 1:
+                enemy = new MrSnake("file:src/Sprites/SnakeSpriteSheet.png", 2, 1, 27, 35);
         }
         return enemy;
     }

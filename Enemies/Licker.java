@@ -1,9 +1,9 @@
 package Enemies;
 import Game.Character;
+import Game.SpriteAnimation;
 
 //A.K.A Charles
 
-import Game.SpriteAnimation;
 import javafx.animation.Animation;
 import javafx.geometry.Rectangle2D;
 import javafx.util.Duration;
@@ -32,7 +32,6 @@ public class Licker extends MeleeEnemy {
         charles.setOffset(0, 0);
     }
     
-    @Override
     public void move(Character player, double width, double height) {
         animation.play();
 	if (player.getX() > this.getX() && player.getY() == this.getY()) { //right
