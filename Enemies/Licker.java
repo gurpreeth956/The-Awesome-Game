@@ -1,9 +1,9 @@
 package Enemies;
 import Game.Character;
+import Game.SpriteAnimation;
 
 //A.K.A Charles
 
-import Game.SpriteAnimation;
 import javafx.animation.Animation;
 import javafx.geometry.Rectangle2D;
 import javafx.util.Duration;
@@ -32,42 +32,42 @@ public class Licker extends MeleeEnemy {
         charles.setOffset(0, 0);
     }
     
-    @Override
     public void move(Character player, double width, double height) {
         animation.play();
-	if (player.getX() > this.getX() && player.getY() == this.getY()) { //right
+        //X - 10 and Y - 30 is so it looks like Charles is aiming for middle of player
+	if (player.getX() - 10 > this.getX() && player.getY() - 30 == this.getY()) { //right
             charles.setOffset(0, 320);
             this.moveX(1, width);
         }
-        if (player.getX() < this.getX() && player.getY() == this.getY()) { //left
+        if (player.getX() - 10 < this.getX() && player.getY() - 30 == this.getY()) { //left
             charles.setOffset(0, 480);
             this.moveX(-1, width);
         }
-        if (player.getX() == this.getX() && player.getY() > this.getY()) { //down
+        if (player.getX() - 10 == this.getX() && player.getY() - 30 > this.getY()) { //down
             charles.setOffset(0, 0);
             this.moveY(1, height);
         }
-        if (player.getX() == this.getX() && player.getY() < this.getY()) { //up
+        if (player.getX() - 10 == this.getX() && player.getY() - 30 < this.getY()) { //up
             charles.setOffset(0, 160);
             this.moveY(-1, height);
         }
 
-        if (player.getX() > this.getX() && player.getY() < this.getY()) { //quadrant1
+        if (player.getX() - 10 > this.getX() && player.getY() - 30 < this.getY()) { //quadrant1
             charles.setOffset(0, 320);
             this.moveX(1, width);
             this.moveY(-1, height);
         }
-        if (player.getX() < this.getX() && player.getY() < this.getY()) { //quadrant2
+        if (player.getX() - 10 < this.getX() && player.getY() - 30 < this.getY()) { //quadrant2
             charles.setOffset(0, 480);
             this.moveX(-1, width);
             this.moveY(-1, height);
         }
-        if (player.getX() < this.getX() && player.getY() > this.getY()) { //quadrant3
+        if (player.getX() - 10 < this.getX() && player.getY() - 30 > this.getY()) { //quadrant3
             charles.setOffset(0, 480);
             this.moveX(-1, width);
             this.moveY(1, height);
         }
-        if (player.getX() > this.getX() && player.getY() > this.getY()) { //quadrant4
+        if (player.getX() - 10 > this.getX() && player.getY() - 30 > this.getY()) { //quadrant4
             charles.setOffset(0, 320);
             this.moveX(1, width);
             this.moveY(1, height);
