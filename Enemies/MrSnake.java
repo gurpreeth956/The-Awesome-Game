@@ -34,39 +34,40 @@ public class MrSnake extends MeleeEnemy {
     
     public void move(Character player, double width, double height) {
         animation.play();
-	if (player.getX() > this.getX() && player.getY() == this.getY()) { //right
+        //there is a plus 20 for X since snake width is very small
+	if (player.getX() + 20 > this.getX() && player.getY() == this.getY()) { //right
             kaa.setOffset(0, 35);
             this.moveX(2, width);
         }
-        if (player.getX() < this.getX() && player.getY() == this.getY()) { //left
+        if (player.getX() + 20 < this.getX() && player.getY() == this.getY()) { //left
             kaa.setOffset(0, 0);
             this.moveX(-2, width);
         }
-        if (player.getX() == this.getX() && player.getY() > this.getY()) { //down
+        if (player.getX() + 20 == this.getX() && player.getY() > this.getY()) { //down
             kaa.setOffset(0, 35);
             this.moveY(2, height);
         }
-        if (player.getX() == this.getX() && player.getY() < this.getY()) { //up
+        if (player.getX() + 20 == this.getX() && player.getY() < this.getY()) { //up
             kaa.setOffset(0, 0);
             this.moveY(-2, height);
         }
 
-        if (player.getX() > this.getX() && player.getY() < this.getY()) { //quadrant1
+        if (player.getX() + 20 > this.getX() && player.getY() < this.getY()) { //quadrant1
             kaa.setOffset(0, 35);
             this.moveX(1, width);
             this.moveY(-1, height);
         }
-        if (player.getX() < this.getX() && player.getY() < this.getY()) { //quadrant2
+        if (player.getX() + 20 < this.getX() && player.getY() < this.getY()) { //quadrant2
             kaa.setOffset(0, 0);
             this.moveX(-1, width);
             this.moveY(-1, height);
         }
-        if (player.getX() < this.getX() && player.getY() > this.getY()) { //quadrant3
+        if (player.getX() + 20 < this.getX() && player.getY() > this.getY()) { //quadrant3
             kaa.setOffset(0, 0);
             this.moveX(-1, width);
             this.moveY(1, height);
         }
-        if (player.getX() > this.getX() && player.getY() > this.getY()) { //quadrant4
+        if (player.getX() + 20 > this.getX() && player.getY() > this.getY()) { //quadrant4
             kaa.setOffset(0, 35);
             this.moveX(1, width);
             this.moveY(1, height);
