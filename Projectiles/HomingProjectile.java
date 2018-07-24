@@ -1,4 +1,5 @@
-package Game;
+package Projectiles;
+import Game.Character;
 
 public class HomingProjectile extends Projectile {
     
@@ -28,8 +29,8 @@ public class HomingProjectile extends Projectile {
     }
     
     public String distance(Character player) {
-        int vert = player.y - this.y;
-        int hori = player.x - this.x;
+        int vert = player.getY() - this.y;
+        int hori = player.getX() - this.x;
         
         if(Math.abs(vert) > Math.abs(hori)) {
             if(vert <= 0) {

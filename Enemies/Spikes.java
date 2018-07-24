@@ -1,6 +1,6 @@
 package Enemies;
-import Game.Projectile;
 import Game.Character;
+import Projectiles.Projectile;
 
 import java.util.ArrayList;
 import java.util.List;

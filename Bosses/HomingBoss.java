@@ -1,10 +1,8 @@
-package Enemies;
+package Bosses;
 import Game.Character;
-
-
-import Game.Projectile;
-import Game.HomingProjectile;
 import Enemies.RangedEnemy;
+import Projectiles.*;
+
 import java.util.List;
 import javafx.scene.layout.Pane;
 
@@ -102,9 +100,5 @@ public class HomingBoss extends RangedEnemy {
         root.getChildren().addAll(proj);
         proj.toBack();
         projectiles.add(proj);
-    }
-    
-    public int getShootSpeed(){
-        return shootSpeed;
     }
 }

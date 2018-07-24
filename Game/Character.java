@@ -1,8 +1,6 @@
 package Game;
-
-
-
 import Environment.Stairs;
+import Friends.*;
 
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
@@ -22,8 +20,9 @@ public class Character extends Pane {
     int shootSpeed;
 
     int health = 5;
-    int fullHealth = 5;
     int shieldHealth = 0;
+    final int fullHealth = 5;
+    final int fullShieldHealth = 3;
     boolean alive = true;
     boolean shield = false;
 
@@ -104,10 +103,12 @@ public class Character extends Pane {
     }
 
     public void setX(int x) {
+        this.setTranslateX(x);
 	this.x = x;
     }
 
     public void setY(int y) {
+        this.setTranslateX(y);
 	this.y = y;
     }
 
@@ -148,16 +149,20 @@ public class Character extends Pane {
 	return this.getBoundsInParent().intersects(stair.getBoundsInParent());
     }
     
-    public void setPlayerSpeed(int i) {
-        playerSpeed = i;
+    public boolean isColliding(Friends friend) {
+        return this.getBoundsInParent().intersects(friend.getBoundsInParent());
+    }
+    
+    public void setPlayerSpeed(int playerSpeed) {
+        this.playerSpeed = playerSpeed;
     }
     
     public int getPlayerSpeed() {
         return playerSpeed;
     }
     
-    public void setShootSpeed(int i) {
-	shootSpeed = i;
+    public void setShootSpeed(int shootSpeed) {
+	this.shootSpeed = shootSpeed;
     }
     
     public int getShootSpeed() {
@@ -166,7 +171,7 @@ public class Character extends Pane {
     
     public void addShield(boolean a) {
         shield = a;
-        if (a) shieldHealth = 3;
+        if (a) shieldHealth = fullShieldHealth;
         else shieldHealth = 0;
     }
     
@@ -176,5 +181,9 @@ public class Character extends Pane {
     
     public int getShieldHealth() {
         return shieldHealth;
+    }
+    
+    public int getFullShieldHealth() {
+        return fullShieldHealth;
     }
 }

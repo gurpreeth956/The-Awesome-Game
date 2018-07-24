@@ -1,8 +1,7 @@
-
 package Enemies;
-import Game.Projectile;
 import Environment.Portal;
 import Game.Character;
+import Projectiles.Projectile;
 
 import java.util.List;
 import javafx.geometry.Rectangle2D;
@@ -45,7 +44,7 @@ public class Enemy extends Pane {
 	this.height = height;
         this.getChildren().addAll(iv);
         
-	healthBarOutline = new Rectangle(x - 1, y - 6, width+2, 4);
+	healthBarOutline = new Rectangle(x - 1, y - 6, width + 2, 4);
 	healthBarOutline.setFill(Color.TRANSPARENT);
 	healthBarOutline.setStroke(Color.BLACK);
 	lostHealth = new Rectangle(x, y - 5, width, 3);
@@ -121,20 +120,22 @@ public class Enemy extends Pane {
         }
     }
 
+    public void setX(int x) {
+        this.setTranslateX(x);
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.setTranslateY(y);
+        this.y = y;
+    }
+    
     public int getX() {
         return x;
     }
 
-    public void setX(int x) {
-        this.x = x;
-    }
-
     public int getY() {
         return y;
-    }
-
-    public void setY(int y) {
-        this.y = y;
     }
 
     public int getEnemySpeed() {
@@ -191,19 +192,19 @@ public class Enemy extends Pane {
 	return colliding;
     }
     
+    public void summon(Portal portal) {
+	this.setTranslateX(portal.getX());
+        this.setTranslateY(portal.getY());
+        this.x = portal.getX();
+        this.y = portal.getY();
+    }
+    
     public int getCoin() {
 	return coin;
     }
     
     public int getScore() {
 	return score;
-    }
-    
-    public void summon(Portal portal) {
-	this.setTranslateX(portal.getX());
-        this.setTranslateY(portal.getY());
-        this.x = portal.getX();
-        this.y = portal.getY();
     }
     
     public void setOffsetX(int offsetX) {
@@ -214,15 +215,15 @@ public class Enemy extends Pane {
 	this.offsetY = offsetY;
     }
     
-    public Rectangle getHealthBarOutline(){
+    public Rectangle getHealthBarOutline() {
         return healthBarOutline;
     }
     
-    public Rectangle getActualHealth(){
+    public Rectangle getActualHealth() {
         return actualHealth;
     }
     
-    public Rectangle getLostHealth(){
+    public Rectangle getLostHealth() {
         return lostHealth;
     }
 }
