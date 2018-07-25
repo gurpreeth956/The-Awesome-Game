@@ -46,7 +46,7 @@ public class Main extends Application {
     Button noReturn = new Button("No");
 
     Character player;
-    Level level;
+    static Level level;
     Stairs toShopStair, decUpStair, toGameStair;
     Friends shopKeeper;
 
@@ -590,6 +590,12 @@ public class Main extends Application {
         addWall(58, 246, Color.TRANSPARENT, 98, 262, shopRootWalls, shopRoot);
         addWall(168, 50, Color.TRANSPARENT, 160, 262, shopRootWalls, shopRoot);
         addWall(68, 64, Color.TRANSPARENT, 260, 312, shopRootWalls, shopRoot);
+        addWall(20, 30, Color.TRANSPARENT, 1166, 0, shopRootWalls, shopRoot);
+        addWall(12, 38, Color.TRANSPARENT, 1182, 30, shopRootWalls, shopRoot);
+        addWall(20, 35, Color.TRANSPARENT, 1202, 65, shopRootWalls, shopRoot);
+        addWall(20, 30, Color.TRANSPARENT, 1220, 95, shopRootWalls, shopRoot);
+        addWall(10, 20, Color.TRANSPARENT, 1240, 125, shopRootWalls, shopRoot);
+        addWall(20, 20, Color.TRANSPARENT, 1260, 145, shopRootWalls, shopRoot);
     }
     
     HealthPackUpgrade healthUp;
