@@ -6,6 +6,7 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.scene.shape.Rectangle;
 
 public class Character extends Pane {
 
@@ -25,6 +26,7 @@ public class Character extends Pane {
     final int fullShieldHealth = 3;
     boolean alive = true;
     boolean shield = false;
+    boolean stop;
 
     public Character(int posX, int posY) {
 	Image charImage = new Image("file:src/Sprites/Greenies.png");
@@ -62,6 +64,15 @@ public class Character extends Pane {
 		    this.x--;
 		}
 	    }
+            
+            boolean wall = isWall();
+            if (right && wall) {
+                this.setTranslateX(this.getTranslateX() - 1);
+                this.x--;
+            } else if (!right && wall) {
+                this.setTranslateX(this.getTranslateX() + 1);
+                this.x++;
+            }
 	}
     }
 
@@ -83,6 +94,15 @@ public class Character extends Pane {
 		    this.y--;
 		}
 	    }
+            
+            boolean wall = isWall();
+            if (down && wall) {
+                this.setTranslateY(this.getTranslateY() - 1);
+                this.y--;
+            } else if (!down && wall) {
+                this.setTranslateY(this.getTranslateY() + 1);
+                this.y++;
+            }
 	}
     }
 
@@ -185,5 +205,15 @@ public class Character extends Pane {
     
     public int getFullShieldHealth() {
         return fullShieldHealth;
+    }
+    
+    public boolean isWall() {
+        stop = false;
+        for (Rectangle rect : Main.shopRootWalls) {
+            if (this.getBoundsInParent().intersects(rect.getBoundsInParent())) {
+                stop = true;
+            }
+        }
+        return stop;
     }
 }
