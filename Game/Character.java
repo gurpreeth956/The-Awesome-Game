@@ -210,7 +210,7 @@ public class Character extends Pane {
     public boolean isWall() {
         stop = false;
         for (Rectangle rect : Main.shopRootWalls) {
-            if (this.getBoundsInParent().intersects(rect.getBoundsInParent())) {
+            if (this.getBoundsInParent().intersects(rect.getBoundsInParent()) && Main.level.isShopping()) {
                 stop = true;
             }
         }
