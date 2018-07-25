@@ -50,12 +50,12 @@ public class Main extends Application {
     Stairs toShopStair, decUpStair, toGameStair;
     Friends shopKeeper;
 
-    public static List<Projectile> projectiles = new ArrayList<>();
-    private List<Projectile> projToRemove = new ArrayList<>();
+    public static List<Projectile> projectiles = new ArrayList();
+    private List<Projectile> projToRemove = new ArrayList();
     private long timeOfLastProjectile = 0;
 
-    private List<Projectile> enemyProj = new ArrayList<>();
-    private List<Projectile> enemyProjToRemove = new ArrayList<>();
+    private List<Projectile> enemyProj = new ArrayList();
+    private List<Projectile> enemyProjToRemove = new ArrayList();
 
     private List<Enemy> enemies = new ArrayList();
     private List<Enemy> enemToRemove = new ArrayList();
@@ -65,11 +65,13 @@ public class Main extends Application {
 
     private List<Portal> portals = new ArrayList();
     private int portalCount = 0;
+    
+    public static List<Rectangle> shopRootWalls = new ArrayList();
 
     private List<Upgrades> shopUpgrades = new ArrayList();
     private List<Upgrades> upgradesToRemove = new ArrayList();
     private List<Upgrades> currentUpgrades = new ArrayList();
-    private ListView<String> shopUpgradesView = new ListView<>();
+    private ListView<String> shopUpgradesView = new ListView();
 
     Rectangle healthBarOutline, actualHealth, lostHealth, shieldHealth;
     Label coinLabel, scoreLabel, shopBuyingHealthLabel, shopBuyingShieldLabel, shopBuyingCoinLabel, 
@@ -583,6 +585,13 @@ public class Main extends Application {
         }
     }
     
+    public void addShopRootWalls() {
+        addWall(68, 116, Color.TRANSPARENT, 413, 32, shopRootWalls, shopRoot);
+        addWall(58, 246, Color.TRANSPARENT, 98, 262, shopRootWalls, shopRoot);
+        addWall(168, 50, Color.TRANSPARENT, 160, 262, shopRootWalls, shopRoot);
+        addWall(68, 64, Color.TRANSPARENT, 260, 312, shopRootWalls, shopRoot);
+    }
+    
     HealthPackUpgrade healthUp;
     PlayerShieldUpgrade shieldUp;
     ShootSpeedUpgrade shootUp;
@@ -781,6 +790,16 @@ public class Main extends Application {
         gameRoot.getChildren().clear();
         shopRoot.getChildren().clear();
     }
+    
+    public void addWall(int width, int height, Color color, int offsetX, int offsetY, 
+        List<Rectangle> walls, Pane root) {
+        Rectangle rect = new Rectangle(width, height, color);
+        rect.setX(offsetX);
+        rect.setY(offsetY);
+        
+        walls.add(rect);
+        root.getChildren().addAll(rect);
+    }
 
     public boolean isPressed(KeyCode key) {
         return keys.getOrDefault(key, false);
@@ -842,6 +861,7 @@ public class Main extends Application {
         decUpStair = new Stairs("up", (int) screenSize.getWidth(), (int) screenSize.getHeight());
         toGameStair = new Stairs("shop", (int) screenSize.getWidth() - 100, (int) screenSize.getHeight() - 100);
         shopKeeper = new ShopKeeper("file:src/Sprites/ShopKeeper.png", 65, 40);
+        addShopRootWalls();
         
         //Shop Buying Root
         Text shopTitle = new Text("SHOP");
