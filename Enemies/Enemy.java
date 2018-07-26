@@ -13,7 +13,7 @@ import javafx.scene.shape.Rectangle;
 
 public class Enemy extends Pane {
     
-    ImageView iv;
+    public ImageView iv;
     int offsetX = 0;
     int offsetY = 0;
     int width;
@@ -74,47 +74,31 @@ public class Enemy extends Pane {
         //To be overridden by child classes
     }
     
-    public void moveX(int x, double width) { //x is horizontal speed
+    public void moveX(int x, double screenWidth) { //x is horizontal speed
         boolean right = x > 0;
         for (int i = 0; i < Math.abs(x); i++) {
             if (right) {
-                if(this.x > width - this.width)
-                    this.setTranslateX(width - this.width);
-                else {
-                    this.setTranslateX(this.getTranslateX() + 1);
-                    this.x++;
-                }
+                this.setTranslateX(this.getTranslateX() + 1);
+                this.x++;
             }
             else  {
-                if(this.x < 0)
-                    this.setTranslateX(0);
-                else {
-                    this.setTranslateX(this.getTranslateX() - 1);
-                    this.x--;
-                }
+                this.setTranslateX(this.getTranslateX() - 1);
+                this.x--;
             }
 	    this.healthPos();
         }
     }
     
-    public void moveY(int y, double height) { //y is vertical speed
+    public void moveY(int y, double screenHeight) { //y is vertical speed
         boolean down = y > 0;
         for (int i = 0; i < Math.abs(y); i++) {
             if (down) {
-                if (this.y > height - this.height)
-                    this.setTranslateY(height - this.height);
-                else {
-                    this.setTranslateY(this.getTranslateY() + 1);
-                    this.y++;
-                }
+                this.setTranslateY(this.getTranslateY() + 1);
+                this.y++;
             }
             else {
-                if (this.y < 0)
-                    this.setTranslateY(0);
-                else {
-                    this.setTranslateY(this.getTranslateY() - 1);
-                    this.y--;
-                }
+                this.setTranslateY(this.getTranslateY() - 1);
+                this.y--;
             }
 	    this.healthPos();
         }
@@ -123,11 +107,13 @@ public class Enemy extends Pane {
     public void setX(int x) {
         this.setTranslateX(x);
         this.x = x;
+        this.healthPos();
     }
 
     public void setY(int y) {
         this.setTranslateY(y);
         this.y = y;
+        this.healthPos();
     }
     
     public int getX() {
@@ -166,6 +152,10 @@ public class Enemy extends Pane {
 	actualHealth = new Rectangle(x, y, this.getHealth() * width / this.totalHealth, 3);
 	actualHealth.setFill(Color.GREEN);
 	return actualHealth;
+    }
+    
+    public int getFullHealth() {
+        return this.totalHealth;
     }
     
     public void healthPos() {

@@ -385,29 +385,6 @@ public class Main extends Application {
         }
     }
 
-    public void createBoss(Portal portal) {
-        Enemy enemy = bosses.get(level.getLevel() - 1);
-        enemy.summon(portal);
-        gameRoot.getChildren().addAll(enemy, enemy.getHealthBarOutline(), enemy.getLostHealth(), 
-            enemy.getActualHealth());
-        coinAndScore.toFront();
-        coinLabel.toFront();
-        scoreLabel.toFront();
-        enemies.add(enemy);
-        health.toFront();
-        healthBarOutline.toFront();
-        lostHealth.toFront();
-        actualHealth.toFront();
-        level.enemySpawned();
-        if (player.hasShield()) {
-            shieldHealth.toFront();
-        }
-    }
-    
-    public void updateBoss(Boss boss) {
-        boss.update(gameRoot);
-    }
-
     public void createEnemy(Portal portal) {
         Enemy enemy = level.generate();
         enemy.summon(portal);
@@ -460,6 +437,31 @@ public class Main extends Application {
             coinLabel.setText("Coins: " + level.getCoin());
             scoreLabel.setText("Score: " + level.getScore());
         }
+    }
+    
+    public void createBoss(Portal portal) {
+        Enemy enemy = bosses.get(level.getLevel() - 1);
+        enemy.summon(portal);
+        gameRoot.getChildren().addAll(enemy, enemy.getHealthBarOutline(), enemy.getLostHealth(), 
+            enemy.getActualHealth());
+        coinAndScore.toFront();
+        coinLabel.toFront();
+        scoreLabel.toFront();
+        enemies.add(enemy);
+        bosses.add(enemy);
+        health.toFront();
+        healthBarOutline.toFront();
+        lostHealth.toFront();
+        actualHealth.toFront();
+        level.enemySpawned();
+        if (player.hasShield()) {
+            shieldHealth.toFront();
+        }
+    }
+    
+    public void updateBoss(Boss boss) {
+        //updateEnemy method includes boss
+        boss.update(gameRoot);
     }
 
     public void shieldUpdate() {

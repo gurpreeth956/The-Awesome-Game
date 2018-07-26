@@ -46,12 +46,12 @@ public class Character extends Pane {
 	this.iv.setViewport(new Rectangle2D(offsetX, offsetY, width, height));
     }
 
-    public void moveX(int x, double width) {
+    public void moveX(int x, double screenWidth) {
 	boolean right = x > 0;
 	for (int i = 0; i < Math.abs(x); i++) {
 	    if (right) {
-		if (this.x > width - this.width) {
-		    this.setTranslateX(width - this.width);
+		if (this.x > screenWidth - this.width) {
+		    this.setTranslateX(screenWidth - this.width);
 		} else {
 		    this.setTranslateX(this.getTranslateX() + 1);
 		    this.x++;
@@ -76,12 +76,12 @@ public class Character extends Pane {
 	}
     }
 
-    public void moveY(int y, double height) {
+    public void moveY(int y, double screenHeight) {
 	boolean down = y > 0;
 	for (int i = 0; i < Math.abs(y); i++) {
 	    if (down) {
-		if (this.y > height - this.height) {
-		    this.setTranslateY(height - this.height);
+		if (this.y > screenHeight - this.height) {
+		    this.setTranslateY(screenHeight - this.height);
 		} else {
 		    this.setTranslateY(this.getTranslateY() + 1);
 		    this.y++;
