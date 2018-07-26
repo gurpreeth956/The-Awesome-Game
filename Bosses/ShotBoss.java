@@ -15,7 +15,7 @@ public class ShotBoss extends RangedEnemy {
     }
 
     public void move(Character player, double width, double height) {
-        //animation.play()
+        //animation.play() need to make better enemy with animation
         this.setCharacterView(0, 0);
         if (player.getX() - 96 > this.getX() && player.getY() - 112 == this.getY()) { //right
             this.moveX(1, width);
@@ -53,10 +53,10 @@ public class ShotBoss extends RangedEnemy {
         long time = timeNow - timeOfLastProjectile;
         
         if (time < 0 || time > this.getShootSpeed()) {
-            int randomX = (int) (Math.random() * 11) - 5;
-            int randomY = (int) (Math.random() * 11) - 5;
+            int randomX = (int) (Math.random() * 13) - 6;
+            int randomY = (int) (Math.random() * 13) - 6;
             
-            if (Math.abs(randomX) > 3 || Math.abs(randomY) > 3) {
+            if (Math.abs(randomX) > 4 || Math.abs(randomY) > 4) {
                 createProjectile(randomX, randomY, projectiles, gameRoot, "file:src/Sprites/EnemyShot.png", 12, 12);
                 timeOfLastProjectile = timeNow;
             }
