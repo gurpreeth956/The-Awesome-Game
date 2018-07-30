@@ -8,23 +8,27 @@ public class HomingProjectile extends Projectile {
     }
     
     public void move(Character player) {
-        String dist = distance(player);
+        String dist = this.distance(player);
         
         if (dist.equals("up")) {
             this.setTranslateX(this.getTranslateX() + 0);
-            this.setTranslateY(this.getTranslateY() + this.getVelocityY());
+            this.setTranslateY(this.getTranslateY() - this.getVelocityY());
+            this.y-=5;
         } 
         if (dist.equals("down")) {
             this.setTranslateX(this.getTranslateX() + 0);
             this.setTranslateY(this.getTranslateY() + this.getVelocityY());
+            this.y+=5;
         }
         if (dist.equals("left")) {
-            this.setTranslateX(this.getTranslateX() + this.getVelocityX());
+            this.setTranslateX(this.getTranslateX() - this.getVelocityX());
             this.setTranslateY(this.getTranslateY() + 0);
+            this.x-=5;
         }
         if (dist.equals("right")) {
             this.setTranslateX(this.getTranslateX() + this.getVelocityX());
             this.setTranslateY(this.getTranslateY() + 0);
+            this.x+=5;
         }
     }
     
