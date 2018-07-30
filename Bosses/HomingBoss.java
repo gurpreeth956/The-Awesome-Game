@@ -62,7 +62,7 @@ public class HomingBoss extends RangedEnemy {
             this.setCharacterView(128, 183);
             this.setOffsetY(183);
             if (time < 0 || time > this.getShootSpeed()) {
-                createProjectile(0, -5, projectiles, gameRoot, "file:src/Sprites/EnemyShot.png", 12, 12);
+                createProjectile(5, 5, projectiles, gameRoot, "file:src/Sprites/EnemyShot.png", 12, 12);
                 timeOfLastProjectile = timeNow;
             }
             
@@ -70,7 +70,7 @@ public class HomingBoss extends RangedEnemy {
             this.setCharacterView(128, 0);
             this.setOffsetY(0);
             if (time < 0 || time > this.getShootSpeed()) {
-                createProjectile(0, 5, projectiles, gameRoot, "file:src/Sprites/EnemyShot.png", 12, 12);
+                createProjectile(5, 5, projectiles, gameRoot, "file:src/Sprites/EnemyShot.png", 12, 12);
                 timeOfLastProjectile = timeNow;
             }
 
@@ -78,7 +78,7 @@ public class HomingBoss extends RangedEnemy {
             this.setCharacterView(128, 123);
             this.setOffsetY(123);
             if (time < 0 || time > this.getShootSpeed()) {
-                createProjectile(-5, 0, projectiles, gameRoot, "file:src/Sprites/EnemyShot.png", 12, 12);
+                createProjectile(5, 5, projectiles, gameRoot, "file:src/Sprites/EnemyShot.png", 12, 12);
                 timeOfLastProjectile = timeNow;
             }
 
@@ -86,7 +86,7 @@ public class HomingBoss extends RangedEnemy {
             this.setCharacterView(128, 61);
             this.setOffsetY(61);
             if (time < 0 || time > this.getShootSpeed()) {
-                createProjectile(5, 0, projectiles, gameRoot, "file:src/Sprites/EnemyShot.png", 12, 12);
+                createProjectile(5, 5, projectiles, gameRoot, "file:src/Sprites/EnemyShot.png", 12, 12);
                 timeOfLastProjectile = timeNow;
             }
         }
