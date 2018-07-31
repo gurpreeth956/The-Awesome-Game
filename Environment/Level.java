@@ -119,6 +119,7 @@ public class Level {
                 break;
             case 3:
                 enemy = new MrSnake("file:src/Sprites/SnakeSpriteSheet.png", 2, 1, 27, 35);
+                break;
         }
         return enemy;
     }
