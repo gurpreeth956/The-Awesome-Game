@@ -4,8 +4,8 @@ import Game.Character;
 
 public class HomingProjectile extends Projectile {
 
-    public HomingProjectile(String img, int posX, int posY, int width, int height) {
-        super(img, posX, posY, width, height);
+    public HomingProjectile(String img, int posX, int posY, int width, int height, int dmg) {
+        super(img, posX, posY, width, height, dmg);
     }
 
     public void move(Character player) {

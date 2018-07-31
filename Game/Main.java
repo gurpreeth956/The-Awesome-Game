@@ -315,7 +315,7 @@ public class Main extends Application {
 
     public void createProjectile(int x, int y) {
         Projectile proj = new Projectile("file:src/Sprites/Shot.png", player.getX() + 28, 
-            player.getY() + 16, 12, 12);
+            player.getY() + 16, 12, 12, 1);
         proj.setVelocityX(x);
         proj.setVelocityY(y);
         gameRoot.getChildren().addAll(proj);
@@ -328,7 +328,7 @@ public class Main extends Application {
 
         for (Enemy enemy : enemies) {
             if (proj.enemyColliding(enemy)) {
-                enemy.hit();
+                enemy.hit(proj);
                 gameRoot.getChildren().remove(enemy.getActualHealth());
                 gameRoot.getChildren().add(enemy.updateHealth());
                 proj.setAlive(false);
@@ -354,7 +354,7 @@ public class Main extends Application {
         if (proj.playerColliding(player)) { //create enemy proj class !note!
             proj.setAlive(false);
             if (time < 0 || time > 1000) {
-                player.hit();
+                player.hit(proj.getDamage());
                 playerReceiveHit();
                 hitTime = timeNow;
             }
@@ -389,7 +389,7 @@ public class Main extends Application {
             Spikes.spikeToRemove.add(spike);
             gameRoot.getChildren().removeAll(spike);
             if (time < 0 || time > 500) {
-                player.hit();
+                player.hit(spike.getDamage());
                 playerReceiveHit();
                 spikeHitTime = timeNow;
             }
@@ -421,7 +421,7 @@ public class Main extends Application {
         if (enemy.playerColliding(player)) {
             enemy.hitView(enemy);
             if (time < 0 || time > 1000) {
-                player.hit();
+                player.hit(1);//update this line if different damage values are implemented for different enemies
                 playerReceiveHit();
                 hitTime = timeNow;
             }

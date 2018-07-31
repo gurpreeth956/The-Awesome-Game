@@ -140,8 +140,8 @@ public class Enemy extends Pane {
 	this.alive = alive;
     }
     
-    public void hit() {
-	health--;
+    public void hit(Projectile proj) {
+	health-= proj.getDamage();
     }
     
     public int getHealth() {

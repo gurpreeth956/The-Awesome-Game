@@ -95,7 +95,7 @@ public class HomingBoss extends RangedEnemy {
 
     public void createProjectile(int x, int y, List<Projectile> projectiles, Pane root,
             String img, int width, int height) {
-        Projectile proj = new HomingProjectile(img, this.getX() + 28, this.getY() + 16, width, height);
+        Projectile proj = new HomingProjectile(img, this.getX() + 28, this.getY() + 16, width, height, 1);
         proj.setVelocityX(x);
         proj.setVelocityY(y);
         root.getChildren().addAll(proj);

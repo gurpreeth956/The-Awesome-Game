@@ -20,10 +20,10 @@ public class FourWayShooter extends RangedEnemy {
         long time = timeNow - timeOfLastProjectile;
         
         if (time < 0 || time > this.getShootSpeed()) {
-            createProjectile(0, -5, projectiles, gameRoot, "file:src/Sprites/EnemyShot.png", 12, 12);
-            createProjectile(0, 5, projectiles, gameRoot, "file:src/Sprites/EnemyShot.png", 12, 12);
-            createProjectile(-5, 0, projectiles, gameRoot, "file:src/Sprites/EnemyShot.png", 12, 12);
-            createProjectile(5, 0, projectiles, gameRoot, "file:src/Sprites/EnemyShot.png", 12, 12);
+            createProjectile(0, -5, projectiles, gameRoot, "file:src/Sprites/EnemyShot.png", 12, 12, 1);
+            createProjectile(0, 5, projectiles, gameRoot, "file:src/Sprites/EnemyShot.png", 12, 12, 1);
+            createProjectile(-5, 0, projectiles, gameRoot, "file:src/Sprites/EnemyShot.png", 12, 12, 1);
+            createProjectile(5, 0, projectiles, gameRoot, "file:src/Sprites/EnemyShot.png", 12, 12, 1);
             timeOfLastProjectile = timeNow;
         }
     }

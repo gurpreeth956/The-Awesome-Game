@@ -65,7 +65,7 @@ public class ShotBoss extends RangedEnemy {
     
     public void createProjectile(int x, int y, List<Projectile> projectiles, Pane root, 
                                  String img, int width, int height) {
-        Projectile proj = new Projectile(img, this.getX() + 128, this.getY() + 128, width, height);
+        Projectile proj = new Projectile(img, this.getX() + 128, this.getY() + 128, width, height, 1);
         proj.setVelocityX(x);
         proj.setVelocityY(y);
         root.getChildren().addAll(proj);

@@ -1,6 +1,7 @@
 package Game;
 import Environment.Stairs;
 import Friends.*;
+import Projectiles.*;
 
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
@@ -140,11 +141,11 @@ public class Character extends Pane {
 	return y;
     }
 
-    public void hit() {
+    public void hit(int dmg) {
         if (shield) {
-            shieldHealth--;
+            shieldHealth-=dmg;
         } else {
-            health--;
+            health-=dmg;
         }
     }
     
