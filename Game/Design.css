@@ -53,3 +53,7 @@
 .list-cell {
     -fx-font: 15pt "Arial";
 }
+
+#centertext .list-cell {
+    -fx-alignment: center;
+}

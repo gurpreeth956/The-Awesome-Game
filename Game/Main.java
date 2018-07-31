@@ -27,14 +27,16 @@ import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Screen;
 
 public class Main extends Application {
 
     Scene scene;
-    static Pane gameRoot, shopRoot, currentRoot;
-    static BorderPane menuRoot, shopBuyingRoot, optionsRoot, gameOptionsRoot, gameOverRoot;
+    static Pane gameRoot, shopRoot, currentGameRoot, previousOptionsRoot;
+    static BorderPane menuRoot, shopBuyingRoot, optionsRoot, gameOptionsRoot, gameOverRoot,
+            controlOptionsRoot;
     static VBox areYouSureRoot, exitRoot;
 
     private final HashMap<KeyCode, Boolean> keys = new HashMap();
@@ -72,14 +74,17 @@ public class Main extends Application {
     private List<Upgrades> upgradesToRemove = new ArrayList();
     private List<Upgrades> currentUpgrades = new ArrayList();
     private ListView<String> shopUpgradesView = new ListView();
+    
+    private ListView<String> controlsView = new ListView();
+    KeyCode moveUp, moveDown, moveRight, moveLeft, shootUp, shootDown, shootRight, shootLeft;
 
     Rectangle healthBarOutline, actualHealth, lostHealth, shieldHealth;
     Label coinLabel, scoreLabel, shopBuyingHealthLabel, shopBuyingShieldLabel, shopBuyingCoinLabel, 
-        shopBuyingScoreLabel;
+            shopBuyingScoreLabel;
     VBox health, coinAndScore;
     
     boolean gameplay = false, pause = false, shieldAdded = false, couldGoToShop = true, 
-        couldGoToMap = false, addShopStair = true, inShopBuyingView = false;
+            couldGoToMap = false, addShopStair = true, inShopBuyingView = false, onOptions = true;
     private long pauseTime = 0;
 
     
@@ -118,8 +123,8 @@ public class Main extends Application {
             e.consume();
             pause = true;
             
-            currentRoot = (Pane)primaryStage.getScene().getRoot();
-            if (!currentRoot.equals(exitRoot)) {
+            currentGameRoot = (Pane)primaryStage.getScene().getRoot();
+            if (!currentGameRoot.equals(exitRoot)) {
                 primaryStage.getScene().setRoot(exitRoot);
                 
                 yesExit.setOnAction(eY -> {
@@ -128,7 +133,7 @@ public class Main extends Application {
                     gameplay = false;
                 });
                 noExit.setOnAction(eN -> {
-                    primaryStage.getScene().setRoot(currentRoot);
+                    primaryStage.getScene().setRoot(currentGameRoot);
                     pause = false;
                 });
             }
@@ -154,25 +159,25 @@ public class Main extends Application {
             }
 
             //Controls
-            if (isPressed(KeyCode.W)) {
+            if (isPressed(moveUp)) {
                 player.setCharacterView(0, 183);
                 player.moveY(-player.getPlayerSpeed(), scene.getHeight());
                 player.setOffsetY(183);
                 characterShooting();
 
-            } else if (isPressed(KeyCode.S)) {
+            } else if (isPressed(moveDown)) {
                 player.setCharacterView(0, 0);
                 player.moveY(player.getPlayerSpeed(), scene.getHeight());
                 player.setOffsetY(0);
                 characterShooting();
 
-            } else if (isPressed(KeyCode.A)) {
+            } else if (isPressed(moveLeft)) {
                 player.setCharacterView(0, 123);
                 player.moveX(-player.getPlayerSpeed(), scene.getWidth());
                 player.setOffsetY(123);
                 characterShooting();
 
-            } else if (isPressed(KeyCode.D)) {
+            } else if (isPressed(moveRight)) {
                 player.setCharacterView(0, 61);
                 player.moveX(player.getPlayerSpeed(), scene.getWidth());
                 player.setOffsetY(61);
@@ -198,7 +203,7 @@ public class Main extends Application {
                         createBoss(portal);
                     } else {
                         if (level.getEnemiesToBeat() - level.getEnemiesSpawned() != 1 || 
-                            bosses.size() < level.getLevel()) {
+                                bosses.size() < level.getLevel()) {
                             createEnemy(portal);
                         }
                     }
@@ -211,7 +216,8 @@ public class Main extends Application {
             if (time < 0 || time > 150) {
                 if (isPressed(KeyCode.ESCAPE)) {
                     pause = true;
-                    currentRoot = (Pane)pStage.getScene().getRoot();
+                    onOptions = true;
+                    currentGameRoot = (Pane)pStage.getScene().getRoot();
                     pStage.getScene().setRoot(gameOptionsRoot);
                 }
                 pauseTime = timeNow;
@@ -249,11 +255,16 @@ public class Main extends Application {
         } else if (pause) {
             if (time < 0 || time > 150) {
                 if (isPressed(KeyCode.ESCAPE)) {
-                    pStage.getScene().setRoot(currentRoot);
+                    pStage.getScene().setRoot(currentGameRoot);
                     pause = false;
+                    onOptions = false;
                 }
                 pauseTime = timeNow;
             }
+        }
+        
+        if (onOptions) {
+            updateControls();
         }
     }
 
@@ -261,7 +272,7 @@ public class Main extends Application {
         long timeNow = System.currentTimeMillis();
         long time = timeNow - timeOfLastProjectile;
 
-        if (isPressed(KeyCode.UP)) {
+        if (isPressed(shootUp)) {
             player.setCharacterView(128, 183);
             player.setOffsetY(183);
             if (time < 0 || time > player.getShootSpeed()) {
@@ -269,7 +280,7 @@ public class Main extends Application {
                 timeOfLastProjectile = timeNow;
             }
 
-        } else if (isPressed(KeyCode.DOWN)) {
+        } else if (isPressed(shootDown)) {
             player.setCharacterView(128, 0);
             player.setOffsetY(0);
             if (time < 0 || time > player.getShootSpeed()) {
@@ -277,7 +288,7 @@ public class Main extends Application {
                 timeOfLastProjectile = timeNow;
             }
 
-        } else if (isPressed(KeyCode.LEFT)) {
+        } else if (isPressed(shootLeft)) {
             player.setCharacterView(128, 123);
             player.setOffsetY(123);
             if (time < 0 || time > player.getShootSpeed()) {
@@ -285,7 +296,7 @@ public class Main extends Application {
                 timeOfLastProjectile = timeNow;
             }
 
-        } else if (isPressed(KeyCode.RIGHT)) {
+        } else if (isPressed(shootRight)) {
             player.setCharacterView(128, 61);
             player.setOffsetY(61);
             if (time < 0 || time > player.getShootSpeed()) {
@@ -389,7 +400,7 @@ public class Main extends Application {
         Enemy enemy = level.generate();
         enemy.summon(portal);
         gameRoot.getChildren().addAll(enemy, enemy.getHealthBarOutline(), enemy.getLostHealth(), 
-            enemy.getActualHealth());
+                enemy.getActualHealth());
         coinAndScore.toFront();
         coinLabel.toFront();
         scoreLabel.toFront();
@@ -430,7 +441,7 @@ public class Main extends Application {
         if (!enemy.isAlive()) {
             enemToRemove.add(enemy);
             gameRoot.getChildren().removeAll(enemy, enemy.getActualHealth(), enemy.getLostHealth(),
-                enemy.getHealthBarOutline());
+                    enemy.getHealthBarOutline());
             level.enemyBeat();
             level.coinUp(enemy);
             level.scoreUp(enemy);
@@ -443,7 +454,7 @@ public class Main extends Application {
         Enemy enemy = bosses.get(level.getLevel() - 1);
         enemy.summon(portal);
         gameRoot.getChildren().addAll(enemy, enemy.getHealthBarOutline(), enemy.getLostHealth(), 
-            enemy.getActualHealth());
+                enemy.getActualHealth());
         coinAndScore.toFront();
         coinLabel.toFront();
         scoreLabel.toFront();
@@ -484,7 +495,8 @@ public class Main extends Application {
     public void playerReceiveHit() {
         if (player.hasShield()) {
             gameRoot.getChildren().remove(shieldHealth);
-            shieldHealth = new Rectangle(screenSize.getWidth() - 120, 10, player.getShieldHealth() * 33 + 1, 22);
+            shieldHealth = new Rectangle(screenSize.getWidth() - 120, 10, player.getShieldHealth()
+                    * 33 + 1, 22);
             shieldHealth.setFill(Color.web("#00E8FF"));
             gameRoot.getChildren().add(shieldHealth);
             shieldHealth.toFront();
@@ -524,7 +536,8 @@ public class Main extends Application {
                     upgrade.setActive(true);
                     updateShopBuyingRoot();
                     shopRoot.getChildren().remove(actualHealth);
-                    actualHealth = new Rectangle(screenSize.getWidth() - 120, 10, player.getHealth() * 20, 22);
+                    actualHealth = new Rectangle(screenSize.getWidth() - 120, 10, player.getHealth()
+                            * 20, 22);
                     actualHealth.setFill(Color.web("#00F32C"));
                     shopRoot.getChildren().add(actualHealth);
                     actualHealth.toFront();
@@ -537,7 +550,7 @@ public class Main extends Application {
             if (player.isColliding(toGameStair) && couldGoToMap) {
                 shopRoot.getChildren().clear();
                 gameRoot.getChildren().addAll(player, health, healthBarOutline, lostHealth, 
-                    actualHealth, coinAndScore);
+                        actualHealth, coinAndScore);
                 
                 if (player.hasShield()) {
                     gameRoot.getChildren().addAll(shieldHealth);
@@ -552,7 +565,7 @@ public class Main extends Application {
                 level.increaseLevel();
                 level.setShopping(false);
                 pStage.getScene().setRoot(gameRoot);
-                currentRoot = gameRoot;
+                currentGameRoot = gameRoot;
             }
         }
         
@@ -570,12 +583,12 @@ public class Main extends Application {
                     Spikes.spikeToRemove.add(spike);
                 }
                 pStage.getScene().setRoot(shopRoot);
-                currentRoot = shopRoot;
+                currentGameRoot = shopRoot;
                 
                 if (couldGoToShop) {
                     gameRoot.getChildren().clear();
                     shopRoot.getChildren().addAll(player, health, healthBarOutline, lostHealth, 
-                        actualHealth, coinAndScore, decUpStair, toGameStair, shopKeeper);
+                            actualHealth, coinAndScore, decUpStair, toGameStair, shopKeeper);
                     if (player.hasShield()) {
                         shopRoot.getChildren().addAll(shieldHealth);
                     }
@@ -602,17 +615,17 @@ public class Main extends Application {
     
     HealthPackUpgrade healthUp;
     PlayerShieldUpgrade shieldUp;
-    ShootSpeedUpgrade shootUp;
+    ShootSpeedUpgrade shotUp;
     PlayerSpeedUpgrade speedUp;
     
     public void addShopButtons() {
         healthUp = new HealthPackUpgrade();
         shieldUp = new PlayerShieldUpgrade();
-        shootUp = new ShootSpeedUpgrade();
+        shotUp = new ShootSpeedUpgrade();
         speedUp = new PlayerSpeedUpgrade();
         shopUpgrades.add(healthUp);
         shopUpgrades.add(shieldUp);
-        shopUpgrades.add(shootUp);
+        shopUpgrades.add(shotUp);
         shopUpgrades.add(speedUp);
 
         for (Upgrades upgrade : shopUpgrades) {
@@ -636,8 +649,8 @@ public class Main extends Application {
                         iv.setImage(shieldUp.getImage());
                     } else if (name.equals("Player Speed   -   " + speedUp.getPrice())) {
                         iv.setImage(speedUp.getImage());
-                    } else if (name.equals("Shooting Speed   -   " + shootUp.getPrice())) {
-                        iv.setImage(shootUp.getImage());
+                    } else if (name.equals("Shooting Speed   -   " + shotUp.getPrice())) {
+                        iv.setImage(shotUp.getImage());
                     }
                     setText(name);
                     setGraphic(iv);
@@ -686,9 +699,9 @@ public class Main extends Application {
                 removeUpgrade(speedUp);
             }
         } else if (upgradeName.equals("Shooting Speed   ")) {
-            if (level.getCoin() >= shootUp.getPrice()) {
-                shootUp.setBought(true);
-                removeUpgrade(shootUp);
+            if (level.getCoin() >= shotUp.getPrice()) {
+                shotUp.setBought(true);
+                removeUpgrade(shotUp);
             }
         }
     }
@@ -720,7 +733,7 @@ public class Main extends Application {
         shopBuyingScoreLabel.setTextFill(Color.BLACK);
         
         vbox.getChildren().addAll(shopBuyingHealthLabel, shopBuyingShieldLabel, shopBuyingCoinLabel, 
-            shopBuyingScoreLabel);
+                shopBuyingScoreLabel);
         return vbox;
     }
     
@@ -754,7 +767,8 @@ public class Main extends Application {
         player = new Character((int) screenSize.getWidth() / 2, (int) screenSize.getHeight() / 2);
         actualHealth = new Rectangle(screenSize.getWidth() - 120, 10, 100, 22);
         actualHealth.setFill(Color.web("#00F32C"));
-        gameRoot.getChildren().addAll(player, health, healthBarOutline, lostHealth, actualHealth, coinAndScore);
+        gameRoot.getChildren().addAll(player, health, healthBarOutline, lostHealth, 
+                actualHealth, coinAndScore);
         addShopButtons();
         coinAndScore.toFront();
         coinLabel.toFront();
@@ -770,8 +784,9 @@ public class Main extends Application {
         couldGoToShop = true;
         couldGoToMap = false;
         addShopStair = true;
+        onOptions = false;
         level.fillBoss(bosses);
-        currentRoot = gameRoot;
+        currentGameRoot = gameRoot;
     }
     
     public void clearAll() {
@@ -811,6 +826,64 @@ public class Main extends Application {
 
     public boolean isPressed(KeyCode key) {
         return keys.getOrDefault(key, false);
+    }
+    
+    public void resetControls() {
+        moveUp = KeyCode.W;
+        moveDown = KeyCode.S;
+        moveLeft = KeyCode.A;
+        moveRight = KeyCode.D;
+        shootUp = KeyCode.UP;
+        shootDown = KeyCode.DOWN;
+        shootLeft = KeyCode.LEFT;
+        shootRight = KeyCode.RIGHT;
+        
+        controlsView.getItems().clear();
+        updateControlView();
+    }
+    
+    public void updateControls() {
+        controlsView.setOnKeyPressed(e -> {
+            e.consume();
+            int index = controlsView.getSelectionModel().getSelectedIndex();
+            KeyCode newKey = e.getCode();
+            
+            switch (index) {
+                case 0 : moveUp = newKey;
+                         break;
+                case 1 : moveDown = newKey;
+                         break;
+                case 2 : moveRight = newKey;
+                         break;
+                case 3 : moveLeft = newKey;
+                         break;
+                case 4 : break;
+                case 5 : shootUp = newKey;
+                         break;
+                case 6 : shootDown = newKey;
+                         break;
+                case 7 : shootRight = newKey;
+                         break;
+                case 8 : shootLeft = newKey;
+                         break;
+            }
+            
+            controlsView.getItems().clear();
+            updateControlView();
+        });
+    }
+    
+    public void updateControlView() {
+        controlsView.getItems().addAll(
+                "MOVE UP            -            " + moveUp.toString(),
+                "MOVE DOWN            -            " + moveDown.toString(),
+                "MOVE RIGHT            -            " + moveRight.toString(),
+                "MOVE LEFT            -            " + moveLeft.toString(),
+                "", //empty line for gap
+                "SHOOT UP            -            " + shootUp.toString(),
+                "SHOOT DOWN            -            " + shootDown.toString(),
+                "SHOOT RIGHT            -            " + shootRight.toString(),
+                "SHOOT LEFT            -            " + shootLeft.toString());
     }
     //General
     
@@ -916,6 +989,19 @@ public class Main extends Application {
         gameOptionsRoot.setTop(gameOpTitle);
         BorderPane.setAlignment(gameOpTitle, Pos.CENTER);
         BorderPane.setMargin(gameOpTitle, new Insets(100));
+        
+        //Control Options Root
+        controlOptionsRoot = new BorderPane();
+        Text controlTitle = new Text("CONTROLS");
+        controlTitle.setFont(Font.font("Arial", 50));
+        HBox controlButtons = addControlButtons(pStage);
+        controlOptionsRoot.setId("menu");
+        controlOptionsRoot.setTop(controlTitle);
+        controlOptionsRoot.setBottom(controlButtons);
+        BorderPane.setAlignment(controlTitle, Pos.CENTER);
+        BorderPane.setMargin(controlTitle, new Insets(50));
+        BorderPane.setAlignment(controlButtons, Pos.CENTER);
+        BorderPane.setMargin(controlButtons, new Insets(50));
 
         //Game Over Root
         VBox gameOverBox = addGameOverButtons(pStage);
@@ -961,6 +1047,7 @@ public class Main extends Application {
         Button optionsBtn = new Button("OPTIONS");
         optionsBtn.setOnAction(e -> {
             pStage.getScene().setRoot(optionsRoot);
+            previousOptionsRoot = menuRoot;
         });
 
         Button exitBtn = new Button("EXIT");
@@ -989,13 +1076,19 @@ public class Main extends Application {
         musicBox.setOnAction(e -> {
 
         });
+        
+        Button controlBtn = new Button("CONTROLS");
+        controlBtn.setOnAction(e -> {
+            pStage.getScene().setRoot(controlOptionsRoot);
+            previousOptionsRoot = optionsRoot;
+        });
 
         Button backBtn = new Button("BACK TO MENU");
         backBtn.setOnAction(e -> {
             pStage.getScene().setRoot(menuRoot);
         });
 
-        vbox.getChildren().addAll(musicBox, backBtn);
+        vbox.getChildren().addAll(musicBox, controlBtn, backBtn);
         return vbox;
     }
 
@@ -1008,6 +1101,12 @@ public class Main extends Application {
         musicBox.setSelected(false);
         musicBox.setOnAction(e -> {
 
+        });
+        
+        Button controlBtn = new Button("CONTROLS");
+        controlBtn.setOnAction(e -> {
+            pStage.getScene().setRoot(controlOptionsRoot);
+            previousOptionsRoot = gameOptionsRoot;
         });
 
         Button gameBtn = new Button("BACK TO GAME");
@@ -1050,8 +1149,44 @@ public class Main extends Application {
             });
         });
 
-        vbox.getChildren().addAll(musicBox, gameBtn, backBtn, exitBtn);
+        vbox.getChildren().addAll(musicBox, gameBtn, backBtn, controlBtn, exitBtn);
         return vbox;
+    }
+    
+    public HBox addControlButtons(Stage pStage) {
+        HBox hbox = new HBox();
+        hbox.setAlignment(Pos.CENTER);
+        hbox.setSpacing(100);
+        
+        //Keep the code below until game save is implemented
+        moveUp = KeyCode.W;
+        moveDown = KeyCode.S;
+        moveLeft = KeyCode.A;
+        moveRight = KeyCode.D;
+        shootUp = KeyCode.UP;
+        shootDown = KeyCode.DOWN;
+        shootLeft = KeyCode.LEFT;
+        shootRight = KeyCode.RIGHT;
+        //
+        
+        updateControlView();
+        
+        controlOptionsRoot.setCenter(controlsView);
+        BorderPane.setAlignment(controlsView, Pos.TOP_CENTER);
+        BorderPane.setMargin(controlsView, new Insets(10, 400, 10, 400));
+        
+        Button resetBtn = new Button("RESET");
+        resetBtn.setOnAction(e -> {
+            resetControls();
+        });
+        
+        Button backBtn = new Button("BACK");
+        backBtn.setOnAction(e -> {
+            pStage.getScene().setRoot(previousOptionsRoot);
+        });
+        
+        hbox.getChildren().addAll(resetBtn, backBtn);
+        return hbox;
     }
 
     public VBox addGameOverButtons(Stage pStage) {
