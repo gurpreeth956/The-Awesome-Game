@@ -32,7 +32,8 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Screen;
 
 public class Main extends Application {
-
+    
+    //Initilizes various elements for scenes
     Scene scene;
     static Pane gameRoot, shopRoot, currentGameRoot, previousOptionsRoot;
     static BorderPane menuRoot, shopBuyingRoot, optionsRoot, gameOptionsRoot, gameOverRoot,
@@ -51,7 +52,8 @@ public class Main extends Application {
     static Level level;
     Stairs toShopStair, decUpStair, toGameStair;
     Friends shopKeeper;
-
+    
+    //various lists for current projectiles, enemies and upgrades
     public static List<Projectile> projectiles = new ArrayList();
     private List<Projectile> projToRemove = new ArrayList();
     private long timeOfLastProjectile = 0;
@@ -78,6 +80,7 @@ public class Main extends Application {
     private ListView<String> controlsView = new ListView();
     KeyCode moveUp, moveDown, moveRight, moveLeft, shootUp, shootDown, shootRight, shootLeft;
 
+    //Various elements for health score ect.
     Rectangle healthBarOutline, actualHealth, lostHealth, shieldHealth;
     Label coinLabel, scoreLabel, shopBuyingHealthLabel, shopBuyingShieldLabel, shopBuyingCoinLabel, 
             shopBuyingScoreLabel;
@@ -196,10 +199,10 @@ public class Main extends Application {
             }
 
             for (Portal portal : portals) {
+                //determines when to spawn enemies
                 if (level.getEnemiesSpawned() < level.getEnemiesToBeat() && portal.summon() && 
                     !level.isShopping()) {
                     if (level.getEnemiesLeft() == 1 && bosses.size() >= level.getLevel()) {
-                        //bosses.size part is temp so game doesnt crash after we run out of bosses
                         createBoss(portal);
                     } else {
                         if (level.getEnemiesToBeat() - level.getEnemiesSpawned() != 1 || 
@@ -212,7 +215,7 @@ public class Main extends Application {
 
             shoppingUpdate(pStage);
             shieldUpdate();
-
+            
             if (time < 0 || time > 150) {
                 if (isPressed(KeyCode.ESCAPE)) {
                     pause = true;
@@ -245,7 +248,6 @@ public class Main extends Application {
             enemies.removeAll(enemToRemove);
             enemToRemove.clear();
             
-            //lists from spikes class
             Spikes.spikes.removeAll(Spikes.spikeToRemove);
             Spikes.spikeToRemove.clear();
 
@@ -312,7 +314,7 @@ public class Main extends Application {
         portal.toBack();
         portals.add(portal);
     }
-
+    
     public void createProjectile(int x, int y) {
         Projectile proj = new Projectile("file:src/Sprites/Shot.png", player.getX() + 28, 
             player.getY() + 16, 12, 12, 1);
@@ -326,6 +328,7 @@ public class Main extends Application {
     public void updateProj(Projectile proj) {
         proj.move(player);
 
+        //removes projectile on enemy hit
         for (Enemy enemy : enemies) {
             if (proj.enemyColliding(enemy)) {
                 enemy.hit(proj);
@@ -335,6 +338,7 @@ public class Main extends Application {
             }
         }
 
+        //removes projectile on screen edge hit
         if (proj.getTranslateX() <= 0 || proj.getTranslateX() >= scene.getWidth()) {
             proj.setAlive(false);
         } else if (proj.getTranslateY() <= 0 || proj.getTranslateY() >= scene.getHeight()) {
@@ -351,6 +355,7 @@ public class Main extends Application {
         long timeNow = System.currentTimeMillis();
         long time = timeNow - hitTime;
         
+        //removes enemy projectile in player collision
         if (proj.playerColliding(player)) { //create enemy proj class !note!
             proj.setAlive(false);
             if (time < 0 || time > 1000) {
@@ -360,6 +365,7 @@ public class Main extends Application {
             }
         }
         
+        //translates projectile if not hitting player
         if (!proj.playerColliding(player)) {
             proj.move(player);
         }
@@ -385,6 +391,7 @@ public class Main extends Application {
             gameRoot.getChildren().removeAll(spike);
         }
         
+        //removes spike if colliding player
         if (spike.playerColliding(player) && !level.isShopping()) {
             Spikes.spikeToRemove.add(spike);
             gameRoot.getChildren().removeAll(spike);
@@ -418,6 +425,7 @@ public class Main extends Application {
     public void updateEnemy(Enemy enemy) {
         long timeNow = System.currentTimeMillis();
         long time = timeNow - hitTime;
+        //changes characterview on player collision
         if (enemy.playerColliding(player)) {
             enemy.hitView(enemy);
             if (time < 0 || time > 1000) {
@@ -438,6 +446,7 @@ public class Main extends Application {
             enemy.update(gameRoot);
             enemy.setAlive(false);
         }
+        //clears enemy info if dead
         if (!enemy.isAlive()) {
             enemToRemove.add(enemy);
             gameRoot.getChildren().removeAll(enemy, enemy.getActualHealth(), enemy.getLostHealth(),
@@ -451,8 +460,8 @@ public class Main extends Application {
     }
     
     public void createBoss(Portal portal) {
-        Enemy enemy = bosses.get(level.getLevel() - 1);
-        enemy.summon(portal);
+        Enemy enemy = bosses.get(level.getLevel() - 1);//Use level to determine index for boss spawn
+        enemy.summon(portal);//Determine portal to spawn boss from
         gameRoot.getChildren().addAll(enemy, enemy.getHealthBarOutline(), enemy.getLostHealth(), 
                 enemy.getActualHealth());
         coinAndScore.toFront();
@@ -475,6 +484,7 @@ public class Main extends Application {
         boss.update(gameRoot);
     }
 
+    //shield info if shield is brought
     public void shieldUpdate() {
         if (player.hasShield()) {
             if (!shieldAdded) {
@@ -492,6 +502,7 @@ public class Main extends Application {
         }
     }
     
+    //determines which bar takes damage
     public void playerReceiveHit() {
         if (player.hasShield()) {
             gameRoot.getChildren().remove(shieldHealth);
@@ -515,12 +526,14 @@ public class Main extends Application {
     public void shoppingUpdate(Stage pStage) {
         //Shopping
         if (level.isShopping()) {
+            //opens shoproot
             if (player.isColliding(shopKeeper) && isPressed(KeyCode.ENTER)) {
                 pStage.getScene().setRoot(shopBuyingRoot);
                 updateShopBuyingRoot();
                 inShopBuyingView = true;
             }
             
+            //updates info if upgrade is brought
             for (Upgrades upgrade : shopUpgrades) {
                 if (upgrade.getBought()) {
                     upgradesToRemove.add(upgrade);
@@ -530,6 +543,7 @@ public class Main extends Application {
                 }
             }
             
+            //activates abilities on brought upgrades
             for (Upgrades upgrade : currentUpgrades) {
                 if (!upgrade.isActive()) {
                     upgrade.activeAbility(player);
@@ -547,11 +561,13 @@ public class Main extends Application {
                 }
             }
             
+            //lets player return on game root
             if (player.isColliding(toGameStair) && couldGoToMap) {
                 shopRoot.getChildren().clear();
                 gameRoot.getChildren().addAll(player, health, healthBarOutline, lostHealth, 
                         actualHealth, coinAndScore);
                 
+                //updates game root info based on changes while shopping
                 if (player.hasShield()) {
                     gameRoot.getChildren().addAll(shieldHealth);
                 }
@@ -663,6 +679,7 @@ public class Main extends Application {
         BorderPane.setMargin(shopUpgradesView, new Insets(10));
     }
     
+    //info for upgrades in shop
     public void updateShopBuyingRoot() {
         shopBuyingHealthLabel.setText("Health: " + (player.getHealth() * 20) + "%");
         shopBuyingShieldLabel.setText("Shield: " + (player.getShieldHealth() * 33) + "%");

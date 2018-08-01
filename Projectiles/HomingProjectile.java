@@ -8,6 +8,7 @@ public class HomingProjectile extends Projectile {
         super(img, posX, posY, width, height, dmg);
     }
 
+    //Moves projectile based on position relative to player
     public void move(Character player) {
         String dist = this.distance(player);
 
@@ -57,6 +58,7 @@ public class HomingProjectile extends Projectile {
         }
     }
 
+    //Determines projectiles position relative to player
     public String distance(Character player) {
         int vert = player.getY() - this.y;
         int hori = player.getX() - this.x;

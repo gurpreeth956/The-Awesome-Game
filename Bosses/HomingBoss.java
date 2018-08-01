@@ -54,6 +54,8 @@ public class HomingBoss extends RangedEnemy {
         }
     }
 
+    //Keep speed params consistent for homing projectile purposes
+    //Change homing projectile code later
     public void shoot(Character player, List<Projectile> projectiles, Pane gameRoot) {
         long timeNow = System.currentTimeMillis();
         long time = timeNow - timeOfLastProjectile;

@@ -13,6 +13,7 @@ import javafx.scene.shape.Rectangle;
 
 public class Enemy extends Pane {
     
+    //Create damage variable for player hit??
     public ImageView iv;
     int offsetX = 0;
     int offsetY = 0;
