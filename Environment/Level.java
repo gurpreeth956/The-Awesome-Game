@@ -100,25 +100,28 @@ public class Level {
 
     public Enemy generate() {
         int randomNum = 10;
-        while(randomNum > 5) {
+        while(randomNum > 6) {
             randomNum = (int) (Math.random() * this.getLevel() + 1);
         }
         Enemy enemy = null;
         switch (randomNum) { //for testing reasons numbers will vary
-            case 1: 
+            case 6 : 
                 enemy = new Licker("file:src/Sprites/CharlesSpriteSheet.png", 3, 1, 80, 80);
                 break;
-            case 5:
+            case 5 :
                 enemy = new RangedEnemy("file:src/Sprites/Redies.png", 1, 1, 66, 33, 2000);
                 break;
-            case 2:
+            case 2 :
                 enemy = new SpikeEnemy("file:src/Sprites/SpikeySpriteSheet.png", 3, 1, 71, 65, 3000);
                 break;
-            case 4:
+            case 4 :
                 enemy = new FourWayShooter("file:src/Sprites/Redies.png", 1, 1, 66, 33, 3000);
                 break;
-            case 3:
+            case 3 :
                 enemy = new MrSnake("file:src/Sprites/SnakeSpriteSheet.png", 2, 1, 27, 35);
+                break;
+            case 1 :
+                enemy = new DomsPinky("file:src/Sprites/Pinky.png", 3, 1, 67, 78);
                 break;
         }
         return enemy;
