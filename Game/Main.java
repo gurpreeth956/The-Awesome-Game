@@ -13,6 +13,8 @@ import javafx.animation.AnimationTimer;
 import javafx.scene.layout.*;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
@@ -24,16 +26,16 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Screen;
 
 public class Main extends Application {
     
-    //Initilizes various elements for scenes
+    //initilizes various elements for scenes
     Scene scene;
     static Pane gameRoot, shopRoot, currentGameRoot, previousOptionsRoot;
     static BorderPane menuRoot, shopBuyingRoot, optionsRoot, gameOptionsRoot, gameOverRoot,
@@ -77,10 +79,11 @@ public class Main extends Application {
     private List<Upgrades> currentUpgrades = new ArrayList();
     private ListView<String> shopUpgradesView = new ListView();
     
-    private ListView<String> controlsView = new ListView();
-    KeyCode moveUp, moveDown, moveRight, moveLeft, shootUp, shootDown, shootRight, shootLeft;
+    private TableView<ListViewObject> controlsView = new TableView();
+    KeyCode moveUp, moveDown, moveRight, moveLeft, shootUp, shootDown, shootRight, shootLeft,
+            interaction;
 
-    //Various elements for health score ect.
+    //various elements for health score ect.
     Rectangle healthBarOutline, actualHealth, lostHealth, shieldHealth;
     Label coinLabel, scoreLabel, shopBuyingHealthLabel, shopBuyingShieldLabel, shopBuyingCoinLabel, 
             shopBuyingScoreLabel;
@@ -460,8 +463,8 @@ public class Main extends Application {
     }
     
     public void createBoss(Portal portal) {
-        Enemy enemy = bosses.get(level.getLevel() - 1);//Use level to determine index for boss spawn
-        enemy.summon(portal);//Determine portal to spawn boss from
+        Enemy enemy = bosses.get(level.getLevel() - 1); //use level to determine index for boss spawn
+        enemy.summon(portal); //determine portal to spawn boss from
         gameRoot.getChildren().addAll(enemy, enemy.getHealthBarOutline(), enemy.getLostHealth(), 
                 enemy.getActualHealth());
         coinAndScore.toFront();
@@ -484,8 +487,8 @@ public class Main extends Application {
         boss.update(gameRoot);
     }
 
-    //shield info if shield is brought
     public void shieldUpdate() {
+        //shield info if shield is brought
         if (player.hasShield()) {
             if (!shieldAdded) {
                 shieldAdded = true;
@@ -502,8 +505,8 @@ public class Main extends Application {
         }
     }
     
-    //determines which bar takes damage
     public void playerReceiveHit() {
+        //determines which bar takes damage
         if (player.hasShield()) {
             gameRoot.getChildren().remove(shieldHealth);
             shieldHealth = new Rectangle(screenSize.getWidth() - 120, 10, player.getShieldHealth()
@@ -527,7 +530,7 @@ public class Main extends Application {
         //Shopping
         if (level.isShopping()) {
             //opens shoproot
-            if (player.isColliding(shopKeeper) && isPressed(KeyCode.ENTER)) {
+            if (player.isColliding(shopKeeper) && isPressed(interaction)) {
                 pStage.getScene().setRoot(shopBuyingRoot);
                 updateShopBuyingRoot();
                 inShopBuyingView = true;
@@ -617,6 +620,7 @@ public class Main extends Application {
     }
     
     public void addShopRootWalls() {
+        //add transparent rectangles in areas player can not visit
         addWall(68, 116, Color.TRANSPARENT, 413, 32, shopRootWalls, shopRoot);
         addWall(58, 246, Color.TRANSPARENT, 98, 262, shopRootWalls, shopRoot);
         addWall(168, 50, Color.TRANSPARENT, 160, 262, shopRootWalls, shopRoot);
@@ -648,7 +652,7 @@ public class Main extends Application {
             shopUpgradesView.getItems().addAll(upgrade.getListView());
         }
         
-        //Add Icons
+        //adds icons in front of text
         shopUpgradesView.setCellFactory(e -> new ListCell<String>() {
             private ImageView iv = new ImageView();
             
@@ -674,13 +678,14 @@ public class Main extends Application {
             }
         });
         
+        shopUpgradesView.setId("shopUpView");
         shopBuyingRoot.setCenter(shopUpgradesView);
         BorderPane.setAlignment(shopUpgradesView, Pos.TOP_CENTER);
         BorderPane.setMargin(shopUpgradesView, new Insets(10));
     }
     
-    //info for upgrades in shop
     public void updateShopBuyingRoot() {
+        //info for upgrades in shop
         shopBuyingHealthLabel.setText("Health: " + (player.getHealth() * 20) + "%");
         shopBuyingShieldLabel.setText("Shield: " + (player.getShieldHealth() * 33) + "%");
         shopBuyingCoinLabel.setText("Coins: " + level.getCoin());
@@ -845,6 +850,23 @@ public class Main extends Application {
         return keys.getOrDefault(key, false);
     }
     
+    public void updateTableViewHeader(TableView table) {
+        //used to remove tableview header
+        table.widthProperty().addListener((ObservableValue<? extends Number> source, 
+                Number oldWidth, Number newWidth) -> {
+            Pane header = (Pane) table.lookup("TableHeaderRow");
+            if (header.isVisible()){
+                header.setMaxHeight(0);
+                header.setMinHeight(0);
+                header.setPrefHeight(0);
+                header.setVisible(false);
+            }
+        });
+    }
+    //General
+    
+    
+    //Controls
     public void resetControls() {
         moveUp = KeyCode.W;
         moveDown = KeyCode.S;
@@ -854,9 +876,12 @@ public class Main extends Application {
         shootDown = KeyCode.DOWN;
         shootLeft = KeyCode.LEFT;
         shootRight = KeyCode.RIGHT;
+        interaction = KeyCode.E;
         
         controlsView.getItems().clear();
-        updateControlView();
+        controlsView.setItems(getControlList());
+        updateTableViewHeader(controlsView);
+        
     }
     
     public void updateControls() {
@@ -883,26 +908,49 @@ public class Main extends Application {
                          break;
                 case 8 : shootLeft = newKey;
                          break;
+                case 9 : break;
+                case 10 : interaction = newKey; //there is a glitch if this key is made SPACE Key -
+                                                //player cannot exit shopUpgradeView (idk y)
+                          break;
             }
             
             controlsView.getItems().clear();
-            updateControlView();
+            controlsView.setItems(getControlList());
+            updateTableViewHeader(controlsView);
         });
     }
     
-    public void updateControlView() {
-        controlsView.getItems().addAll(
-                "MOVE UP            -            " + moveUp.toString(),
-                "MOVE DOWN            -            " + moveDown.toString(),
-                "MOVE RIGHT            -            " + moveRight.toString(),
-                "MOVE LEFT            -            " + moveLeft.toString(),
-                "", //empty line for gap
-                "SHOOT UP            -            " + shootUp.toString(),
-                "SHOOT DOWN            -            " + shootDown.toString(),
-                "SHOOT RIGHT            -            " + shootRight.toString(),
-                "SHOOT LEFT            -            " + shootLeft.toString());
+    public ObservableList<ListViewObject> getControlList() {
+        ObservableList<ListViewObject> controlList = FXCollections.observableArrayList();
+        controlList.addAll(
+                new ListViewObject("MOVE UP", "   -   ", moveUp.toString()),
+                new ListViewObject("MOVE DOWN", "   -   ", moveDown.toString()),
+                new ListViewObject("MOVE RIGHT", "   -   ", moveRight.toString()),
+                new ListViewObject("MOVE LEFT", "   -   ", moveLeft.toString()),
+                new ListViewObject("", "", ""),
+                new ListViewObject("SHOOT UP", "   -   ", shootUp.toString()),
+                new ListViewObject("SHOOT DOWN", "   -   ", shootDown.toString()),
+                new ListViewObject("SHOOT RIGHT", "   -   ", shootRight.toString()),
+                new ListViewObject("SHOOT LEFT", "   -   ", shootLeft.toString()),
+                new ListViewObject("", "", ""),
+                new ListViewObject("INTERACTION", "   -   ", interaction.toString()));
+        
+        return controlList;
     }
-    //General
+    
+    public void createControlTable() {
+        TableColumn<ListViewObject, String> column1 = new TableColumn<>("");
+        column1.setMinWidth((int) ((1280 - 600) / 3));
+        column1.setCellValueFactory(new PropertyValueFactory<>("t1"));
+        TableColumn<ListViewObject, String> column2 = new TableColumn<>("");
+        column2.setMinWidth((int) ((1280 - 600) / 3));
+        column2.setCellValueFactory(new PropertyValueFactory<>("t2"));
+        TableColumn<ListViewObject, String> column3 = new TableColumn<>("");
+        column3.setMinWidth((int) ((1280 - 600) / 3));
+        column3.setCellValueFactory(new PropertyValueFactory<>("t3"));
+        controlsView.getColumns().addAll(column1, column2, column3);
+    }
+    //Controls
     
     
     //Layouts
@@ -969,6 +1017,7 @@ public class Main extends Application {
         itemSummary.setFont(Font.font("Arial", 30));
         VBox playerData = getPlayerData();
         shopBuyingRoot = new BorderPane();
+        shopBuyingRoot.setId("menu");
         shopBuyingRoot.setTop(shopTitle);
         shopBuyingRoot.setBottom(shopButtons);
         shopBuyingRoot.setRight(itemSummary);
@@ -1019,6 +1068,7 @@ public class Main extends Application {
         BorderPane.setMargin(controlTitle, new Insets(50));
         BorderPane.setAlignment(controlButtons, Pos.CENTER);
         BorderPane.setMargin(controlButtons, new Insets(50));
+        createControlTable();
 
         //Game Over Root
         VBox gameOverBox = addGameOverButtons(pStage);
@@ -1184,13 +1234,16 @@ public class Main extends Application {
         shootDown = KeyCode.DOWN;
         shootLeft = KeyCode.LEFT;
         shootRight = KeyCode.RIGHT;
+        interaction = KeyCode.E;
         //
         
-        updateControlView();
+        controlsView.setItems(getControlList());
+        controlsView.setId("controls");
+        updateTableViewHeader(controlsView);
         
         controlOptionsRoot.setCenter(controlsView);
         BorderPane.setAlignment(controlsView, Pos.TOP_CENTER);
-        BorderPane.setMargin(controlsView, new Insets(10, 400, 10, 400));
+        BorderPane.setMargin(controlsView, new Insets(10, 300, 10, 300));
         
         Button resetBtn = new Button("RESET");
         resetBtn.setOnAction(e -> {
