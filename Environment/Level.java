@@ -91,10 +91,11 @@ public class Level {
 
     public void fillBoss(List<Enemy> bosses) {
         //testing phase - we will decide bosses order eventually
+        bosses.add(new HomingBoss("file:src/Sprites/Redies.png", 3, 20, 66, 33, 1000));
         bosses.add(new ShotBoss("file:src/Sprites/ShotBoss.png", 5, 20, 256, 256, 50));
         bosses.add(new SpiderBoss("file:src/Sprites/SpiderBoss.png", 5, 20, 158, 240));
         bosses.add(new Boss("file:src/Sprites/test.png", 3, 20, 200, 200));
-        bosses.add(new HomingBoss("file:src/Sprites/Redies.png", 3, 20, 66, 33, 1000));
+       //bosses.add(new HomingBoss("file:src/Sprites/Redies.png", 3, 20, 66, 33, 1000));
     }
 
     public Enemy generate() {
@@ -118,6 +119,7 @@ public class Level {
                 break;
             case 3:
                 enemy = new MrSnake("file:src/Sprites/SnakeSpriteSheet.png", 2, 1, 27, 35);
+                break;
         }
         return enemy;
     }

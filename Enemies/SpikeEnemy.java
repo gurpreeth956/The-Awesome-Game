@@ -59,7 +59,7 @@ public class SpikeEnemy extends RangedEnemy {
         long time = timeNow - timeOfLastProjectile;
 
         if (time < 0 || time > this.getShootSpeed()) {
-            Spikes spike = new Spikes(this.x, this.y, gameRoot);
+            Spikes spike = new Spikes(this.x, this.y, gameRoot, 1);
             gameRoot.getChildren().addAll(spike);
             timeOfLastProjectile = timeNow;
         }

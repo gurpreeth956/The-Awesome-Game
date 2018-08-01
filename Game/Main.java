@@ -34,7 +34,8 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Screen;
 
 public class Main extends Application {
-
+    
+    //initilizes various elements for scenes
     Scene scene;
     static Pane gameRoot, shopRoot, currentGameRoot, previousOptionsRoot;
     static BorderPane menuRoot, shopBuyingRoot, optionsRoot, gameOptionsRoot, gameOverRoot,
@@ -53,7 +54,8 @@ public class Main extends Application {
     static Level level;
     Stairs toShopStair, decUpStair, toGameStair;
     Friends shopKeeper;
-
+    
+    //various lists for current projectiles, enemies and upgrades
     public static List<Projectile> projectiles = new ArrayList();
     private List<Projectile> projToRemove = new ArrayList();
     private long timeOfLastProjectile = 0;
@@ -81,6 +83,7 @@ public class Main extends Application {
     KeyCode moveUp, moveDown, moveRight, moveLeft, shootUp, shootDown, shootRight, shootLeft,
             interaction;
 
+    //various elements for health score ect.
     Rectangle healthBarOutline, actualHealth, lostHealth, shieldHealth;
     Label coinLabel, scoreLabel, shopBuyingHealthLabel, shopBuyingShieldLabel, shopBuyingCoinLabel, 
             shopBuyingScoreLabel;
@@ -199,10 +202,10 @@ public class Main extends Application {
             }
 
             for (Portal portal : portals) {
+                //determines when to spawn enemies
                 if (level.getEnemiesSpawned() < level.getEnemiesToBeat() && portal.summon() && 
                     !level.isShopping()) {
                     if (level.getEnemiesLeft() == 1 && bosses.size() >= level.getLevel()) {
-                        //bosses.size part is temp so game doesnt crash after we run out of bosses
                         createBoss(portal);
                     } else {
                         if (level.getEnemiesToBeat() - level.getEnemiesSpawned() != 1 || 
@@ -215,7 +218,7 @@ public class Main extends Application {
 
             shoppingUpdate(pStage);
             shieldUpdate();
-
+            
             if (time < 0 || time > 150) {
                 if (isPressed(KeyCode.ESCAPE)) {
                     pause = true;
@@ -248,7 +251,6 @@ public class Main extends Application {
             enemies.removeAll(enemToRemove);
             enemToRemove.clear();
             
-            //lists from spikes class
             Spikes.spikes.removeAll(Spikes.spikeToRemove);
             Spikes.spikeToRemove.clear();
 
@@ -315,10 +317,10 @@ public class Main extends Application {
         portal.toBack();
         portals.add(portal);
     }
-
+    
     public void createProjectile(int x, int y) {
         Projectile proj = new Projectile("file:src/Sprites/Shot.png", player.getX() + 28, 
-            player.getY() + 16, 12, 12);
+            player.getY() + 16, 12, 12, 1);
         proj.setVelocityX(x);
         proj.setVelocityY(y);
         gameRoot.getChildren().addAll(proj);
@@ -329,15 +331,17 @@ public class Main extends Application {
     public void updateProj(Projectile proj) {
         proj.move(player);
 
+        //removes projectile on enemy hit
         for (Enemy enemy : enemies) {
             if (proj.enemyColliding(enemy)) {
-                enemy.hit();
+                enemy.hit(proj);
                 gameRoot.getChildren().remove(enemy.getActualHealth());
                 gameRoot.getChildren().add(enemy.updateHealth());
                 proj.setAlive(false);
             }
         }
 
+        //removes projectile on screen edge hit
         if (proj.getTranslateX() <= 0 || proj.getTranslateX() >= scene.getWidth()) {
             proj.setAlive(false);
         } else if (proj.getTranslateY() <= 0 || proj.getTranslateY() >= scene.getHeight()) {
@@ -354,15 +358,17 @@ public class Main extends Application {
         long timeNow = System.currentTimeMillis();
         long time = timeNow - hitTime;
         
+        //removes enemy projectile in player collision
         if (proj.playerColliding(player)) { //create enemy proj class !note!
             proj.setAlive(false);
             if (time < 0 || time > 1000) {
-                player.hit();
+                player.hit(proj.getDamage());
                 playerReceiveHit();
                 hitTime = timeNow;
             }
         }
         
+        //translates projectile if not hitting player
         if (!proj.playerColliding(player)) {
             proj.move(player);
         }
@@ -388,11 +394,12 @@ public class Main extends Application {
             gameRoot.getChildren().removeAll(spike);
         }
         
+        //removes spike if colliding player
         if (spike.playerColliding(player) && !level.isShopping()) {
             Spikes.spikeToRemove.add(spike);
             gameRoot.getChildren().removeAll(spike);
             if (time < 0 || time > 500) {
-                player.hit();
+                player.hit(spike.getDamage());
                 playerReceiveHit();
                 spikeHitTime = timeNow;
             }
@@ -421,10 +428,11 @@ public class Main extends Application {
     public void updateEnemy(Enemy enemy) {
         long timeNow = System.currentTimeMillis();
         long time = timeNow - hitTime;
+        //changes characterview on player collision
         if (enemy.playerColliding(player)) {
             enemy.hitView(enemy);
             if (time < 0 || time > 1000) {
-                player.hit();
+                player.hit(1);//update this line if different damage values are implemented for different enemies
                 playerReceiveHit();
                 hitTime = timeNow;
             }
@@ -441,6 +449,7 @@ public class Main extends Application {
             enemy.update(gameRoot);
             enemy.setAlive(false);
         }
+        //clears enemy info if dead
         if (!enemy.isAlive()) {
             enemToRemove.add(enemy);
             gameRoot.getChildren().removeAll(enemy, enemy.getActualHealth(), enemy.getLostHealth(),
@@ -454,8 +463,8 @@ public class Main extends Application {
     }
     
     public void createBoss(Portal portal) {
-        Enemy enemy = bosses.get(level.getLevel() - 1);
-        enemy.summon(portal);
+        Enemy enemy = bosses.get(level.getLevel() - 1); //use level to determine index for boss spawn
+        enemy.summon(portal); //determine portal to spawn boss from
         gameRoot.getChildren().addAll(enemy, enemy.getHealthBarOutline(), enemy.getLostHealth(), 
                 enemy.getActualHealth());
         coinAndScore.toFront();
@@ -479,6 +488,7 @@ public class Main extends Application {
     }
 
     public void shieldUpdate() {
+        //shield info if shield is brought
         if (player.hasShield()) {
             if (!shieldAdded) {
                 shieldAdded = true;
@@ -496,6 +506,7 @@ public class Main extends Application {
     }
     
     public void playerReceiveHit() {
+        //determines which bar takes damage
         if (player.hasShield()) {
             gameRoot.getChildren().remove(shieldHealth);
             shieldHealth = new Rectangle(screenSize.getWidth() - 120, 10, player.getShieldHealth()
@@ -518,12 +529,14 @@ public class Main extends Application {
     public void shoppingUpdate(Stage pStage) {
         //Shopping
         if (level.isShopping()) {
+            //opens shoproot
             if (player.isColliding(shopKeeper) && isPressed(interaction)) {
                 pStage.getScene().setRoot(shopBuyingRoot);
                 updateShopBuyingRoot();
                 inShopBuyingView = true;
             }
             
+            //updates info if upgrade is brought
             for (Upgrades upgrade : shopUpgrades) {
                 if (upgrade.getBought()) {
                     upgradesToRemove.add(upgrade);
@@ -533,6 +546,7 @@ public class Main extends Application {
                 }
             }
             
+            //activates abilities on brought upgrades
             for (Upgrades upgrade : currentUpgrades) {
                 if (!upgrade.isActive()) {
                     upgrade.activeAbility(player);
@@ -550,11 +564,13 @@ public class Main extends Application {
                 }
             }
             
+            //lets player return on game root
             if (player.isColliding(toGameStair) && couldGoToMap) {
                 shopRoot.getChildren().clear();
                 gameRoot.getChildren().addAll(player, health, healthBarOutline, lostHealth, 
                         actualHealth, coinAndScore);
                 
+                //updates game root info based on changes while shopping
                 if (player.hasShield()) {
                     gameRoot.getChildren().addAll(shieldHealth);
                 }
@@ -604,6 +620,7 @@ public class Main extends Application {
     }
     
     public void addShopRootWalls() {
+        //add transparent rectangles in areas player can not visit
         addWall(68, 116, Color.TRANSPARENT, 413, 32, shopRootWalls, shopRoot);
         addWall(58, 246, Color.TRANSPARENT, 98, 262, shopRootWalls, shopRoot);
         addWall(168, 50, Color.TRANSPARENT, 160, 262, shopRootWalls, shopRoot);
@@ -635,7 +652,7 @@ public class Main extends Application {
             shopUpgradesView.getItems().addAll(upgrade.getListView());
         }
         
-        //Add Icons
+        //adds icons in front of text
         shopUpgradesView.setCellFactory(e -> new ListCell<String>() {
             private ImageView iv = new ImageView();
             
@@ -668,6 +685,7 @@ public class Main extends Application {
     }
     
     public void updateShopBuyingRoot() {
+        //info for upgrades in shop
         shopBuyingHealthLabel.setText("Health: " + (player.getHealth() * 20) + "%");
         shopBuyingShieldLabel.setText("Shield: " + (player.getShieldHealth() * 33) + "%");
         shopBuyingCoinLabel.setText("Coins: " + level.getCoin());
@@ -832,7 +850,8 @@ public class Main extends Application {
         return keys.getOrDefault(key, false);
     }
     
-    public void updateTableViewHeader(TableView table) { //used to remove tableview header
+    public void updateTableViewHeader(TableView table) {
+        //used to remove tableview header
         table.widthProperty().addListener((ObservableValue<? extends Number> source, 
                 Number oldWidth, Number newWidth) -> {
             Pane header = (Pane) table.lookup("TableHeaderRow");

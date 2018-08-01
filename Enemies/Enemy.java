@@ -13,6 +13,7 @@ import javafx.scene.shape.Rectangle;
 
 public class Enemy extends Pane {
     
+    //Create damage variable for player hit??
     public ImageView iv;
     int offsetX = 0;
     int offsetY = 0;
@@ -140,8 +141,8 @@ public class Enemy extends Pane {
 	this.alive = alive;
     }
     
-    public void hit() {
-	health--;
+    public void hit(Projectile proj) {
+	health-= proj.getDamage();
     }
     
     public int getHealth() {
