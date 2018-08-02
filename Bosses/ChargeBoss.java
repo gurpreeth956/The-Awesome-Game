@@ -3,8 +3,8 @@ import Enemies.MeleeEnemy;
 
 public class ChargeBoss extends MeleeEnemy {
     
-    int stunTime = 500;
-    long lastCharge = 0;
+    int stunTime = 1000;
+    boolean charging = true;
     
     public ChargeBoss(String img, int health, int coin, int width, int height) {
         super(img, health, coin, width, height);
