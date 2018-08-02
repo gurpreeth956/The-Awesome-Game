@@ -61,38 +61,14 @@ public class HomingBoss extends RangedEnemy {
         long time = timeNow - timeOfLastProjectile;
         String dist = distance(player);
 
-        if (dist.equals("up")) { //shoot up
-            this.setCharacterView(128, 183);
-            this.setOffsetY(183);
-            if (time < 0 || time > this.getShootSpeed()) {
-                createProjectile(3, 3, projectiles, gameRoot, "file:src/Sprites/EnemyShot.png", 12, 12);
-                timeOfLastProjectile = timeNow;
-            }
-
-        } else if (dist.equals("down")) { //shoot down
+        //if (dist.equals("down")) { //shoot down
             this.setCharacterView(128, 0);
             this.setOffsetY(0);
             if (time < 0 || time > this.getShootSpeed()) {
-                createProjectile(3, 3, projectiles, gameRoot, "file:src/Sprites/EnemyShot.png", 12, 12);
+                createProjectile(3, 3, projectiles, gameRoot, "file:src/Sprites/HomingShot.png", 20, 9);
                 timeOfLastProjectile = timeNow;
             }
-
-        } else if (dist.equals("left")) { //shoot left
-            this.setCharacterView(128, 123);
-            this.setOffsetY(123);
-            if (time < 0 || time > this.getShootSpeed()) {
-                createProjectile(3, 3, projectiles, gameRoot, "file:src/Sprites/EnemyShot.png", 12, 12);
-                timeOfLastProjectile = timeNow;
-            }
-
-        } else if (dist.equals("right")) { //shoot right
-            this.setCharacterView(128, 61);
-            this.setOffsetY(61);
-            if (time < 0 || time > this.getShootSpeed()) {
-                createProjectile(3, 3, projectiles, gameRoot, "file:src/Sprites/EnemyShot.png", 12, 12);
-                timeOfLastProjectile = timeNow;
-            }
-        }
+        //}
     }
 
     public void createProjectile(int x, int y, List<Projectile> projectiles, Pane root,

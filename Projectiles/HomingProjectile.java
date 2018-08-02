@@ -3,68 +3,54 @@ package Projectiles;
 import Game.Character;
 
 public class HomingProjectile extends Projectile {
+    
+    double targetX;
+    double targetY;
+    double vy;
+    double vx;
+    double rotation;
+    int ease = 30;//change this to increase turn radius of missile
+    int launchPos = -90;
 
     public HomingProjectile(String img, int posX, int posY, int width, int height, int dmg) {
         super(img, posX, posY, width, height, dmg);
     }
 
-    //Moves projectile based on position relative to player
-    public void move(Character player) {
-        String dist = this.distance(player);
-
-        if (dist.equals("U")) {
-            this.setTranslateX(this.getTranslateX() + 0);
-            this.setTranslateY(this.getTranslateY() - this.getVelocityY());
-            this.y -= 3;
+    public void move(Character player){
+        targetX = player.getX()-this.x;
+        targetY = player.getY()-this.y;
+        rotation = Math.atan2(targetY, targetX)*180/Math.PI;
+        this.iv.setRotate(rotation);
+        if(Math.abs(rotation - launchPos)>180){
+            if(rotation > 0 && launchPos < 0){
+               launchPos -= (360 - rotation + launchPos) / ease;
+            }
+            else if(launchPos > 0 && rotation < 0){
+                launchPos += (360 - rotation + launchPos) / ease;
+            }
+        }else if(rotation < launchPos){
+            launchPos -= Math.abs(launchPos - rotation) / ease;
+        }else{
+            launchPos += Math.abs(rotation - launchPos) / ease;
         }
-        if (dist.equals("D")) {
-            this.setTranslateX(this.getTranslateX() + 0);
-            this.setTranslateY(this.getTranslateY() + this.getVelocityY());
-            this.y += 3;
+        vx = this.getVelocityX()*(90-Math.abs(launchPos))/90;
+        if(launchPos<0){
+            vy = -this.getVelocityX() + Math.abs(vx);
+        }else{
+            vy = this.getVelocityX() - Math.abs(vx);
         }
-        if (dist.equals("L")) {
-            this.setTranslateX(this.getTranslateX() - this.getVelocityX());
-            this.setTranslateY(this.getTranslateY() + 0);
-            this.x -= 3;
-        }
-        if (dist.equals("R")) {
-            this.setTranslateX(this.getTranslateX() + this.getVelocityX());
-            this.setTranslateY(this.getTranslateY() + 0);
-            this.x += 3;
-        }
-        if (dist.equals("NE")) {
-            this.setTranslateX(this.getTranslateX() + this.getVelocityX());
-            this.setTranslateY(this.getTranslateY() - this.getVelocityY());
-            this.x += 3;
-            this.y -= 3;
-        }
-        if (dist.equals("NW")) {
-            this.setTranslateX(this.getTranslateX() - this.getVelocityX());
-            this.setTranslateY(this.getTranslateY() - this.getVelocityY());
-            this.x -= 3;
-            this.y -= 3;
-        }
-        if (dist.equals("SE")) {
-            this.setTranslateX(this.getTranslateX() + this.getVelocityX());
-            this.setTranslateY(this.getTranslateY() + this.getVelocityY());
-            this.x += 3;
-            this.y += 3;
-        }
-        if (dist.equals("SW")) {
-            this.setTranslateX(this.getTranslateX() - this.getVelocityX());
-            this.setTranslateY(this.getTranslateY() + this.getVelocityY());
-            this.x -= 3;
-            this.y += 3;
-        }
+        this.setTranslateX(this.getTranslateX()+(int)vx);
+        this.setTranslateY(this.getTranslateY()+(int)vy);
+        this.x += (int)vx;//X is int and vx is double 
+        this.y += (int)vy;//casting to int improves missile accuracy
     }
-
+    
     //Determines projectiles position relative to player
-    public String distance(Character player) {
+    public void distance(Character player) {
         int vert = player.getY() - this.y;
         int hori = player.getX() - this.x;
-        String dir = "";
 
-        if (hori > 0 && vert < 0) {
+        /*if (hori > 0 && vert < 0) {
             dir = "NE";
         }
         if (hori < 0 && vert < 0) {
@@ -75,19 +61,18 @@ public class HomingProjectile extends Projectile {
         }
         if (hori > 0 && vert > 0) {
             dir = "SE";
+        }*/
+        if (hori > 0 && vert == 0) {//Right
+            launchPos = 0;
         }
-        if (hori > 0 && vert == 0) {
-            dir = "R";
+        if (hori < 0 && vert == 0) {//Left
+            launchPos = -180;
         }
-        if (hori < 0 && vert == 0) {
-            dir = "L";
+        if (hori == 0 && vert > 0) {//down
+            launchPos = 90;
         }
-        if (hori == 0 && vert > 0) {
-            dir = "D";
+        if (hori == 0 && vert < 0) {//up
+            launchPos = -90;
         }
-        if (hori == 0 && vert < 0) {
-            dir = "U";
-        }
-        return dir;
     }
 }
