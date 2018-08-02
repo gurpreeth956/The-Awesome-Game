@@ -60,10 +60,10 @@ public class Enemy extends Pane {
     }
     
     public void hitView(Enemy enemy) {
-        enemy.setCharacterView(128, 0);
+	//To be overridden by child classes
     }
     
-    public void move(Character player, double a, double b) {
+    public void move(Character player, double width, double height) {
 	//To be overridden by child classes
     }
     

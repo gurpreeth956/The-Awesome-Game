@@ -15,6 +15,7 @@ public class RangedEnemy extends Enemy {
         this.shootSpeed = shootSpeed;
     }
     
+    //
     public void move(Character player, double width, double height) {
 	if (player.getX() > this.getX() && player.getY() == this.getY()) { //right
             this.setCharacterView(0, 61);
@@ -54,6 +55,7 @@ public class RangedEnemy extends Enemy {
             this.moveY(1, height);
         }
     }
+    //
     
     public void shoot(Character player, List<Projectile> projectiles, Pane gameRoot) {
         long timeNow = System.currentTimeMillis();
@@ -123,10 +125,6 @@ public class RangedEnemy extends Enemy {
         }
         return "right";
     }
-    
-    /*public void hitView(Enemy enemy) {
-        this.setCharacterView(0, 0);
-    }*/
     
     public long getTimeofLastProjectile() {
         return timeOfLastProjectile;
