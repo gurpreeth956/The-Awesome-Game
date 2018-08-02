@@ -9,9 +9,9 @@ import javafx.scene.layout.Pane;
 
 public class HomingBoss extends RangedEnemy {
 
-    public HomingBoss(String img, int health, int coin, int width, int height, int shootSpeed) {
-        super(img, health, coin, width, height, shootSpeed);
-        timeOfLastProjectile = 0;
+    public HomingBoss(String img, int health, int coin, int width, int height, int shootSpeed, 
+            String shotImg) {
+        super(img, health, coin, width, height, shootSpeed, shotImg);
     }
 
     public void move(Character player, double width, double height) {
@@ -65,7 +65,7 @@ public class HomingBoss extends RangedEnemy {
             this.setCharacterView(128, 0);
             this.setOffsetY(0);
             if (time < 0 || time > this.getShootSpeed()) {
-                createProjectile(3, 3, projectiles, gameRoot, "file:src/Sprites/HomingShot.png", 20, 9);
+                createProjectile(3, 3, projectiles, gameRoot, shotIVFile, 20, 9);
                 timeOfLastProjectile = timeNow;
             }
         //}

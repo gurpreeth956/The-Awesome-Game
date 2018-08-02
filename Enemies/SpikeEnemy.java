@@ -9,12 +9,13 @@ import javafx.scene.layout.Pane;
 
 public class SpikeEnemy extends RangedEnemy {
 
-    public SpikeEnemy(String img, int health, int coin, int width, int height, int shootSpeed) {
-        super(img, health, coin, width, height, shootSpeed);
+    public SpikeEnemy(String img, int health, int coin, int width, int height, int shootSpeed,
+            String shotImg) {
+        super(img, health, coin, width, height, shootSpeed, shotImg);
     }
     
     public void move(Character player, double width, double height) {
-        //Y - 20 is so it looks like Spikey is aiming for middle of player
+        //y - 20 is so it looks like Spikey is aiming for middle of player
 	if (player.getX() > this.getX() && player.getY() - 20 == this.getY()) { //right
             this.setCharacterView(3, 194);
             this.moveX(1, width);

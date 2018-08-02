@@ -39,10 +39,10 @@ public class HomingProjectile extends Projectile {
         }else{
             vy = this.getVelocityX() - Math.abs(vx);
         }
-        this.setTranslateX(this.getTranslateX()+(int)vx);
-        this.setTranslateY(this.getTranslateY()+(int)vy);
-        this.x += (int)vx;//X is int and vx is double 
-        this.y += (int)vy;//casting to int improves missile accuracy
+        this.setTranslateX(this.getTranslateX()+vx);
+        this.setTranslateY(this.getTranslateY()+vy);
+        this.x += vx;//X is int and vx is double 
+        this.y += vy;//casting to int improves missile accuracy
     }
     
     //Determines projectiles position relative to player
