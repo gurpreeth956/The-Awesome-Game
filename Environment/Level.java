@@ -104,24 +104,27 @@ public class Level {
             randomNum = (int) (Math.random() * this.getLevel() + 1);
         }
         Enemy enemy = null;
+        
         switch (randomNum) { //for testing reasons numbers will vary
             case 6 : 
-                enemy = new Licker("file:src/Sprites/CharlesSpriteSheet.png", 3, 1, 80, 80);
+                enemy = new Licker("file:src/Sprites/CharlesSpriteSheet.png", 3, 1, 80, 80); //melee
                 break;
             case 5 :
-                enemy = new RangedEnemy("file:src/Sprites/Redies.png", 1, 1, 66, 33, 2000);
+                enemy = new RangedEnemy("file:src/Sprites/Redies.png", 1, 1, 66, 33, 2000); //ranged
+                //need to make new enemy for this
                 break;
             case 2 :
-                enemy = new SpikeEnemy("file:src/Sprites/SpikeySpriteSheet.png", 3, 1, 71, 65, 3000);
+                enemy = new SpikeEnemy("file:src/Sprites/SpikeySpriteSheet.png", 3, 1, 71, 65, 3000); //ranged
                 break;
             case 4 :
-                enemy = new FourWayShooter("file:src/Sprites/Redies.png", 1, 1, 66, 33, 3000);
+                enemy = new FourWayShooter("file:src/Sprites/Redies.png", 1, 1, 66, 33, 3000); //ranged
+                //need to make new design
                 break;
             case 3 :
-                enemy = new MrSnake("file:src/Sprites/SnakeSpriteSheet.png", 2, 1, 27, 35);
+                enemy = new MrSnake("file:src/Sprites/SnakeSpriteSheet.png", 2, 1, 27, 35); //melee
                 break;
             case 1 :
-                enemy = new DomsPinky("file:src/Sprites/Pinky.png", 3, 1, 67, 78);
+                enemy = new DomsPinky("file:src/Sprites/Pinky.png", 3, 1, 67, 78); //melee
                 break;
         }
         return enemy;
