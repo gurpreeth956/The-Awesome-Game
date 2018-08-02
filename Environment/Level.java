@@ -2,7 +2,9 @@ package Environment;
 
 import Bosses.*;
 import Enemies.*;
+import Game.Main;
 import java.util.List;
+import javafx.scene.Scene;
 
 public class Level {
 
@@ -91,6 +93,7 @@ public class Level {
 
     public void fillBoss(List<Enemy> bosses) {
         //testing phase - we will decide bosses order eventually
+        bosses.add(new ChargeBoss("file:src/Sprites/Redies.png", 3, 20, 66, 33, 10));
         bosses.add(new HomingBoss("file:src/Sprites/Redies.png", 3, 20, 66, 33, 1000));
         bosses.add(new ShotBoss("file:src/Sprites/ShotBoss.png", 5, 20, 256, 256, 50));
         bosses.add(new SpiderBoss("file:src/Sprites/SpiderBoss.png", 5, 20, 158, 240));
