@@ -59,16 +59,55 @@ public class Enemy extends Pane {
         this.iv.setViewport(new Rectangle2D(offsetX, offsetY, width, height));
     }
     
-    public void hitView(Enemy enemy) {
-        enemy.setCharacterView(128, 0);
-    }
-    
-    public void move(Character player, double a, double b) {
+    public void move(Character player, double width, double height) {
 	//To be overridden by child classes
+        //following code is used for when testing enemy in child class without its own design 
+        
+        if (player.getX() > this.getX() && player.getY() == this.getY()) { //right
+            this.setCharacterView(0, 61);
+            this.moveX(1, width);
+        }
+        if (player.getX() < this.getX() && player.getY() == this.getY()) { //left
+            this.setCharacterView(0, 123);
+            this.moveX(-1, width);
+        }
+        if (player.getX() == this.getX() && player.getY() > this.getY()) { //down
+            this.setCharacterView(0, 0);
+            this.moveY(1, height);
+        }
+        if (player.getX() == this.getX() && player.getY() < this.getY()) { //up
+            this.setCharacterView(0, 183);
+            this.moveY(-1, height);
+        }
+
+        if (player.getX() > this.getX() && player.getY() < this.getY()) { //quadrant1
+            this.setCharacterView(0, 61);
+            this.moveX(1, width);
+            this.moveY(-1, height);
+        }
+        if (player.getX() < this.getX() && player.getY() < this.getY()) { //quadrant2
+            this.setCharacterView(0, 123);
+            this.moveX(-1, width);
+            this.moveY(-1, height);
+        }
+        if (player.getX() < this.getX() && player.getY() > this.getY()) { //quadrant3
+            this.setCharacterView(0, 123);
+            this.moveX(-1, width);
+            this.moveY(1, height);
+        }
+        if (player.getX() > this.getX() && player.getY() > this.getY()) { //quadrant4
+            this.setCharacterView(0, 61);
+            this.moveX(1, width);
+            this.moveY(1, height);
+        }
     }
     
     public void shoot(Character player, List<Projectile> list, Pane root) {
         //To be overridden by child classes
+    }
+    
+    public void hitView(Enemy enemy) {
+	//To be overridden by child classes
     }
     
     public void update(Pane root) {

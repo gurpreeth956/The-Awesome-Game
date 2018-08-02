@@ -97,6 +97,6 @@ public class SpiderBoss extends MeleeEnemy {
     }
     
     public void hitView(Enemy enemy) {
-        
+        animation.play();
     }
 }

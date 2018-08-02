@@ -431,6 +431,7 @@ public class Main extends Application {
         //changes characterview on player collision
         if (enemy.playerColliding(player)) {
             enemy.hitView(enemy);
+            enemy.healthPos();
             if (time < 0 || time > 1000) {
                 player.hit(1);//update this line if different damage values are implemented for different enemies
                 playerReceiveHit();
