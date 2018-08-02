@@ -8,5 +8,5 @@ public class MeleeEnemy extends Enemy {
     
     public void hitView(Enemy enemy) {
         this.setCharacterView(0, 0);
-    }   
+    }
 }

@@ -91,9 +91,9 @@ public class Level {
 
     public void fillBoss(List<Enemy> bosses) {
         //testing phase - we will decide bosses order eventually
-        bosses.add(new HomingBoss("file:src/Sprites/Redies.png", 3, 20, 66, 33, 1000,
-                "file:src/Sprites/HomingShot.png"));
-        bosses.add(new RandShotBoss("file:src/Sprites/ShotBoss.png", 5, 20, 256, 256, 50,
+        //bosses.add(new HomingBoss("file:src/Sprites/Redies.png", 3, 20, 66, 33, 1000,
+          //      "file:src/Sprites/HomingShot.png"));
+        bosses.add(new RandShotBoss("file:src/Sprites/ShotBoss.png", 5, 20, 258, 256, 50,
                 "file:src/Sprites/EnemyShot.png"));
         bosses.add(new SpiderBoss("file:src/Sprites/SpiderBoss.png", 5, 20, 158, 240));
     }
@@ -114,7 +114,7 @@ public class Level {
             case 6 : 
                 enemy = new Licker("file:src/Sprites/CharlesSpriteSheet.png", 3, 1, 80, 80); //melee
                 break;
-            case 2 :
+            case 3 :
                 enemy = new SpikeEnemy("file:src/Sprites/SpikeySpriteSheet.png", 3, 1, 71, 65, 
                         3000, "file:src/Sprites/Spikes.png"); //ranged
                 break;
@@ -123,7 +123,7 @@ public class Level {
                 "file:src/Sprites/EnemyShot.png"); //ranged
                 //need to make new design
                 break;
-            case 3 :
+            case 2 :
                 enemy = new MrSnake("file:src/Sprites/SnakeSpriteSheet.png", 2, 1, 27, 35); //melee
                 break;
             case 5 :

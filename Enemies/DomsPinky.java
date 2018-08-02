@@ -8,6 +8,7 @@ import javafx.animation.Animation;
 import javafx.geometry.Rectangle2D;
 import javafx.util.Duration;
 
+//May be made into pet
 public class DomsPinky extends MeleeEnemy {
     
     SpriteAnimation dom;
@@ -27,6 +28,7 @@ public class DomsPinky extends MeleeEnemy {
         iv.setViewport(new Rectangle2D(offsetX, offsetY, width, height));
         getChildren().addAll(iv);
     }
+    
     public void hitView(Enemy enemy) {
         dom.setOffset(0, 0);
     }

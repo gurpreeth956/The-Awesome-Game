@@ -2,21 +2,39 @@ package Bosses;
 import Enemies.Enemy;
 import Game.Character;
 import Enemies.RangedEnemy;
-import Projectiles.*;
+import Game.SpriteAnimation;
+import Projectiles.Projectile;
 
 import java.util.List;
+import javafx.animation.Animation;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.layout.Pane;
+import javafx.util.Duration;
 
 public class RandShotBoss extends RangedEnemy {
 
+    SpriteAnimation bossAnimation;
+    private final int count = 2;
+    private final int columns = 2;
+    private final int offsetX = 0;
+    private final int offsetY = 0;
+    private final Duration duration = Duration.millis(900);
+    private final Animation animation;
+    
     public RandShotBoss(String img, int health, int coin, int width, int height, int shootSpeed,
             String shotImg) {
         super(img, health, coin, width, height, shootSpeed, shotImg);
+        super.getChildren().remove(iv);
+        bossAnimation = new SpriteAnimation(img, count, columns, offsetX, offsetY, width, height, duration);
+        animation = bossAnimation;
+        iv = bossAnimation.getIV();
+        iv.setViewport(new Rectangle2D(offsetX, offsetY, width, height));
+        this.getChildren().addAll(iv);
+        this.setCharacterView(0, 0);
     }
 
     public void move(Character player, double width, double height) {
-        //animation.play() need to make better enemy with animation
-        this.setCharacterView(0, 0);
+        animation.play();
         if (player.getX() - 96 > this.getX() && player.getY() - 112 == this.getY()) { //right
             this.moveX(1, width);
         }
@@ -57,7 +75,7 @@ public class RandShotBoss extends RangedEnemy {
             int randomY = (int) (Math.random() * 13) - 6;
             
             if (Math.abs(randomX) > 4 || Math.abs(randomY) > 4) {
-                createProjectile(randomX, randomY, projectiles, gameRoot, "file:src/Sprites/EnemyShot.png", 12, 12);
+                createProjectile(randomX, randomY, projectiles, gameRoot, shotIVFile, 12, 12);
                 timeOfLastProjectile = timeNow;
             }
         }
@@ -74,6 +92,6 @@ public class RandShotBoss extends RangedEnemy {
     }
     
     public void hitView(Enemy enemy) {
-        this.setCharacterView(0, 0);
+        animation.play();
     }
 }

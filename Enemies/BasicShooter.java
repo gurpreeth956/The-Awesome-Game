@@ -1,4 +1,5 @@
 package Enemies;
+import Game.Character;
 
 import Projectiles.Projectile;
 import java.util.List;
@@ -51,7 +52,7 @@ public class BasicShooter extends RangedEnemy {
         }
     }
     
-    public void shoot(Game.Character player, List<Projectile> projectiles, Pane gameRoot) {
+    public void shoot(Character player, List<Projectile> projectiles, Pane gameRoot) {
         long timeNow = System.currentTimeMillis();
         long time = timeNow - timeOfLastProjectile;
         String dist = distance(player);
