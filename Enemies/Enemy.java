@@ -107,13 +107,13 @@ public class Enemy extends Pane {
 
     public void setX(int x) {
         this.setTranslateX(x);
-        this.x = x;
+        this.x += x;
         this.healthPos();
     }
 
     public void setY(int y) {
         this.setTranslateY(y);
-        this.y = y;
+        this.y += y;
         this.healthPos();
     }
     
