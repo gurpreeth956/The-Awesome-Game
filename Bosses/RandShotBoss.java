@@ -7,11 +7,11 @@ import Projectiles.*;
 import java.util.List;
 import javafx.scene.layout.Pane;
 
-public class ShotBoss extends RangedEnemy {
+public class RandShotBoss extends RangedEnemy {
 
-    public ShotBoss(String img, int health, int coin, int width, int height, int shootSpeed) {
-        super(img, health, coin, width, height, shootSpeed);
-        timeOfLastProjectile = 0;
+    public RandShotBoss(String img, int health, int coin, int width, int height, int shootSpeed,
+            String shotImg) {
+        super(img, health, coin, width, height, shootSpeed, shotImg);
     }
 
     public void move(Character player, double width, double height) {

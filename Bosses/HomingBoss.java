@@ -9,9 +9,9 @@ import javafx.scene.layout.Pane;
 
 public class HomingBoss extends RangedEnemy {
 
-    public HomingBoss(String img, int health, int coin, int width, int height, int shootSpeed) {
-        super(img, health, coin, width, height, shootSpeed);
-        timeOfLastProjectile = 0;
+    public HomingBoss(String img, int health, int coin, int width, int height, int shootSpeed, 
+            String shotImg) {
+        super(img, health, coin, width, height, shootSpeed, shotImg);
     }
 
     public void move(Character player, double width, double height) {
