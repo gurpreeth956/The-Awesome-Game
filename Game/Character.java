@@ -6,6 +6,7 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.scene.shape.Rectangle;
 
 public class Character extends Pane {
 
@@ -19,12 +20,13 @@ public class Character extends Pane {
     int playerSpeed;
     int shootSpeed;
 
-    int health = 5;
+    int health = 100;
     int shieldHealth = 0;
-    final int fullHealth = 5;
+    final int fullHealth = 100;
     final int fullShieldHealth = 3;
     boolean alive = true;
     boolean shield = false;
+    boolean stop;
 
     public Character(int posX, int posY) {
 	Image charImage = new Image("file:src/Sprites/Greenies.png");
@@ -44,12 +46,12 @@ public class Character extends Pane {
 	this.iv.setViewport(new Rectangle2D(offsetX, offsetY, width, height));
     }
 
-    public void moveX(int x, double width) {
+    public void moveX(int x, double screenWidth) {
 	boolean right = x > 0;
 	for (int i = 0; i < Math.abs(x); i++) {
 	    if (right) {
-		if (this.x > width - this.width) {
-		    this.setTranslateX(width - this.width);
+		if (this.x > screenWidth - this.width) {
+		    this.setTranslateX(screenWidth - this.width);
 		} else {
 		    this.setTranslateX(this.getTranslateX() + 1);
 		    this.x++;
@@ -62,15 +64,24 @@ public class Character extends Pane {
 		    this.x--;
 		}
 	    }
+            
+            boolean wall = isWall();
+            if (right && wall) {
+                this.setTranslateX(this.getTranslateX() - 1);
+                this.x--;
+            } else if (!right && wall) {
+                this.setTranslateX(this.getTranslateX() + 1);
+                this.x++;
+            }
 	}
     }
 
-    public void moveY(int y, double height) {
+    public void moveY(int y, double screenHeight) {
 	boolean down = y > 0;
 	for (int i = 0; i < Math.abs(y); i++) {
 	    if (down) {
-		if (this.y > height - this.height) {
-		    this.setTranslateY(height - this.height);
+		if (this.y > screenHeight - this.height) {
+		    this.setTranslateY(screenHeight - this.height);
 		} else {
 		    this.setTranslateY(this.getTranslateY() + 1);
 		    this.y++;
@@ -83,6 +94,15 @@ public class Character extends Pane {
 		    this.y--;
 		}
 	    }
+            
+            boolean wall = isWall();
+            if (down && wall) {
+                this.setTranslateY(this.getTranslateY() - 1);
+                this.y--;
+            } else if (!down && wall) {
+                this.setTranslateY(this.getTranslateY() + 1);
+                this.y++;
+            }
 	}
     }
 
@@ -120,11 +140,11 @@ public class Character extends Pane {
 	return y;
     }
 
-    public void hit() {
+    public void hit(int dmg) {
         if (shield) {
-            shieldHealth--;
+            shieldHealth-=dmg;
         } else {
-            health--;
+            health-=dmg;
         }
     }
     
@@ -185,5 +205,15 @@ public class Character extends Pane {
     
     public int getFullShieldHealth() {
         return fullShieldHealth;
+    }
+    
+    public boolean isWall() {
+        stop = false;
+        for (Rectangle rect : Main.shopRootWalls) {
+            if (this.getBoundsInParent().intersects(rect.getBoundsInParent()) && Main.level.isShopping()) {
+                stop = true;
+            }
+        }
+        return stop;
     }
 }

@@ -27,10 +27,6 @@ public class MrSnake extends MeleeEnemy {
         iv.setViewport(new Rectangle2D(offsetX, offsetY, width, height));
         getChildren().addAll(iv);
     }
-
-    public void hitView(Enemy enemy) {
-        kaa.setOffset(0, 0);
-    }
     
     public void move(Character player, double width, double height) {
         animation.play();
@@ -72,5 +68,9 @@ public class MrSnake extends MeleeEnemy {
             this.moveX(1, width);
             this.moveY(1, height);
         }
+    }
+    
+    public void hitView(Enemy enemy) {
+        animation.play();
     }
 }

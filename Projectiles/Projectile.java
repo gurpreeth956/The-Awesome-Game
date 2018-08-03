@@ -16,12 +16,13 @@ public class Projectile extends Pane {
     int height;
     int x; //Proj xPos
     int y; //Proj yPos
+    int damage;
     
     int velocityX = 0;
     int velocityY = 0;
     boolean alive = true;
     
-    public Projectile(String img, int posX, int posY, int width, int height) {
+    public Projectile(String img, int posX, int posY, int width, int height, int dmg) {
         Image projImage = new Image(img);
 	ImageView projIV = new ImageView(projImage);
         this.iv = projIV;
@@ -32,6 +33,7 @@ public class Projectile extends Pane {
         this.y = posY;
         this.width = width;
         this.height = height;
+        this.damage = dmg;
         this.getChildren().addAll(iv);
     }
     
@@ -70,5 +72,9 @@ public class Projectile extends Pane {
     
     public boolean playerColliding(Character player) {
         return this.getBoundsInParent().intersects(player.getBoundsInParent());
+    }
+    
+    public int getDamage(){
+        return damage;
     }
 }
