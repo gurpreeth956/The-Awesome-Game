@@ -95,7 +95,7 @@ public class Level {
         //testing phase - we will decide bosses order eventually
         bosses.add(new ChargeBoss("file:src/Sprites/Redies.png", 3, 20, 66, 33, 5));
         //bosses.add(new HomingBoss("file:src/Sprites/Redies.png", 3, 20, 66, 33, 1000,
-          //      "file:src/Sprites/HomingShot.png"));
+        //        "file:src/Sprites/HomingShot.png"));
         bosses.add(new RandShotBoss("file:src/Sprites/ShotBoss.png", 5, 20, 258, 256, 50,
                 "file:src/Sprites/EnemyShot.png"));
         bosses.add(new SpiderBoss("file:src/Sprites/SpiderBoss.png", 5, 20, 158, 240));
@@ -111,7 +111,7 @@ public class Level {
         switch (randomNum) { //for testing reasons numbers will vary
             case 1 :
                 enemy = new BasicShooter("file:src/Sprites/BlueCannon.png", 1, 1, 28, 51, 2000,
-                        "file:src/Sprites/EnemyShot.png"); //ranged
+                        "file:src/Sprites/Cannonball.png"); //ranged
                 //need to make new shot
                 break;
             case 5 : 

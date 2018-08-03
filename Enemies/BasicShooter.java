@@ -87,7 +87,7 @@ public class BasicShooter extends RangedEnemy {
                 double rotation = 180 - this.getRotate();
                 this.setRotate(this.getRotate() + rotation);
                 angularDir = 90;
-                createProjectile(0, -5, projectiles, gameRoot, shotIVFile, 12, 12, 1);
+                createProjectile(0, -5, projectiles, gameRoot, shotIVFile, 16, 16, 1);
                 timeOfLastProjectile = timeNow;
             }
 
@@ -97,7 +97,7 @@ public class BasicShooter extends RangedEnemy {
                 double rotation = 360 - this.getRotate();
                 this.setRotate(this.getRotate() + rotation);
                 angularDir = 270;
-                createProjectile(0, 5, projectiles, gameRoot, shotIVFile, 12, 12, 1);
+                createProjectile(0, 5, projectiles, gameRoot, shotIVFile, 16, 16, 1);
                 timeOfLastProjectile = timeNow;
             }
 
@@ -107,7 +107,7 @@ public class BasicShooter extends RangedEnemy {
                 double rotation = 90 - this.getRotate();
                 this.setRotate(this.getRotate() + rotation);
                 angularDir = 180;
-                createProjectile(-5, 0, projectiles, gameRoot, shotIVFile, 12, 12, 1);
+                createProjectile(-5, 0, projectiles, gameRoot, shotIVFile, 16, 16, 1);
                 timeOfLastProjectile = timeNow;
             }
 
@@ -117,7 +117,7 @@ public class BasicShooter extends RangedEnemy {
                 double rotation = 270 - this.getRotate();
                 this.setRotate(this.getRotate() + rotation);
                 angularDir = 360;
-                createProjectile(5, 0, projectiles, gameRoot, shotIVFile, 12, 12, 1);
+                createProjectile(5, 0, projectiles, gameRoot, shotIVFile, 16, 16, 1);
                 timeOfLastProjectile = timeNow;
             }
         }
