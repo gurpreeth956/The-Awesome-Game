@@ -21,7 +21,6 @@ public class ChargeBoss extends MeleeEnemy {
         this.speed = speed;
     }
 
-    //CrAsHy BoI
     public void move(Character player, double width, double height) {
         long timeNow = System.currentTimeMillis();
         this.setCharacterView(0, 0);
@@ -58,6 +57,7 @@ public class ChargeBoss extends MeleeEnemy {
             this.setTranslateY(this.getTranslateY() + (int)vy);
             this.x += (int)vx;
             this.y += (int)vy;
+            this.healthPos();
         }
         //figure out direction to charge in relative to player coordinates
         //charge in direction until collision with pane border

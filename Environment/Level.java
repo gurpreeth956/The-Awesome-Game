@@ -2,9 +2,7 @@ package Environment;
 
 import Bosses.*;
 import Enemies.*;
-import Game.Main;
 import java.util.List;
-import javafx.scene.Scene;
 
 public class Level {
 
@@ -18,8 +16,8 @@ public class Level {
 
     public Level() {
         currentLevel = 1;
-        enemiesToBeat = 2;
-        enemiesLeft = 2;
+        enemiesToBeat = 3;
+        enemiesLeft = 3;
         enemiesSpawned = 0;
         shopping = false;
     }
@@ -103,16 +101,15 @@ public class Level {
 
     public Enemy generate() {
         int randomNum = 10;
-        while(randomNum > 6) {
+        while(randomNum > 7) {
             randomNum = (int) (Math.random() * this.getLevel() + 1);
         }
         Enemy enemy = null;
         
         switch (randomNum) { //for testing reasons numbers will vary
-            case 1 :
+            case 7 :
                 enemy = new BasicShooter("file:src/Sprites/BlueCannon.png", 1, 1, 28, 51, 2000,
-                        "file:src/Sprites/Cannonball.png"); //ranged
-                //need to make new shot
+                        "file:src/Sprites/CannonShot.png"); //ranged
                 break;
             case 5 : 
                 enemy = new Licker("file:src/Sprites/CharlesSpriteSheet.png", 3, 1, 80, 80); //melee
@@ -131,6 +128,9 @@ public class Level {
                 break;
             case 3 :
                 enemy = new DomsPinky("file:src/Sprites/Pinky.png", 3, 1, 67, 78); //melee
+                break;
+            case 1 :
+                enemy = new JuppsTheo("file:src/Sprites/JuppTheo.png", 3, 1, 30, 68); //melee
                 break;
         }
         return enemy;

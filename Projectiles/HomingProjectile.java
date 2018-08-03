@@ -9,19 +9,31 @@ public class HomingProjectile extends Projectile {
     double vy;
     double vx;
     double rotation;
-    int ease = 30;//change this to increase turn radius of missile
-    int launchPos = -90;
+    int ease = 10;//change this to increase turn radius of missile
+    int launchPos = -90;//launches missile stright up (angle -90)
+    boolean lock = false;
 
     public HomingProjectile(String img, int posX, int posY, int width, int height, int dmg) {
         super(img, posX, posY, width, height, dmg);
     }
 
+    //Link to code for homing missile
+    //https://code.tutsplus.com/tutorials/hit-the-target-with-a-deadly-homing-missile--active-8933
     public void move(Character player){
         targetX = player.getX()-this.x;
         targetY = player.getY()-this.y;
         rotation = Math.atan2(targetY, targetX)*180/Math.PI;
         this.iv.setRotate(rotation);
-        if(Math.abs(rotation - launchPos)>180){
+        //never miss homing missile
+        /*rotation = (rotation-360)/ease;
+        vx = this.getVelocityX() * (90 - Math.abs(rotation))/90;
+        if(rotation<0){
+            vy = -this.getVelocityX() + Math.abs(vx);
+        }else{
+            vy = this.getVelocityX() - Math.abs(vx);
+        }*/
+        //Code for homing missile with turn delay (bugged)
+       if(Math.abs(rotation - launchPos)>180){
             if(rotation > 0 && launchPos < 0){
                launchPos -= (360 - rotation + launchPos) / ease;
             }
@@ -39,29 +51,16 @@ public class HomingProjectile extends Projectile {
         }else{
             vy = this.getVelocityX() - Math.abs(vx);
         }
-        this.setTranslateX(this.getTranslateX()+vx);
-        this.setTranslateY(this.getTranslateY()+vy);
-        this.x += vx;//X is int and vx is double 
-        this.y += vy;//casting to int improves missile accuracy
+        this.setTranslateX(this.getTranslateX()+(int)vx);
+        this.setTranslateY(this.getTranslateY()+(int)vy);
+        this.x += (int)vx;//X is int and vx is double 
+        this.y += (int)vy;//casting to int improves missile accuracy
     }
     
     //Determines projectiles position relative to player
     public void distance(Character player) {
         int vert = player.getY() - this.y;
         int hori = player.getX() - this.x;
-
-        /*if (hori > 0 && vert < 0) {
-            dir = "NE";
-        }
-        if (hori < 0 && vert < 0) {
-            dir = "NW";
-        }
-        if (hori < 0 && vert > 0) {
-            dir = "SW";
-        }
-        if (hori > 0 && vert > 0) {
-            dir = "SE";
-        }*/
         if (hori > 0 && vert == 0) {//Right
             launchPos = 0;
         }

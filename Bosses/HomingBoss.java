@@ -65,7 +65,7 @@ public class HomingBoss extends RangedEnemy {
             this.setCharacterView(128, 0);
             this.setOffsetY(0);
             if (time < 0 || time > this.getShootSpeed()) {
-                createProjectile(3, 3, projectiles, gameRoot, shotIVFile, 20, 9);
+                createProjectile(5, 5, projectiles, gameRoot, shotIVFile, 20, 9);
                 timeOfLastProjectile = timeNow;
             }
         //}
