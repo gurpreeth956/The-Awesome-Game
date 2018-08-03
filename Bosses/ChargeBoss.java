@@ -23,20 +23,21 @@ public class ChargeBoss extends MeleeEnemy {
 
     //CrAsHy BoI
     public void move(Character player, double width, double height) {
-        long timeNow = System.currentTimeMillis();//good
-        this.setCharacterView(0, 0);//good
-        if (this.getX() <= 0 || this.getX() - 66 >= width) {
+        long timeNow = System.currentTimeMillis();
+        this.setCharacterView(0, 0);
+        if ((this.getX() <= 0 || this.getX() + 66>= width) && charging) {
             charging = false;
             timeIndex = System.currentTimeMillis();
+            lock = false;
         }
-        if (this.getY() <= 0 || this.getY() - 33 >= height) {
+        if ((this.getY() <= 0 || this.getY() + 33>= height) && charging) {
             charging = false;
             timeIndex = System.currentTimeMillis();
+            lock = false;
         }
         if (!charging) {
             if (timeNow - stunTime >= timeIndex) {
                 charging = true;
-                lock = false;
             }
         }
         if (!lock) {
@@ -46,13 +47,17 @@ public class ChargeBoss extends MeleeEnemy {
             this.iv.setRotate(angle);
             lock = true;
         }
-        while (charging) {
-            vx = speed * Math.cos(angle);
-            vy = speed * Math.sin(angle);
-            this.setTranslateX(this.getTranslateX() + vx);
-            this.setTranslateY(this.getTranslateY() + vy);
-            this.x += vx;
-            this.y += vy;
+        if(charging) {
+            vx = speed * (90-Math.abs(angle))/90;
+            if(angle<0){
+                vy = -speed +Math.abs(vx);
+            }else{
+                vy = speed - Math.abs(vx);
+            }
+            this.setTranslateX(this.getTranslateX() + (int)vx);
+            this.setTranslateY(this.getTranslateY() + (int)vy);
+            this.x += (int)vx;
+            this.y += (int)vy;
         }
         //figure out direction to charge in relative to player coordinates
         //charge in direction until collision with pane border
