@@ -25,12 +25,12 @@ public class ChargeBoss extends MeleeEnemy {
     public void move(Character player, double width, double height) {
         long timeNow = System.currentTimeMillis();
         this.setCharacterView(0, 0);
-        if ((this.getX() <= 0 || this.getX() + 66>= width) && charging) {
+        if ((this.getX() <= 0 || this.getX() + 245>= width) && charging) {
             charging = false;
             timeIndex = System.currentTimeMillis();
             lock = false;
         }
-        if ((this.getY() <= 0 || this.getY() + 33>= height) && charging) {
+        if ((this.getY() <= 0 || this.getY() + 210 >= height) && charging) {
             charging = false;
             timeIndex = System.currentTimeMillis();
             lock = false;
