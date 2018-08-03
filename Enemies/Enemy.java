@@ -19,8 +19,8 @@ public class Enemy extends Pane {
     int offsetY = 0;
     int width;
     int height;
-    int x; //Enemy xPos
-    int y; //Enemy yPos
+    public int x; //Enemy xPos
+    public int y; //Enemy yPos
     int coin;
     int score;
     int enemySpeed;
