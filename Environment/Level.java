@@ -92,7 +92,7 @@ public class Level {
     public void fillBoss(List<Enemy> bosses) {
         //testing phase - we will decide bosses order eventually
         bosses.add(new HomingBoss("file:src/Sprites/Redies.png", 3, 20, 66, 33, 1000,
-                "file:src/Sprites/HomingShot.png"));
+                "file:src/Sprites/HomingShot.png")); //need new design
         bosses.add(new RandShotBoss("file:src/Sprites/ShotBoss.png", 5, 20, 258, 256, 50,
                 "file:src/Sprites/EnemyShot.png"));
         bosses.add(new SpiderBoss("file:src/Sprites/SpiderBoss.png", 5, 20, 158, 240));
@@ -109,6 +109,7 @@ public class Level {
             case 1 :
                 enemy = new BasicShooter("file:src/Sprites/BlueCannon.png", 1, 1, 28, 51, 2000,
                         "file:src/Sprites/EnemyShot.png"); //ranged
+                //need to make new shot
                 break;
             case 5 : 
                 enemy = new Licker("file:src/Sprites/CharlesSpriteSheet.png", 3, 1, 80, 80); //melee
