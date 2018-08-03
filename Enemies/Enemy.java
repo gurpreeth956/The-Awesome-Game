@@ -62,7 +62,6 @@ public class Enemy extends Pane {
     public void move(Character player, double width, double height) {
 	//To be overridden by child classes
         //following code is used for when testing enemy in child class without its own design 
-        
         if (player.getX() > this.getX() && player.getY() == this.getY()) { //right
             this.setCharacterView(0, 61);
             this.moveX(1, width);

@@ -55,28 +55,28 @@ public class SpiderBoss extends MeleeEnemy {
 
             if (time < 0 || time > currentPauseTime) {
                 randomDirection = (int) (Math.random() * 4 + 1);
-                if (randomDirection == 1) {
+                if (randomDirection == 1) { //going down
                     int randX = (int) (Math.random() * 1100 + 10);
                     this.setX(randX);
                     this.setY(-250);
                     double rotation = 180 - this.getRotate();
                     this.setRotate(this.getRotate() + rotation);
 
-                } else if (randomDirection == 2) {
+                } else if (randomDirection == 2) { //going right
                     int randY = (int) (Math.random() * 545 + 10);
                     this.setX(-250);
                     this.setY(randY);
                     double rotation = 90 - this.getRotate();
                     this.setRotate(this.getRotate() + rotation);
 
-                } else if (randomDirection == 3) {
+                } else if (randomDirection == 3) { //going left
                     int randX = (int) (Math.random() * 1100 + 10);
                     this.setX(randX);
                     this.setY(970);
                     double rotation = 360 - this.getRotate();
                     this.setRotate(this.getRotate() + rotation);
 
-                } else if (randomDirection == 4) {
+                } else if (randomDirection == 4) { //going up
                     int randY = (int) (Math.random() * 545 + 10);
                     this.setX(1300);
                     this.setY(randY);
