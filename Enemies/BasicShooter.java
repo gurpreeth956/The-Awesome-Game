@@ -87,7 +87,7 @@ public class BasicShooter extends RangedEnemy {
                 double rotation = 180 - this.getRotate();
                 this.setRotate(this.getRotate() + rotation);
                 angularDir = 90;
-                createProjectile(0, -5, projectiles, gameRoot, shotIVFile, 16, 16, 1);
+                createProjectile(0, -5, projectiles, gameRoot, shotIVFile, 20, 20, 1);
                 timeOfLastProjectile = timeNow;
             }
 
@@ -97,7 +97,7 @@ public class BasicShooter extends RangedEnemy {
                 double rotation = 360 - this.getRotate();
                 this.setRotate(this.getRotate() + rotation);
                 angularDir = 270;
-                createProjectile(0, 5, projectiles, gameRoot, shotIVFile, 16, 16, 1);
+                createProjectile(0, 5, projectiles, gameRoot, shotIVFile, 20, 20, 1);
                 timeOfLastProjectile = timeNow;
             }
 
@@ -107,7 +107,7 @@ public class BasicShooter extends RangedEnemy {
                 double rotation = 90 - this.getRotate();
                 this.setRotate(this.getRotate() + rotation);
                 angularDir = 180;
-                createProjectile(-5, 0, projectiles, gameRoot, shotIVFile, 16, 16, 1);
+                createProjectile(-5, 0, projectiles, gameRoot, shotIVFile, 20, 20, 1);
                 timeOfLastProjectile = timeNow;
             }
 
@@ -117,7 +117,7 @@ public class BasicShooter extends RangedEnemy {
                 double rotation = 270 - this.getRotate();
                 this.setRotate(this.getRotate() + rotation);
                 angularDir = 360;
-                createProjectile(5, 0, projectiles, gameRoot, shotIVFile, 16, 16, 1);
+                createProjectile(5, 0, projectiles, gameRoot, shotIVFile, 20, 20, 1);
                 timeOfLastProjectile = timeNow;
             }
         }
@@ -127,13 +127,13 @@ public class BasicShooter extends RangedEnemy {
                                  String img, int width, int height, int dmg) {
         Projectile proj;
         if (angularDir == 360) {
-            proj = new Projectile(img, this.getX() + 30, this.getY() + 20, width, height, dmg);
+            proj = new Projectile(img, this.getX() + 22, this.getY() + 18, width, height, dmg);
         } else if (angularDir == 270) {
-            proj = new Projectile(img, this.getX() + 10, this.getY() + 30, width, height, dmg); //
+            proj = new Projectile(img, this.getX() + 4, this.getY() + 20, width, height, dmg); //
         } else if (angularDir == 180) {
-            proj = new Projectile(img, this.getX() - 10, this.getY() + 20, width, height, dmg);
+            proj = new Projectile(img, this.getX() - 12, this.getY() + 13, width, height, dmg);
         } else {
-            proj = new Projectile(img, this.getX() + 10, this.getY() + 30, width, height, dmg);
+            proj = new Projectile(img, this.getX() + 4, this.getY() + 22, width, height, dmg);
         }
         proj.setVelocityX(x);
         proj.setVelocityY(y);
