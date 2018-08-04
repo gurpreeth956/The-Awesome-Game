@@ -123,13 +123,13 @@ public class Level {
                 "file:src/Sprites/EnemyShot.png"); //ranged
                 //need to make new design
                 break;
-            case 2 :
+            case 1 :
                 enemy = new MrSnake("file:src/Sprites/SnakeSpriteSheet.png", 2, 1, 27, 35); //melee
                 break;
             case 3 :
                 enemy = new DomsPinky("file:src/Sprites/Pinky.png", 3, 1, 67, 78); //melee
                 break;
-            case 1 :
+            case 2 :
                 enemy = new JuppsTheo("file:src/Sprites/JuppTheo.png", 3, 1, 30, 68); //melee
                 break;
         }

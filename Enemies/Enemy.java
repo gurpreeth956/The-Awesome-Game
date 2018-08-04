@@ -59,7 +59,7 @@ public class Enemy extends Pane {
         this.iv.setViewport(new Rectangle2D(offsetX, offsetY, width, height));
     }
     
-    public void move(Character player, double width, double height) {
+    public void move(Character player, double width, double height) { //note width and height here are screen size
 	//To be overridden by child classes
         //following code is used for when testing enemy in child class without its own design 
         if (player.getX() > this.getX() && player.getY() == this.getY()) { //right

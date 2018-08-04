@@ -33,40 +33,40 @@ public class MrSnake extends MeleeEnemy {
         //there is a plus 20 for X since snake width is very small
 	if (player.getX() + 20 > this.getX() && player.getY() == this.getY()) { //right
             kaa.setOffset(0, 35);
-            this.moveX(3, width);
+            this.moveX(2, width);
         }
         if (player.getX() + 20 < this.getX() && player.getY() == this.getY()) { //left
             kaa.setOffset(0, 0);
-            this.moveX(-3, width);
+            this.moveX(-2, width);
         }
         if (player.getX() + 20 == this.getX() && player.getY() > this.getY()) { //down
             kaa.setOffset(0, 35);
-            this.moveY(3, height);
+            this.moveY(2, height);
         }
         if (player.getX() + 20 == this.getX() && player.getY() < this.getY()) { //up
             kaa.setOffset(0, 0);
-            this.moveY(-3, height);
+            this.moveY(-2, height);
         }
 
         if (player.getX() + 20 > this.getX() && player.getY() < this.getY()) { //quadrant1
             kaa.setOffset(0, 35);
-            this.moveX(2, width);
-            this.moveY(-2, height);
+            this.moveX(1, width);
+            this.moveY(-1, height);
         }
         if (player.getX() + 20 < this.getX() && player.getY() < this.getY()) { //quadrant2
             kaa.setOffset(0, 0);
-            this.moveX(-2, width);
-            this.moveY(-2, height);
+            this.moveX(-1, width);
+            this.moveY(-1, height);
         }
         if (player.getX() + 20 < this.getX() && player.getY() > this.getY()) { //quadrant3
             kaa.setOffset(0, 0);
-            this.moveX(-2, width);
-            this.moveY(2, height);
+            this.moveX(-1, width);
+            this.moveY(1, height);
         }
         if (player.getX() + 20 > this.getX() && player.getY() > this.getY()) { //quadrant4
             kaa.setOffset(0, 35);
-            this.moveX(2, width);
-            this.moveY(2, height);
+            this.moveX(1, width);
+            this.moveY(1, height);
         }
     }
     
