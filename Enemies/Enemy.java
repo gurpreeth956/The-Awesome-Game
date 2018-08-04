@@ -255,4 +255,13 @@ public class Enemy extends Pane {
     public Rectangle getLostHealth() {
         return lostHealth;
     }
+    
+    public ImageView getIV(){
+        return this.iv;
+    }
+    
+    public void setIV(ImageView iv){
+        this.iv = iv;
+        this.iv.setViewport(new Rectangle2D(offsetX, offsetY, width, height));
+    }
 }
