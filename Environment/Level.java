@@ -118,12 +118,12 @@ public class Level {
                 enemy = new SpikeEnemy("file:src/Sprites/SpikeySpriteSheet.png", 3, 1, 71, 65, 
                         3000, "file:src/Sprites/Spikes.png"); //ranged
                 break;
-            case 2 :
+            case 4 :
                 enemy = new FourWayShooter("file:src/Sprites/Redies.png", 1, 1, 66, 33, 3000,
                 "file:src/Sprites/EnemyShot.png"); //ranged
                 //need to make new design
                 break;
-            case 4 :
+            case 2 :
                 enemy = new MrSnake("file:src/Sprites/SnakeSpriteSheet.png", 2, 1, 27, 35); //melee
                 break;
             case 3 :
