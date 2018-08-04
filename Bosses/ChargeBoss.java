@@ -7,8 +7,10 @@ public class ChargeBoss extends MeleeEnemy {
 
     long stunTime = 1000;
     long timeIndex = 0;
+    long lastStunTime = 0;
     boolean charging = true;
     boolean lock = false;
+    boolean charged = false;
     int targetX;
     int targetY;
     double angle;
@@ -59,8 +61,6 @@ public class ChargeBoss extends MeleeEnemy {
             this.y += (int)vy;
             this.healthPos();
         }
-        //figure out direction to charge in relative to player coordinates
-        //charge in direction until collision with pane border
-        //use timer for stun duration??
+        //create charged boolean to record if a successful charge has been completed?
     }
 }

@@ -9,12 +9,13 @@ public class HomingProjectile extends Projectile {
     double vy;
     double vx;
     double rotation;
-    int ease = 10;//change this to increase turn radius of missile
-    int launchPos = -90;//launches missile stright up (angle -90)
+    int ease = 5;//change this to increase turn radius of missile
+    int launchPos;//angle of initial launch
     boolean lock = false;
 
-    public HomingProjectile(String img, int posX, int posY, int width, int height, int dmg) {
+    public HomingProjectile(String img, int posX, int posY, int width, int height, int dmg, int launchPos) {
         super(img, posX, posY, width, height, dmg);
+        this.launchPos = launchPos;
     }
 
     //Link to code for homing missile
@@ -25,8 +26,7 @@ public class HomingProjectile extends Projectile {
         rotation = Math.atan2(targetY, targetX)*180/Math.PI;
         this.iv.setRotate(rotation);
         //never miss homing missile
-        /*rotation = (rotation-360)/ease;
-        vx = this.getVelocityX() * (90 - Math.abs(rotation))/90;
+        /*vx = this.getVelocityX() * (90 - Math.abs(rotation))/90;
         if(rotation<0){
             vy = -this.getVelocityX() + Math.abs(vx);
         }else{
@@ -57,21 +57,4 @@ public class HomingProjectile extends Projectile {
         this.y += (int)vy;//casting to int improves missile accuracy
     }
     
-    //Determines projectiles position relative to player
-    public void distance(Character player) {
-        int vert = player.getY() - this.y;
-        int hori = player.getX() - this.x;
-        if (hori > 0 && vert == 0) {//Right
-            launchPos = 0;
-        }
-        if (hori < 0 && vert == 0) {//Left
-            launchPos = -180;
-        }
-        if (hori == 0 && vert > 0) {//down
-            launchPos = 90;
-        }
-        if (hori == 0 && vert < 0) {//up
-            launchPos = -90;
-        }
-    }
 }
