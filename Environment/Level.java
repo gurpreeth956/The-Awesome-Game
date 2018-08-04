@@ -91,6 +91,7 @@ public class Level {
 
     public void fillBoss(List<Enemy> bosses) {
         //testing phase - we will decide bosses order eventually
+        //bosses.add(new TKTimmy("file:src/Sprites/TKTimmyBasic.png", 3, 5, 190, 190));
         //bosses.add(new ChargeBoss("file:src/Sprites/Bull.png", 3, 20, 245, 210, 10));
         bosses.add(new HomingBoss("file:src/Sprites/Redies.png", 3, 20, 66, 33, 1000,
                 "file:src/Sprites/HomingShot.png"));
