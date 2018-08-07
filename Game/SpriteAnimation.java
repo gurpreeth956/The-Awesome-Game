@@ -9,7 +9,7 @@ import javafx.util.Duration;
 
 public class SpriteAnimation extends Transition {
     
-    private final ImageView iv;
+    private ImageView iv;
     private final int count;
     private final int columns;
     private int offsetX;
@@ -48,5 +48,10 @@ public class SpriteAnimation extends Transition {
     
     public ImageView getIV() {
         return iv;
+    }
+    
+    public void setIV(String image){
+        this.iv = new ImageView(image);
+        this.iv.setViewport(new Rectangle2D(offsetX, offsetY, width, height));
     }
 }

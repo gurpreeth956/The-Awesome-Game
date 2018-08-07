@@ -9,7 +9,7 @@ import javafx.scene.layout.Pane;
 
 public class HomingBoss extends RangedEnemy {
 
-    public HomingBoss(String img, int health, int coin, int width, int height, int shootSpeed, 
+    public HomingBoss(String img, int health, int coin, int width, int height, int shootSpeed,
             String shotImg) {
         super(img, health, coin, width, height, shootSpeed, shotImg);
     }
@@ -61,23 +61,52 @@ public class HomingBoss extends RangedEnemy {
         long time = timeNow - timeOfLastProjectile;
         String dist = distance(player);
 
-        //if (dist.equals("down")) { //shoot down
-            this.setCharacterView(128, 0);
-            this.setOffsetY(0);
-            if (time < 0 || time > this.getShootSpeed()) {
-                createProjectile(3, 3, projectiles, gameRoot, shotIVFile, 20, 9);
-                timeOfLastProjectile = timeNow;
-            }
-        //}
+        this.setCharacterView(128, 0);
+        this.setOffsetY(0);
+        if (time < 0 || time > this.getShootSpeed()) {
+            createProjectile(7, 5, projectiles, gameRoot, shotIVFile, 20, 9, player);
+            timeOfLastProjectile = timeNow;
+        }
     }
 
     public void createProjectile(int x, int y, List<Projectile> projectiles, Pane root,
-            String img, int width, int height) {
-        Projectile proj = new HomingProjectile(img, this.getX() + 28, this.getY() + 16, width, height, 1);
+            String img, int width, int height, Character player) {
+        Projectile proj = new HomingProjectile(img, this.getX() + 28, this.getY() + 16, width, height, 1, launchDistance(player));
         proj.setVelocityX(x);
         proj.setVelocityY(y);
         root.getChildren().addAll(proj);
         proj.toBack();
         projectiles.add(proj);
+    }
+
+    public int launchDistance(Character player) {
+        int vert = player.getY() - this.y;
+        int hori = player.getX() - this.x;
+        int dist = 0;
+        if (hori > 0 && vert == 0) {//Right
+            dist = 0;
+        }
+        if (hori < 0 && vert == 0) {//Left
+            dist = -180;
+        }
+        if (hori == 0 && vert > 0) {//down
+            dist = 90;
+        }
+        if (hori == 0 && vert < 0) {//up
+            dist = -90;
+        }
+        if (hori > 0 && vert < 0) {
+            dist = -45;
+        }
+        if (hori < 0 && vert < 0) {
+            dist = -135;
+        }
+        if (hori < 0 && vert > 0) {
+            dist = 135;
+        }
+        if (hori > 0 && vert > 0) {
+            dist = 45;
+        }
+        return dist;
     }
 }
