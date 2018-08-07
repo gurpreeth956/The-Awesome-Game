@@ -93,11 +93,11 @@ public class Level {
         //testing phase - we will decide bosses order eventually
         //bosses.add(new TKTimmy("file:src/Sprites/TKTimmyBasic.png", 3, 5, 190, 190));
         //bosses.add(new ChargeBoss("file:src/Sprites/Bull.png", 3, 20, 245, 210, 10));
+        bosses.add(new SpiderBoss("file:src/Sprites/SpiderBoss.png", 5, 20, 158, 240));
         bosses.add(new HomingBoss("file:src/Sprites/Redies.png", 3, 20, 66, 33, 2000,
                 "file:src/Sprites/HomingShot.png"));
         bosses.add(new RandShotBoss("file:src/Sprites/ShotBoss.png", 5, 20, 258, 256, 50,
                 "file:src/Sprites/EnemyShot.png"));
-        bosses.add(new SpiderBoss("file:src/Sprites/SpiderBoss.png", 5, 20, 158, 240));
     }
 
     public Enemy generate() {
