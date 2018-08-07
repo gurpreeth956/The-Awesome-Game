@@ -28,7 +28,7 @@ public class TKTimmy extends MeleeBoss {
     
     
     public TKTimmy(String img, int health, int coin, int width, int height) {
-        super(img, health, coin, width, height);
+        super(img, health, coin, width, height, "SPINING TIMMY");
         super.getChildren().remove(super.getIV());
         timmy = new SpriteAnimation(img, count, columns, offsetX, offsetY, width, height, duration);         
         animation = timmy;

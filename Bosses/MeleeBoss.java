@@ -1,15 +1,22 @@
 package Bosses;
 import Enemies.MeleeEnemy;
+import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 
 //This is a parent class not a boss
 public class MeleeBoss extends MeleeEnemy {
-  
-    public MeleeBoss(String img, int health, int coin, int width, int height) {
+    
+    public MeleeBoss(String img, int health, int coin, int width, int height, String bossName) {
 	super(img, health, coin, width, height);
-        super.getChildren().removeAll(healthBarOutline, lostHealth, actualHealth);
+        super.getChildren().removeAll(healthBarOutline, lostHealth, actualHealth, nameLabel);
         
+        nameLabel = new Label(bossName);
+        nameLabel.setFont(new Font("Arial", 25));
+        nameLabel.setTextFill(Color.RED);
+        nameLabel.setTranslateX(10);
+        nameLabel.setTranslateY(700);
         healthBarOutline = new Rectangle(355, 20, 541, 20);
 	healthBarOutline.setFill(Color.TRANSPARENT);
 	healthBarOutline.setStroke(Color.BLACK);

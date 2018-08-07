@@ -32,7 +32,7 @@ public class SpiderBoss extends MeleeBoss {
     Rectangle body;
     
     public SpiderBoss(String img, int health, int coin, int width, int height) {
-        super(img, health, coin, width, height);
+        super(img, health, coin, width, height, "INSECTO BUG");
         super.getChildren().remove(iv);
         spidey = new SpriteAnimation(img, count, columns, offsetX, offsetY, width, height, duration);
         animation = spidey;

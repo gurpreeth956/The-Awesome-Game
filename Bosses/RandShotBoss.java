@@ -22,7 +22,7 @@ public class RandShotBoss extends RangedBoss {
     
     public RandShotBoss(String img, int health, int coin, int width, int height, int shootSpeed,
             String shotImg) {
-        super(img, health, coin, width, height, shootSpeed, shotImg);
+        super(img, health, coin, width, height, shootSpeed, shotImg, "MR.EVILER");
         super.getChildren().remove(iv);
         bossAnimation = new SpriteAnimation(img, count, columns, offsetX, offsetY, width, height, duration);
         animation = bossAnimation;

@@ -30,7 +30,7 @@ public class ChargeBoss extends MeleeBoss {
     int speed;
 
     public ChargeBoss(String img, int health, int coin, int width, int height, int speed) {
-        super(img, health, coin, width, height);
+        super(img, health, coin, width, height, "MULLER THE BULL");
         super.getChildren().remove(iv);
         bull = new SpriteAnimation(img, count, columns, offsetX, offsetY, width, height, duration);
         animation = bull;

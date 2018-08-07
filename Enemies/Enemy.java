@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import java.util.List;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -34,6 +35,9 @@ public class Enemy extends Pane {
     public int totalHealth;
     
     public List<Rectangle> collisionRects;
+    
+    //currently used only for bosses
+    public Label nameLabel;
 
     public Enemy(String img, int health, int coin, int width, int height) {
 	Image enemyImage = new Image(img);
@@ -48,6 +52,9 @@ public class Enemy extends Pane {
 	this.height = height;
         this.getChildren().addAll(iv);
         
+        nameLabel = new Label("");
+        nameLabel.setTranslateX(10);
+        nameLabel.setTranslateY(700);
 	healthBarOutline = new Rectangle(x - 1, y - 6, width + 2, 4);
 	healthBarOutline.setFill(Color.TRANSPARENT);
 	healthBarOutline.setStroke(Color.BLACK);
@@ -264,6 +271,10 @@ public class Enemy extends Pane {
     
     public Rectangle getLostHealth() {
         return lostHealth;
+    }
+
+    public Label getNameLabel() {
+        return nameLabel;
     }
     
     public ImageView getIV() {

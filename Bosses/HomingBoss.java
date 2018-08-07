@@ -10,7 +10,7 @@ public class HomingBoss extends RangedBoss {
 
     public HomingBoss(String img, int health, int coin, int width, int height, int shootSpeed,
             String shotImg) {
-        super(img, health, coin, width, height, shootSpeed, shotImg);
+        super(img, health, coin, width, height, shootSpeed, shotImg, "Needs a name");
     }
 
     public void move(Character player, double width, double height) {
