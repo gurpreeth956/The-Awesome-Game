@@ -589,7 +589,7 @@ public class Main extends Application {
             }
         }
         
-        //Round End
+        //round end
         if (level.getEnemiesLeft() <= 0) {
             if (!level.isShopping() && addShopStair) {
                 toShopStair = new Stairs("down", (int) scene.getWidth(), (int) scene.getHeight());
@@ -634,6 +634,7 @@ public class Main extends Application {
         addWall(20, 20, Color.TRANSPARENT, 1260, 145, shopRootWalls, shopRoot);
     }
     
+    //upgrade variables
     HealthPackUpgrade healthUp;
     PlayerShieldUpgrade shieldUp;
     ShootSpeedUpgrade shotUp;
