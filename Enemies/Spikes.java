@@ -43,8 +43,8 @@ public class Spikes extends Pane {
         return alive;
     }
     
-    public void setAlive(boolean a) {
-        alive = a;
+    public void setAlive(boolean alive) {
+        this.alive = alive;
     }
     
     public boolean playerShotColliding(List<Projectile> projs) {
@@ -68,7 +68,9 @@ public class Spikes extends Pane {
         return colliding;
     }
     
-    public int getDamage(){
+    public int getDamage() {
         return damage;
     }
+    
+    
 }

@@ -411,6 +411,9 @@ public class Main extends Application {
         enemy.summon(portal);
         gameRoot.getChildren().addAll(enemy, enemy.getHealthBarOutline(), enemy.getLostHealth(), 
                 enemy.getActualHealth());
+        for (Rectangle rect : enemy.getCollisionRects()) {
+            gameRoot.getChildren().addAll(rect);
+        }
         coinAndScore.toFront();
         coinLabel.toFront();
         scoreLabel.toFront();
@@ -432,7 +435,7 @@ public class Main extends Application {
         if (enemy.playerColliding(player)) {
             enemy.hitView(enemy);
             enemy.healthPos();
-            if (time < 0 || time > 1000) {
+            if ((time < 0 || time > 1000)) {
                 player.hit(1);//update this line if different damage values are implemented for different enemies
                 playerReceiveHit();
                 hitTime = timeNow;
@@ -460,6 +463,9 @@ public class Main extends Application {
             level.scoreUp(enemy);
             coinLabel.setText("Coins: " + level.getCoin());
             scoreLabel.setText("Score: " + level.getScore());
+            for (Rectangle rect : enemy.getCollisionRects()) {
+                gameRoot.getChildren().removeAll(rect);
+            }
         }
     }
     
@@ -468,6 +474,9 @@ public class Main extends Application {
         enemy.summon(portal); //determine portal to spawn boss from
         gameRoot.getChildren().addAll(enemy, enemy.getHealthBarOutline(), enemy.getLostHealth(), 
                 enemy.getActualHealth());
+        for (Rectangle rect : enemy.getCollisionRects()) {
+            gameRoot.getChildren().addAll(rect);
+        }
         coinAndScore.toFront();
         coinLabel.toFront();
         scoreLabel.toFront();
@@ -485,7 +494,7 @@ public class Main extends Application {
     
     public void updateBoss(Boss boss) {
         //updateEnemy method includes boss
-        boss.update(gameRoot);
+        //boss.update(gameRoot);
     }
 
     public void shieldUpdate() {
@@ -589,7 +598,7 @@ public class Main extends Application {
             }
         }
         
-        //Round End
+        //round end
         if (level.getEnemiesLeft() <= 0) {
             if (!level.isShopping() && addShopStair) {
                 toShopStair = new Stairs("down", (int) scene.getWidth(), (int) scene.getHeight());
@@ -634,6 +643,7 @@ public class Main extends Application {
         addWall(20, 20, Color.TRANSPARENT, 1260, 145, shopRootWalls, shopRoot);
     }
     
+    //upgrade variables
     HealthPackUpgrade healthUp;
     PlayerShieldUpgrade shieldUp;
     ShootSpeedUpgrade shotUp;

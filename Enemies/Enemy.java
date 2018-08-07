@@ -2,6 +2,7 @@ package Enemies;
 import Environment.Portal;
 import Game.Character;
 import Projectiles.Projectile;
+import java.util.ArrayList;
 
 import java.util.List;
 import javafx.geometry.Rectangle2D;
@@ -31,6 +32,8 @@ public class Enemy extends Pane {
     boolean alive = true;
     int health;
     int totalHealth;
+    
+    public List<Rectangle> collisionRects;
 
     public Enemy(String img, int health, int coin, int width, int height) {
 	Image enemyImage = new Image(img);
@@ -53,13 +56,16 @@ public class Enemy extends Pane {
 	actualHealth = new Rectangle(x, y - 5, width, 3);
 	actualHealth.setFill(Color.GREEN);
 	actualHealth.toFront();
+        
+        //so game does not crash
+        collisionRects = new ArrayList();
     }
     
     public void setCharacterView(int offsetX, int offsetY) {
         this.iv.setViewport(new Rectangle2D(offsetX, offsetY, width, height));
     }
     
-    public void move(Character player, double width, double height) {
+    public void move(Character player, double width, double height) { //note width and height here are screen size
 	//To be overridden by child classes
         //following code is used for when testing enemy in child class without its own design 
         if (player.getX() > this.getX() && player.getY() == this.getY()) { //right
@@ -208,6 +214,18 @@ public class Enemy extends Pane {
     
     public boolean playerColliding(Character player) {
         return this.getBoundsInParent().intersects(player.getBoundsInParent());
+        
+        
+        /*will be new method once collision rectangles are added to all enemies
+        if (this.getBoundsInParent().intersects(player.getBoundsInParent())) {
+            for (Rectangle rect : collisionRects) {
+                if (rect.getBoundsInParent().intersects(player.getBoundsInParent())) {
+                    return true;
+                }
+            }
+        }
+        return false;
+        */
     }
     
     public boolean enemyColliding(List<Enemy> enemies) {
@@ -219,6 +237,10 @@ public class Enemy extends Pane {
 	    }
 	}
 	return colliding;
+    }
+    
+    public List<Rectangle> getCollisionRects() {
+        return collisionRects;
     }
     
     public void summon(Portal portal) {

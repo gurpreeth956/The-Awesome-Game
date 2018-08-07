@@ -2,6 +2,8 @@ package Enemies;
 import Game.Character;
 import Game.SpriteAnimation;
 
+//A.K.A Theo
+
 import javafx.animation.Animation;
 import javafx.geometry.Rectangle2D;
 import javafx.util.Duration;
@@ -28,7 +30,7 @@ public class JuppsTheo extends MeleeEnemy {
     
     public void move(Character player, double width, double height) {
         animation.play();
-        //there is a plus 20 for X since snake width is very small
+        //there is a plus 20 for X and minus 30 for Y
 	if (player.getX() + 20 > this.getX() && player.getY() - 30 == this.getY()) { //right
             theo.setOffset(0, 0);
             this.moveX(2, width);

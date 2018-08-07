@@ -3,9 +3,12 @@ import Enemies.Enemy;
 import Enemies.MeleeEnemy;
 import Game.Character;
 import Game.SpriteAnimation;
+import java.util.ArrayList;
 
 import javafx.animation.Animation;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
 public class SpiderBoss extends MeleeEnemy {
@@ -25,6 +28,10 @@ public class SpiderBoss extends MeleeEnemy {
     boolean ready;
     boolean rageMode;
     
+    //collision rectangles
+    Rectangle head;
+    Rectangle body;
+    
     public SpiderBoss(String img, int health, int coin, int width, int height) {
         super(img, health, coin, width, height);
         super.getChildren().remove(iv);
@@ -38,6 +45,14 @@ public class SpiderBoss extends MeleeEnemy {
         randLocationSet = false;
         ready = false;
         rageMode = false;
+        
+        collisionRects = new ArrayList();
+        head = new Rectangle(this.getTranslateX() + 56, this.getTranslateY(), 52, 56);
+        body = new Rectangle(this.getTranslateX() + 24, this.getTranslateY() + 56, 120, 168);
+        head.setFill(Color.TRANSPARENT);
+        body.setFill(Color.TRANSPARENT);
+        collisionRects.add(head);
+        collisionRects.add(body);
     }
 
     public void move(Character player, double width, double height) {
@@ -48,6 +63,10 @@ public class SpiderBoss extends MeleeEnemy {
                 ready = true;
             }
             this.moveY(-5, 240);
+            head.setX(this.getX() + 56);
+            head.setY(this.getY());
+            body.setX(this.getX() + 20);
+            body.setY(this.getY() + 52);
         }
         else {
             long timeNow = System.currentTimeMillis();
@@ -61,6 +80,10 @@ public class SpiderBoss extends MeleeEnemy {
                     this.setY(-250);
                     double rotation = 180 - this.getRotate();
                     this.setRotate(this.getRotate() + rotation);
+                    
+                    for (Rectangle rect : collisionRects) {
+                        rect.setRotate(180);
+                    }
 
                 } else if (randomDirection == 2) { //going right
                     int randY = (int) (Math.random() * 545 + 10);
@@ -68,32 +91,75 @@ public class SpiderBoss extends MeleeEnemy {
                     this.setY(randY);
                     double rotation = 90 - this.getRotate();
                     this.setRotate(this.getRotate() + rotation);
+                    
+                    for (Rectangle rect : collisionRects) {
+                        rect.setRotate(90);
+                    }
 
-                } else if (randomDirection == 3) { //going left
+                } else if (randomDirection == 3) { //going up
                     int randX = (int) (Math.random() * 1100 + 10);
                     this.setX(randX);
                     this.setY(970);
                     double rotation = 360 - this.getRotate();
                     this.setRotate(this.getRotate() + rotation);
+                    
+                    for (Rectangle rect : collisionRects) {
+                        rect.setRotate(360);
+                    }
 
-                } else if (randomDirection == 4) { //going up
+                } else if (randomDirection == 4) { //going left
                     int randY = (int) (Math.random() * 545 + 10);
                     this.setX(1300);
                     this.setY(randY);
                     double rotation = 270 - this.getRotate();
                     this.setRotate(this.getRotate() + rotation);
+                    
+                    for (Rectangle rect : collisionRects) {
+                        rect.setRotate(270);
+                    }
                 }
 
                 timeUntilNextAttack = timeNow;
             }
             
             switch(randomDirection) {
-                case 1 : this.moveY(8, height); break;
-                case 2 : this.moveX(12, width); break;
-                case 3 : this.moveY(-8, height); break;
-                case 4 : this.moveX(-12, width); break;
+                case 1 : this.moveY(8, height); 
+                    head.setX(this.getX() + 56);
+                    head.setY(this.getY() + 178);
+                    body.setX(this.getX() + 24);
+                    body.setY(this.getY() + 14);
+                    break;
+                case 2 : this.moveX(12, width); 
+                    head.setX(this.getX() + 142);
+                    head.setY(this.getY() + 92);
+                    body.setX(this.getX() - 2);
+                    body.setY(this.getY() + 36);
+                    break;
+                case 3 : this.moveY(-8, height); 
+                    head.setX(this.getX() + 52);
+                    head.setY(this.getY() + 8);
+                    body.setX(this.getX() + 24);
+                    body.setY(this.getY() + 60);
+                    break;
+                case 4 : this.moveX(-12, width); 
+                    head.setX(this.getX() - 34);
+                    head.setY(this.getY() + 90);
+                    body.setX(this.getX() + 40);
+                    body.setY(this.getY() + 34);
+                    break;
             }
         }
+    }
+    
+    public boolean playerColliding(Character player) {
+        if (this.getBoundsInParent().intersects(player.getBoundsInParent())) {
+            for (Rectangle rect : collisionRects) {
+                if (rect.getBoundsInParent().intersects(player.getBoundsInParent())) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
     
     public void hitView(Enemy enemy) {
