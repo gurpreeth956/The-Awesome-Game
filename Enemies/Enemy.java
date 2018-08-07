@@ -26,12 +26,12 @@ public class Enemy extends Pane {
     int score;
     int enemySpeed;
     
-    Rectangle healthBarOutline;
-    Rectangle actualHealth;
-    Rectangle lostHealth;
-    boolean alive = true;
-    int health;
-    int totalHealth;
+    public Rectangle healthBarOutline;
+    public Rectangle actualHealth;
+    public Rectangle lostHealth;
+    public boolean alive = true;
+    public int health;
+    public int totalHealth;
     
     public List<Rectangle> collisionRects;
 
@@ -214,18 +214,6 @@ public class Enemy extends Pane {
     
     public boolean playerColliding(Character player) {
         return this.getBoundsInParent().intersects(player.getBoundsInParent());
-        
-        
-        /*will be new method once collision rectangles are added to all enemies
-        if (this.getBoundsInParent().intersects(player.getBoundsInParent())) {
-            for (Rectangle rect : collisionRects) {
-                if (rect.getBoundsInParent().intersects(player.getBoundsInParent())) {
-                    return true;
-                }
-            }
-        }
-        return false;
-        */
     }
     
     public boolean enemyColliding(List<Enemy> enemies) {
@@ -278,11 +266,11 @@ public class Enemy extends Pane {
         return lostHealth;
     }
     
-    public ImageView getIV(){
+    public ImageView getIV() {
         return this.iv;
     }
     
-    public void setIV(ImageView iv){
+    public void setIV(ImageView iv) {
         this.iv = iv;
         this.iv.setViewport(new Rectangle2D(offsetX, offsetY, width, height));
     }

@@ -1,13 +1,12 @@
 package Bosses;
 
 import Game.Character;
-import Enemies.RangedEnemy;
 import Projectiles.*;
 
 import java.util.List;
 import javafx.scene.layout.Pane;
 
-public class HomingBoss extends RangedEnemy {
+public class HomingBoss extends RangedBoss {
 
     public HomingBoss(String img, int health, int coin, int width, int height, int shootSpeed,
             String shotImg) {

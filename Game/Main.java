@@ -491,11 +491,6 @@ public class Main extends Application {
             shieldHealth.toFront();
         }
     }
-    
-    public void updateBoss(Boss boss) {
-        //updateEnemy method includes boss
-        //boss.update(gameRoot);
-    }
 
     public void shieldUpdate() {
         //shield info if shield is brought
