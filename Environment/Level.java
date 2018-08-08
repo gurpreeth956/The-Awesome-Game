@@ -102,35 +102,39 @@ public class Level {
 
     public Enemy generate() {
         int randomNum = 10;
-        while(randomNum > 7) {
+        while(randomNum > 8) {
             randomNum = (int) (Math.random() * this.getLevel() + 1);
         }
         Enemy enemy = null;
         
         switch (randomNum) { //for testing reasons numbers will vary
-            case 7 :
+            case 1:
+                enemy = new WillyWorm("file:src/Sprites/BlueCannon.png", 1, 1, 28, 51, 2000,
+                        "file:src/Sprites/CannonShot.png");
+                break;
+            case 8 :
                 enemy = new BasicShooter("file:src/Sprites/BlueCannon.png", 1, 1, 28, 51, 2000,
                         "file:src/Sprites/CannonShot.png"); //ranged
                 break;
-            case 5 : 
+            case 7 : 
                 enemy = new Licker("file:src/Sprites/CharlesSpriteSheet.png", 3, 1, 80, 80); //melee
                 break;
             case 6 :
                 enemy = new SpikeEnemy("file:src/Sprites/SpikeySpriteSheet.png", 3, 1, 71, 65, 
                         3000, "file:src/Sprites/Spikes.png"); //ranged
                 break;
-            case 4 :
+            case 5 :
                 enemy = new FourWayShooter("file:src/Sprites/Redies.png", 1, 1, 66, 33, 3000,
                 "file:src/Sprites/EnemyShot.png"); //ranged
                 //need to make new design
                 break;
-            case 1 :
+            case 2 :
                 enemy = new MrSnake("file:src/Sprites/SnakeSpriteSheet.png", 2, 1, 27, 35); //melee
                 break;
             case 3 :
                 enemy = new DomsPinky("file:src/Sprites/Pinky.png", 3, 1, 67, 78); //melee
                 break;
-            case 2 :
+            case 4 :
                 enemy = new JuppsTheo("file:src/Sprites/JuppTheo.png", 3, 1, 30, 68); //melee
                 break;
         }

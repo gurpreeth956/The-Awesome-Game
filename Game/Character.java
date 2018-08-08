@@ -20,9 +20,9 @@ public class Character extends Pane {
     int playerSpeed;
     int shootSpeed;
 
-    int health = 5;
+    int health = 100;
     int shieldHealth = 0;
-    final int fullHealth = 5;
+    final int fullHealth = 100;
     final int fullShieldHealth = 3;
     boolean alive = true;
     boolean shield = false;
