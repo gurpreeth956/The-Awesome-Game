@@ -410,7 +410,7 @@ public class Main extends Application {
         Enemy enemy = level.generate();
         enemy.summon(portal);
         gameRoot.getChildren().addAll(enemy, enemy.getHealthBarOutline(), enemy.getLostHealth(), 
-                enemy.getActualHealth());
+                enemy.getActualHealth(), enemy.getNameLabel());
         for (Rectangle rect : enemy.getCollisionRects()) {
             gameRoot.getChildren().addAll(rect);
         }
@@ -457,7 +457,7 @@ public class Main extends Application {
         if (!enemy.isAlive()) {
             enemToRemove.add(enemy);
             gameRoot.getChildren().removeAll(enemy, enemy.getActualHealth(), enemy.getLostHealth(),
-                    enemy.getHealthBarOutline());
+                    enemy.getHealthBarOutline(), enemy.getNameLabel());
             level.enemyBeat();
             level.coinUp(enemy);
             level.scoreUp(enemy);
@@ -473,7 +473,7 @@ public class Main extends Application {
         Enemy enemy = bosses.get(level.getLevel() - 1); //use level to determine index for boss spawn
         enemy.summon(portal); //determine portal to spawn boss from
         gameRoot.getChildren().addAll(enemy, enemy.getHealthBarOutline(), enemy.getLostHealth(), 
-                enemy.getActualHealth());
+                enemy.getActualHealth(), enemy.getNameLabel());
         for (Rectangle rect : enemy.getCollisionRects()) {
             gameRoot.getChildren().addAll(rect);
         }
@@ -490,11 +490,6 @@ public class Main extends Application {
         if (player.hasShield()) {
             shieldHealth.toFront();
         }
-    }
-    
-    public void updateBoss(Boss boss) {
-        //updateEnemy method includes boss
-        //boss.update(gameRoot);
     }
 
     public void shieldUpdate() {

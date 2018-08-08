@@ -1,7 +1,5 @@
 package Bosses;
 import Game.Character;
-import Enemies.*;
-import Projectiles.*;
 import Game.SpriteAnimation;
 
 import java.util.List;
@@ -10,12 +8,8 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 
-
-/**
- *
- * @author tenzin
- */
-public class TKTimmy extends Boss{
+public class TKTimmy extends MeleeBoss {
+    
     SpriteAnimation timmy;
     private final int count = 20;
     private final int columns = 5;
@@ -34,7 +28,7 @@ public class TKTimmy extends Boss{
     
     
     public TKTimmy(String img, int health, int coin, int width, int height) {
-        super(img, health, coin, width, height);
+        super(img, health, coin, width, height, "SPINING TIMMY");
         super.getChildren().remove(super.getIV());
         timmy = new SpriteAnimation(img, count, columns, offsetX, offsetY, width, height, duration);         
         animation = timmy;
@@ -48,17 +42,17 @@ public class TKTimmy extends Boss{
     
     @Override
    public void move(Character player, double width, double height) {     
-       if(!centered)
+       if (!centered)
            centerMove(width, height);
-       else{
-            if(!attacking){
+       else {
+            if(!attacking) {
                 setIV(basic);
                 trackingView(player);
             }
        }
     }
    
-   public void setIV(String image){
+   public void setIV(String image) {
        getChildren().remove(super.getIV());
        super.getChildren().remove(super.getIV());
        timmy.setIV(image);

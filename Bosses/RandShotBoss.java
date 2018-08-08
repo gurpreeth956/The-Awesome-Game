@@ -1,7 +1,6 @@
 package Bosses;
 import Enemies.Enemy;
 import Game.Character;
-import Enemies.RangedEnemy;
 import Game.SpriteAnimation;
 import Projectiles.Projectile;
 
@@ -11,7 +10,7 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 
-public class RandShotBoss extends RangedEnemy {
+public class RandShotBoss extends RangedBoss {
 
     SpriteAnimation bossAnimation;
     private final int count = 2;
@@ -23,7 +22,7 @@ public class RandShotBoss extends RangedEnemy {
     
     public RandShotBoss(String img, int health, int coin, int width, int height, int shootSpeed,
             String shotImg) {
-        super(img, health, coin, width, height, shootSpeed, shotImg);
+        super(img, health, coin, width, height, shootSpeed, shotImg, "MR.EVILER");
         super.getChildren().remove(iv);
         bossAnimation = new SpriteAnimation(img, count, columns, offsetX, offsetY, width, height, duration);
         animation = bossAnimation;

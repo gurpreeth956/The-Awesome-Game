@@ -1,10 +1,21 @@
 package Bosses;
-
-import Enemies.MeleeEnemy;
 import Game.Character;
+import Game.SpriteAnimation;
 
-public class ChargeBoss extends MeleeEnemy {
+import javafx.animation.Animation;
+import javafx.geometry.Rectangle2D;
+import javafx.util.Duration;
 
+public class ChargeBoss extends MeleeBoss {
+
+    SpriteAnimation bull;
+    private final int count = 2;
+    private final int columns = 2;
+    private final int offsetX = 0;
+    private final int offsetY = 0;
+    private final Duration duration = Duration.millis(500);
+    private final Animation animation;
+    
     long stunTime = 1000;
     long timeIndex = 0;
     long lastStunTime = 0;
@@ -19,19 +30,28 @@ public class ChargeBoss extends MeleeEnemy {
     int speed;
 
     public ChargeBoss(String img, int health, int coin, int width, int height, int speed) {
-        super(img, health, coin, width, height);
+        super(img, health, coin, width, height, "MULLER THE BULL");
+        super.getChildren().remove(iv);
+        bull = new SpriteAnimation(img, count, columns, offsetX, offsetY, width, height, duration);
+        animation = bull;
+        iv = bull.getIV();
+        iv.setViewport(new Rectangle2D(offsetX, offsetY, width, height));
+        getChildren().addAll(iv);
         this.speed = speed;
     }
 
     public void move(Character player, double width, double height) {
+        animation.play();
+        
         long timeNow = System.currentTimeMillis();
-        this.setCharacterView(0, 0);
-        if ((this.getX() <= 0 || this.getX() + 245>= width) && charging) {
+        
+        //need to add collision rects and its rotation
+        if ((this.getX() <= 0 || this.getX() + 176 >= width) && charging) {
             charging = false;
             timeIndex = System.currentTimeMillis();
             lock = false;
         }
-        if ((this.getY() <= 0 || this.getY() + 210 >= height) && charging) {
+        if ((this.getY() <= 0 || this.getY() + 176 >= height) && charging) {
             charging = false;
             timeIndex = System.currentTimeMillis();
             lock = false;
@@ -45,14 +65,14 @@ public class ChargeBoss extends MeleeEnemy {
             targetX = player.getX() - this.getX();
             targetY = player.getY() - this.getY();
             angle = Math.atan2(targetY, targetX) * 180 / Math.PI;
-            this.iv.setRotate(angle);
+            this.setRotate(angle);
             lock = true;
         }
         if(charging) {
-            vx = speed * (90-Math.abs(angle))/90;
-            if(angle<0){
-                vy = -speed +Math.abs(vx);
-            }else{
+            vx = speed * (90 - Math.abs(angle)) / 90;
+            if(angle < 0) {
+                vy = -speed + Math.abs(vx);
+            } else {
                 vy = speed - Math.abs(vx);
             }
             this.setTranslateX(this.getTranslateX() + (int)vx);

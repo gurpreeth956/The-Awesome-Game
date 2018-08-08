@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import java.util.List;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -26,14 +27,17 @@ public class Enemy extends Pane {
     int score;
     int enemySpeed;
     
-    Rectangle healthBarOutline;
-    Rectangle actualHealth;
-    Rectangle lostHealth;
-    boolean alive = true;
-    int health;
-    int totalHealth;
+    public Rectangle healthBarOutline;
+    public Rectangle actualHealth;
+    public Rectangle lostHealth;
+    public boolean alive = true;
+    public int health;
+    public int totalHealth;
     
     public List<Rectangle> collisionRects;
+    
+    //currently used only for bosses
+    public Label nameLabel;
 
     public Enemy(String img, int health, int coin, int width, int height) {
 	Image enemyImage = new Image(img);
@@ -48,6 +52,9 @@ public class Enemy extends Pane {
 	this.height = height;
         this.getChildren().addAll(iv);
         
+        nameLabel = new Label("");
+        nameLabel.setTranslateX(10);
+        nameLabel.setTranslateY(700);
 	healthBarOutline = new Rectangle(x - 1, y - 6, width + 2, 4);
 	healthBarOutline.setFill(Color.TRANSPARENT);
 	healthBarOutline.setStroke(Color.BLACK);
@@ -214,18 +221,6 @@ public class Enemy extends Pane {
     
     public boolean playerColliding(Character player) {
         return this.getBoundsInParent().intersects(player.getBoundsInParent());
-        
-        
-        /*will be new method once collision rectangles are added to all enemies
-        if (this.getBoundsInParent().intersects(player.getBoundsInParent())) {
-            for (Rectangle rect : collisionRects) {
-                if (rect.getBoundsInParent().intersects(player.getBoundsInParent())) {
-                    return true;
-                }
-            }
-        }
-        return false;
-        */
     }
     
     public boolean enemyColliding(List<Enemy> enemies) {
@@ -277,12 +272,16 @@ public class Enemy extends Pane {
     public Rectangle getLostHealth() {
         return lostHealth;
     }
+
+    public Label getNameLabel() {
+        return nameLabel;
+    }
     
-    public ImageView getIV(){
+    public ImageView getIV() {
         return this.iv;
     }
     
-    public void setIV(ImageView iv){
+    public void setIV(ImageView iv) {
         this.iv = iv;
         this.iv.setViewport(new Rectangle2D(offsetX, offsetY, width, height));
     }

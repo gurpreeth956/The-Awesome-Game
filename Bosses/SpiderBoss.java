@@ -1,6 +1,5 @@
 package Bosses;
 import Enemies.Enemy;
-import Enemies.MeleeEnemy;
 import Game.Character;
 import Game.SpriteAnimation;
 import java.util.ArrayList;
@@ -11,14 +10,14 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
-public class SpiderBoss extends MeleeEnemy {
+public class SpiderBoss extends MeleeBoss {
 
     SpriteAnimation spidey;
     private final int count = 4;
     private final int columns = 4;
     private final int offsetX = 0;
     private final int offsetY = 0;
-    private final Duration duration = Duration.millis(300);
+    private final Duration duration = Duration.millis(200);
     private final Animation animation;
     
     long timeUntilNextAttack;
@@ -33,7 +32,7 @@ public class SpiderBoss extends MeleeEnemy {
     Rectangle body;
     
     public SpiderBoss(String img, int health, int coin, int width, int height) {
-        super(img, health, coin, width, height);
+        super(img, health, coin, width, height, "INSECTO BUG");
         super.getChildren().remove(iv);
         spidey = new SpriteAnimation(img, count, columns, offsetX, offsetY, width, height, duration);
         animation = spidey;
