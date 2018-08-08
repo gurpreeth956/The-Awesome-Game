@@ -9,7 +9,7 @@ public class HomingProjectile extends Projectile {
     double vy;
     double vx;
     double rotation;
-    int ease = 5;//change this to increase turn radius of missile
+    int ease = 1;//change this to increase turn radius of missile
     int launchPos;//angle of initial launch
     boolean lock = false;
 
@@ -33,6 +33,7 @@ public class HomingProjectile extends Projectile {
             vy = this.getVelocityX() - Math.abs(vx);
         }*/
         //Code for homing missile with turn delay (bugged)
+     
        if(Math.abs(rotation - launchPos)>180){
             if(rotation > 0 && launchPos < 0){
                launchPos -= (360 - rotation + launchPos) / ease;
@@ -47,10 +48,10 @@ public class HomingProjectile extends Projectile {
         }
         vx = this.getVelocityX()*(90-Math.abs(launchPos))/90;
         if(launchPos<0){
-            vy = -this.getVelocityX() + Math.abs(vx);
+            vy = -this.getVelocityX() + Math.abs(vx);//up
         }else{
-            vy = this.getVelocityX() - Math.abs(vx);
-        }
+            vy = this.getVelocityX() - Math.abs(vx);//down
+        } 
         this.setTranslateX(this.getTranslateX()+(int)vx);
         this.setTranslateY(this.getTranslateY()+(int)vy);
         this.x += (int)vx;//X is int and vx is double 

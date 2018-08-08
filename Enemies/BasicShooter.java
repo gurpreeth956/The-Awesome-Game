@@ -2,7 +2,7 @@ package Enemies;
 import Game.Character;
 import Game.SpriteAnimation;
 
-//A.K.A Canon
+//A.K.A Cannon
 
 import Projectiles.Projectile;
 import java.util.List;
@@ -13,7 +13,7 @@ import javafx.util.Duration;
 
 public class BasicShooter extends RangedEnemy {
 
-    SpriteAnimation canon;
+    SpriteAnimation cannon;
     private final int count = 4;
     private final int columns = 4;
     private final int offsetX = 0;
@@ -27,9 +27,9 @@ public class BasicShooter extends RangedEnemy {
             String shotImg) {
         super(img, health, coin, width, height, shootSpeed, shotImg);
         super.getChildren().remove(iv);
-        canon = new SpriteAnimation(img, count, columns, offsetX, offsetY, width, height, duration);
-        animation = canon;
-        iv = canon.getIV();
+        cannon = new SpriteAnimation(img, count, columns, offsetX, offsetY, width, height, duration);
+        animation = cannon;
+        iv = cannon.getIV();
         iv.setViewport(new Rectangle2D(offsetX, offsetY, width, height));
         getChildren().addAll(iv);
     }
@@ -83,7 +83,7 @@ public class BasicShooter extends RangedEnemy {
 
         if (dist.equals("up")) { //shoot up
             if (time < 0 || time > this.getShootSpeed()) {
-                canon.setOffset(0, 52);
+                cannon.setOffset(0, 52);
                 double rotation = 180 - this.getRotate();
                 this.setRotate(this.getRotate() + rotation);
                 angularDir = 90;
@@ -93,7 +93,7 @@ public class BasicShooter extends RangedEnemy {
 
         } else if (dist.equals("down")) { //shoot down
             if (time < 0 || time > this.getShootSpeed()) {
-                canon.setOffset(0, 52);
+                cannon.setOffset(0, 52);
                 double rotation = 360 - this.getRotate();
                 this.setRotate(this.getRotate() + rotation);
                 angularDir = 270;
@@ -103,7 +103,7 @@ public class BasicShooter extends RangedEnemy {
 
         } else if (dist.equals("left")) { //shoot left
             if (time < 0 || time > this.getShootSpeed()) {
-                canon.setOffset(0, 52);
+                cannon.setOffset(0, 52);
                 double rotation = 90 - this.getRotate();
                 this.setRotate(this.getRotate() + rotation);
                 angularDir = 180;
@@ -113,7 +113,7 @@ public class BasicShooter extends RangedEnemy {
 
         } else if (dist.equals("right")) { //shoot right
             if (time < 0 || time > this.getShootSpeed()) {
-                canon.setOffset(0, 52);
+                cannon.setOffset(0, 52);
                 double rotation = 270 - this.getRotate();
                 this.setRotate(this.getRotate() + rotation);
                 angularDir = 360;
