@@ -6,6 +6,7 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.scene.shape.Rectangle;
 
 public class Projectile extends Pane {
     
@@ -68,13 +69,26 @@ public class Projectile extends Pane {
     
     public boolean enemyColliding(Enemy enemy) {
         return this.getBoundsInParent().intersects(enemy.getBoundsInParent());
+        
+        /*will become new code for method once hit rectangles are added to all enemies:
+        for (Rectangle rect : enemy.getCollisionRects()) {
+            if (this.getBoundsInParent().intersects(rect.getBoundsInParent())) {
+                return true;
+            }
+        }
+        return false;*/
     }
     
     public boolean playerColliding(Character player) {
-        return this.getBoundsInParent().intersects(player.getBoundsInParent());
+        for (Rectangle rect : player.getCollisionRects()) {
+            if (this.getBoundsInParent().intersects(rect.getBoundsInParent())) {
+                return true;
+            }
+        }
+        return false;
     }
     
-    public int getDamage(){
+    public int getDamage() {
         return damage;
     }
 }

@@ -52,9 +52,6 @@ public class Enemy extends Pane {
 	this.height = height;
         this.getChildren().addAll(iv);
         
-        nameLabel = new Label("");
-        nameLabel.setTranslateX(10);
-        nameLabel.setTranslateY(700);
 	healthBarOutline = new Rectangle(x - 1, y - 6, width + 2, 4);
 	healthBarOutline.setFill(Color.TRANSPARENT);
 	healthBarOutline.setStroke(Color.BLACK);
@@ -221,6 +218,16 @@ public class Enemy extends Pane {
     
     public boolean playerColliding(Character player) {
         return this.getBoundsInParent().intersects(player.getBoundsInParent());
+        
+        //Will replace once all enemies have collision rectangles
+        /*for (Rectangle playerRect : player.getCollisionRects()) {
+            for (Rectangle enemyRect : this.collisionRects) {
+                if (playerRect.getBoundsInParent().intersects(enemyRect.getBoundsInParent())) {
+                    return true;
+                }
+            }
+        }
+        return false;*/
     }
     
     public boolean enemyColliding(List<Enemy> enemies) {
@@ -239,10 +246,10 @@ public class Enemy extends Pane {
     }
     
     public void summon(Portal portal) {
-	this.setTranslateX(portal.getX());
-        this.setTranslateY(portal.getY());
-        this.x = portal.getX();
-        this.y = portal.getY();
+	this.setTranslateX((portal.getX() + 26) - (this.width / 2));
+        this.setTranslateY((portal.getY() + 55) - (this.height / 2));
+        this.x = (portal.getX() + 26) - (this.width / 2);
+        this.y = (portal.getY() + 55) - (this.height / 2);
     }
     
     public int getCoin() {

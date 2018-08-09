@@ -201,8 +201,8 @@ public class Main extends Application {
                 portalCount++;
             }
 
+            //determines when to spawn enemies
             for (Portal portal : portals) {
-                //determines when to spawn enemies
                 if (level.getEnemiesSpawned() < level.getEnemiesToBeat() && portal.summon() && 
                     !level.isShopping()) {
                     if (level.getEnemiesLeft() == 1 && bosses.size() >= level.getLevel()) {
@@ -240,6 +240,9 @@ public class Main extends Application {
             }
             for (Spikes spike : Spikes.spikes) {
                 updateSpikes(spike);
+            }
+            for (Enemy enemy : bosses) {
+                updateBoss(enemy);
             }
 
             projectiles.removeAll(projToRemove);
@@ -410,10 +413,14 @@ public class Main extends Application {
         Enemy enemy = level.generate();
         enemy.summon(portal);
         gameRoot.getChildren().addAll(enemy, enemy.getHealthBarOutline(), enemy.getLostHealth(), 
-                enemy.getActualHealth(), enemy.getNameLabel());
-        for (Rectangle rect : enemy.getCollisionRects()) {
+                enemy.getActualHealth());
+        
+        //use following code to add, see and fix enemy collision rects
+        //comment following method if not being used but do not delete
+        /*for (Rectangle rect : enemy.getCollisionRects()) {
             gameRoot.getChildren().addAll(rect);
-        }
+        }*/
+        
         coinAndScore.toFront();
         coinLabel.toFront();
         scoreLabel.toFront();
@@ -457,7 +464,7 @@ public class Main extends Application {
         if (!enemy.isAlive()) {
             enemToRemove.add(enemy);
             gameRoot.getChildren().removeAll(enemy, enemy.getActualHealth(), enemy.getLostHealth(),
-                    enemy.getHealthBarOutline(), enemy.getNameLabel());
+                    enemy.getHealthBarOutline());
             level.enemyBeat();
             level.coinUp(enemy);
             level.scoreUp(enemy);
@@ -470,13 +477,18 @@ public class Main extends Application {
     }
     
     public void createBoss(Portal portal) {
+        //remember to give boss a name or they might be an error
         Enemy enemy = bosses.get(level.getLevel() - 1); //use level to determine index for boss spawn
         enemy.summon(portal); //determine portal to spawn boss from
         gameRoot.getChildren().addAll(enemy, enemy.getHealthBarOutline(), enemy.getLostHealth(), 
                 enemy.getActualHealth(), enemy.getNameLabel());
-        for (Rectangle rect : enemy.getCollisionRects()) {
+        
+        //use following code to add, see and fix enemy collision rects
+        //comment following method if not being used but do not delete
+        /*for (Rectangle rect : enemy.getCollisionRects()) {
             gameRoot.getChildren().addAll(rect);
-        }
+        }*/
+        
         coinAndScore.toFront();
         coinLabel.toFront();
         scoreLabel.toFront();
@@ -489,6 +501,13 @@ public class Main extends Application {
         level.enemySpawned();
         if (player.hasShield()) {
             shieldHealth.toFront();
+        }
+    }
+    
+    public void updateBoss(Enemy boss) {
+        //updateEnemy method also includes bosses
+        if (!boss.isAlive()) {
+            gameRoot.getChildren().removeAll(boss.getNameLabel());
         }
     }
 
@@ -779,7 +798,7 @@ public class Main extends Application {
                 upgradeSelected(up);
             }
         });
-        exitButton.setOnAction(e-> {
+        exitButton.setOnAction(e -> {
             pStage.getScene().setRoot(shopRoot);
             inShopBuyingView = false;
         });

@@ -8,6 +8,7 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.scene.shape.Rectangle;
 
 public class Spikes extends Pane {
     
@@ -61,9 +62,11 @@ public class Spikes extends Pane {
     
     public boolean playerColliding(Character player) {
         boolean colliding = false;
-        if (this.getBoundsInParent().intersects(player.getBoundsInParent())) {
-            alive = false;
-            colliding = true;
+        for (Rectangle playerRect : player.getCollisionRects()) {
+            if (this.getBoundsInParent().intersects(playerRect.getBoundsInParent())) {
+                alive = false;
+                colliding = true;
+            }
         }
         return colliding;
     }
@@ -71,6 +74,4 @@ public class Spikes extends Pane {
     public int getDamage() {
         return damage;
     }
-    
-    
 }
