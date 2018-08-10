@@ -79,9 +79,9 @@ public class SpikeEnemy extends RangedEnemy {
     }
     
     public boolean playerColliding(Character player) {
-        if (this.getBoundsInParent().intersects(player.getBoundsInParent())) {
-            for (Rectangle rect : collisionRects) {
-                if (rect.getBoundsInParent().intersects(player.getBoundsInParent())) {
+        for (Rectangle playerRect : player.getCollisionRects()) {
+            for (Rectangle enemyRect : this.collisionRects) {
+                if (playerRect.getBoundsInParent().intersects(enemyRect.getBoundsInParent())) {
                     return true;
                 }
             }
