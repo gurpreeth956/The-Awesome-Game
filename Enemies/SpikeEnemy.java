@@ -21,6 +21,7 @@ public class SpikeEnemy extends RangedEnemy {
         body = new Rectangle(this.getTranslateX() + 12, this.getTranslateY() + 11, 46, 40);
         body.setFill(Color.TRANSPARENT);
         collisionRects.add(body);
+        hasCollisionRects = true;
     }
     
     public void move(Character player, double width, double height) {
@@ -78,17 +79,6 @@ public class SpikeEnemy extends RangedEnemy {
         }
     }
     
-    public boolean playerColliding(Character player) {
-        for (Rectangle playerRect : player.getCollisionRects()) {
-            for (Rectangle enemyRect : this.collisionRects) {
-                if (playerRect.getBoundsInParent().intersects(enemyRect.getBoundsInParent())) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
     public void hitView(Enemy enemy) {
         this.setCharacterView(3, 0);
     }

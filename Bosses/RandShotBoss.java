@@ -30,6 +30,9 @@ public class RandShotBoss extends RangedBoss {
         iv.setViewport(new Rectangle2D(offsetX, offsetY, width, height));
         this.getChildren().addAll(iv);
         this.setCharacterView(0, 0);
+        
+        //change below to true if collision rectangles are added
+        hasCollisionRects = false;
     }
 
     public void move(Character player, double width, double height) {

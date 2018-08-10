@@ -108,18 +108,18 @@ public class Level {
         Enemy enemy = null;
         
         switch (randomNum) { //for testing reasons numbers will vary
-            case 1:
+            case 6:
                 enemy = new WillyWorm("file:src/Sprites/BlueCannon.png", 1, 1, 28, 51, 2000,
                         "file:src/Sprites/CannonShot.png");
                 break;
-            case 8 :
+            case 2 :
                 enemy = new BasicShooter("file:src/Sprites/BlueCannon.png", 1, 1, 28, 51, 2000,
                         "file:src/Sprites/CannonShot.png"); //ranged
                 break;
             case 7 : 
                 enemy = new Licker("file:src/Sprites/CharlesSpriteSheet.png", 3, 1, 80, 80); //melee
                 break;
-            case 6 :
+            case 1 :
                 enemy = new SpikeEnemy("file:src/Sprites/SpikeySpriteSheet.png", 3, 1, 71, 65, 
                         3000, "file:src/Sprites/Spikes.png"); //ranged
                 break;
@@ -128,7 +128,7 @@ public class Level {
                 "file:src/Sprites/EnemyShot.png"); //ranged
                 //need to make new design
                 break;
-            case 2 :
+            case 8 :
                 enemy = new MrSnake("file:src/Sprites/SnakeSpriteSheet.png", 2, 1, 27, 35); //melee
                 break;
             case 3 :

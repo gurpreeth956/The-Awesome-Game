@@ -35,6 +35,7 @@ public class Enemy extends Pane {
     public int totalHealth;
     
     public List<Rectangle> collisionRects;
+    public boolean hasCollisionRects = false;
     
     //currently used only for bosses
     public Label nameLabel;
@@ -217,17 +218,18 @@ public class Enemy extends Pane {
     }
     
     public boolean playerColliding(Character player) {
-        return this.getBoundsInParent().intersects(player.getBoundsInParent());
+        if (!hasCollisionRects) {
+            return this.getBoundsInParent().intersects(player.getBoundsInParent());
+        }
         
-        //Will replace once all enemies have collision rectangles
-        /*for (Rectangle playerRect : player.getCollisionRects()) {
+        for (Rectangle playerRect : player.getCollisionRects()) {
             for (Rectangle enemyRect : this.collisionRects) {
                 if (playerRect.getBoundsInParent().intersects(enemyRect.getBoundsInParent())) {
                     return true;
                 }
             }
         }
-        return false;*/
+        return false;
     }
     
     public boolean enemyColliding(List<Enemy> enemies) {
@@ -282,6 +284,10 @@ public class Enemy extends Pane {
 
     public Label getNameLabel() {
         return nameLabel;
+    }
+    
+    public boolean hasCollisionRects() {
+        return hasCollisionRects;
     }
     
     public ImageView getIV() {
