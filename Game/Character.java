@@ -1,9 +1,9 @@
 package Game;
 import Environment.Stairs;
 import Friends.*;
+
 import java.util.ArrayList;
 import java.util.List;
-
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -75,11 +75,6 @@ public class Character extends Pane {
 		} else {
 		    this.setTranslateX(this.getTranslateX() + 1);
 		    this.x++;
-                    
-                    head.setX(this.getTranslateX() + 20 + 1);
-                    body.setX(this.getTranslateX() + 13 + 1);
-                    leftSide.setX(this.getTranslateX() + 3 + 1);
-                    rightSide.setX(this.getTranslateX() + 53 + 1);
 		}
 	    } else {
 		if (this.x < 0) {
@@ -87,11 +82,6 @@ public class Character extends Pane {
 		} else {
 		    this.setTranslateX(this.getTranslateX() - 1);
 		    this.x--;
-                    
-                    head.setX(this.getTranslateX() + 20 - 1);
-                    body.setX(this.getTranslateX() + 13 - 1);
-                    leftSide.setX(this.getTranslateX() + 3 - 1);
-                    rightSide.setX(this.getTranslateX() + 53 - 1);
 		}
 	    }
             
@@ -99,21 +89,16 @@ public class Character extends Pane {
             if (right && wall) {
                 this.setTranslateX(this.getTranslateX() - 1);
                 this.x--;
-
-                head.setX(this.getTranslateX() + 20 - 1);
-                body.setX(this.getTranslateX() + 13 - 1);
-                leftSide.setX(this.getTranslateX() + 3 - 1);
-                rightSide.setX(this.getTranslateX() + 53 - 1);
                 
             } else if (!right && wall) {
                 this.setTranslateX(this.getTranslateX() + 1);
                 this.x++;
-
-                head.setX(this.getTranslateX() + 20 + 1);
-                body.setX(this.getTranslateX() + 13 + 1);
-                leftSide.setX(this.getTranslateX() + 3 + 1);
-                rightSide.setX(this.getTranslateX() + 53 + 1);
             }
+            
+            head.setX(this.getTranslateX() + 20);
+            body.setX(this.getTranslateX() + 13);
+            leftSide.setX(this.getTranslateX() + 3);
+            rightSide.setX(this.getTranslateX() + 53);
 	}
     }
 
@@ -126,11 +111,6 @@ public class Character extends Pane {
 		} else {
 		    this.setTranslateY(this.getTranslateY() + 1);
 		    this.y++;
-                    
-                    head.setY(this.getTranslateY() + 1);
-                    body.setY(this.getTranslateY() + 5 + 1);
-                    leftSide.setY(this.getTranslateY() + 18 + 1);
-                    rightSide.setY(this.getTranslateY() + 18 + 1);
 		}
 	    } else {
 		if (this.y < 0) {
@@ -138,11 +118,6 @@ public class Character extends Pane {
 		} else {
 		    this.setTranslateY(this.getTranslateY() - 1);
 		    this.y--;
-                    
-                    head.setY(this.getTranslateY() - 1);
-                    body.setY(this.getTranslateY() + 5 - 1);
-                    leftSide.setY(this.getTranslateY() + 18 - 1);
-                    rightSide.setY(this.getTranslateY() + 18 - 1);
 		}
 	    }
             
@@ -150,22 +125,17 @@ public class Character extends Pane {
             if (down && wall) {
                 this.setTranslateY(this.getTranslateY() - 1);
                 this.y--;
-
-                head.setY(this.getTranslateY() - 1);
-                body.setY(this.getTranslateY() + 5 - 1);
-                leftSide.setY(this.getTranslateY() + 18 - 1);
-                rightSide.setY(this.getTranslateY() + 18 - 1);
                 
             } else if (!down && wall) {
                 this.setTranslateY(this.getTranslateY() + 1);
                 this.y++;
-
-                head.setY(this.getTranslateY() + 1);
-                body.setY(this.getTranslateY() + 5 + 1);
-                leftSide.setY(this.getTranslateY() + 18 + 1);
-                rightSide.setY(this.getTranslateY() + 18 + 1);
             }
-	}
+            
+            head.setY(this.getTranslateY());
+            body.setY(this.getTranslateY() + 5);
+            leftSide.setY(this.getTranslateY() + 18);
+            rightSide.setY(this.getTranslateY() + 18);
+        }
     }
 
     public void setOffsetX(int offsetX) {

@@ -2,8 +2,8 @@ package Enemies;
 import Environment.Portal;
 import Game.Character;
 import Projectiles.Projectile;
-import java.util.ArrayList;
 
+import java.util.ArrayList;
 import java.util.List;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.control.Label;
@@ -219,7 +219,11 @@ public class Enemy extends Pane {
     
     public boolean playerColliding(Character player) {
         if (!hasCollisionRects) {
-            return this.getBoundsInParent().intersects(player.getBoundsInParent());
+            for (Rectangle playerRect : player.getCollisionRects()) {
+                if (playerRect.getBoundsInParent().intersects(this.getBoundsInParent())) {
+                    return true;
+                }
+            }
         }
         
         for (Rectangle playerRect : player.getCollisionRects()) {

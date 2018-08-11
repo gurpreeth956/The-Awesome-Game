@@ -2,8 +2,8 @@ package Bosses;
 import Enemies.Enemy;
 import Game.Character;
 import Game.SpriteAnimation;
-import java.util.ArrayList;
 
+import java.util.ArrayList;
 import javafx.animation.Animation;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.paint.Color;

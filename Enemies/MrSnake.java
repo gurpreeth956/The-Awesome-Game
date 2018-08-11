@@ -2,11 +2,12 @@ package Enemies;
 import Game.Character;
 import Game.SpriteAnimation;
 
+import java.util.ArrayList;
 import javafx.animation.Animation;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
-
-//A.K.A Kaa or Shé
 
 public class MrSnake extends MeleeEnemy {
 
@@ -18,6 +19,8 @@ public class MrSnake extends MeleeEnemy {
     private final Duration duration = Duration.millis(900);
     private final Animation animation;
     
+    Rectangle body;
+    
     public MrSnake(String img, int health, int coin, int width, int height) {
         super(img, health, coin, width, height);
         super.getChildren().remove(iv);
@@ -27,8 +30,11 @@ public class MrSnake extends MeleeEnemy {
         iv.setViewport(new Rectangle2D(offsetX, offsetY, width, height));
         getChildren().addAll(iv);
         
-        //change below to true if collision rectangles are added
-        hasCollisionRects = false;
+        collisionRects = new ArrayList();
+        body = new Rectangle(this.getTranslateX() + 7, this.getTranslateY() + 4, 15, 27);
+        body.setFill(Color.TRANSPARENT);
+        collisionRects.add(body);
+        hasCollisionRects = true;
     }
     
     public void move(Character player, double width, double height) {
@@ -71,6 +77,9 @@ public class MrSnake extends MeleeEnemy {
             this.moveX(1, width);
             this.moveY(1, height);
         }
+        
+        body.setX(this.getX() + 7);
+        body.setY(this.getY() + 4);
     }
     
     public void hitView(Enemy enemy) {
