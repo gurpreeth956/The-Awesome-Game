@@ -38,6 +38,9 @@ public class TKTimmy extends MeleeBoss {
         getChildren().addAll(super.getIV());   
         this.width = width;
         this.height = height;
+        
+        //change below to true if collision rectangles are added
+        hasCollisionRects = false;
     }
     
     @Override
@@ -61,12 +64,12 @@ public class TKTimmy extends MeleeBoss {
        getChildren().add(super.getIV());
    }
    
-   public void centerMove(double width, double height){
-       double timwcenter = this.getX() + 95;
-       double timhcenter = this.getY() + 95;
-       double wcenter = width/2;
-       double hcenter = height/2;
-       if (wcenter > timwcenter && hcenter == timhcenter) { //right
+   public void centerMove(double width, double height) {
+        double timwcenter = this.getX() + 95;
+        double timhcenter = this.getY() + 95;
+        double wcenter = width / 2;
+        double hcenter = height / 2;
+        if (wcenter > timwcenter && hcenter == timhcenter) { //right
             this.moveX(1, width);
         }
         if (wcenter < timwcenter && hcenter == timhcenter) { //left
@@ -95,19 +98,18 @@ public class TKTimmy extends MeleeBoss {
             this.moveX(1, width);
             this.moveY(1, height);
         }
-        if(wcenter == timwcenter && hcenter == timhcenter)
+        if (wcenter == timwcenter && hcenter == timhcenter)
             centered = true;
    }
    
-   public void trackingView(Character player){
+   public void trackingView(Character player) {
         if (player.getY() > this.getY() + height) { //down
             this.setCharacterView(0, 0);
         }
         else if (player.getY() < this.getY()) { //up
             this.setCharacterView(0, 190);
         }     
-        else 
-        {
+        else {
             if(player.getX() < this.getX())
                 this.setCharacterView(190, 0); //left
             if(player.getX() > this.getX() + width)

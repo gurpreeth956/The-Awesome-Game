@@ -35,6 +35,9 @@ public class WillyWorm extends RangedEnemy {
         iv = willy.getIV();
         iv.setViewport(new Rectangle2D(offsetX, offsetY, width, height));
         getChildren().add(iv);
+        
+        //change below to true if collision rectangles are added
+        hasCollisionRects = false;
     }
 
     public void move(Game.Character player, double width, double height) {

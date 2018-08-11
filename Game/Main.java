@@ -906,7 +906,6 @@ public class Main extends Application {
         controlsView.getItems().clear();
         controlsView.setItems(getControlList());
         updateTableViewHeader(controlsView);
-        
     }
     
     public void updateControls() {
@@ -934,8 +933,9 @@ public class Main extends Application {
                 case 8 : shootLeft = newKey;
                          break;
                 case 9 : break;
-                case 10 : interaction = newKey; //there is a glitch if this key is made SPACE Key -
-                                                //player cannot exit shopUpgradeView (idk y)
+                case 10 : if (newKey != KeyCode.SPACE) {
+                              interaction = newKey; 
+                          }
                           break;
             }
             

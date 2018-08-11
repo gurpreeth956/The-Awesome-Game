@@ -38,6 +38,9 @@ public class ChargeBoss extends MeleeBoss {
         iv.setViewport(new Rectangle2D(offsetX, offsetY, width, height));
         getChildren().addAll(iv);
         this.speed = speed;
+        
+        //change below to true if collision rectangles are added
+        hasCollisionRects = false;
     }
 
     public void move(Character player, double width, double height) {

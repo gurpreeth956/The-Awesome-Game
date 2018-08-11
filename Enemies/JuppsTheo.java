@@ -26,6 +26,9 @@ public class JuppsTheo extends MeleeEnemy {
         iv = theo.getIV();
         iv.setViewport(new Rectangle2D(offsetX, offsetY, width, height));
         getChildren().addAll(iv);
+        
+        //change below to true if collision rectangles are added
+        hasCollisionRects = false;
     }
     
     public void move(Character player, double width, double height) {

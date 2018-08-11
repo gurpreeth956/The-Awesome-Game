@@ -2,8 +2,8 @@ package Bosses;
 import Enemies.Enemy;
 import Game.Character;
 import Game.SpriteAnimation;
-import java.util.ArrayList;
 
+import java.util.ArrayList;
 import javafx.animation.Animation;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.paint.Color;
@@ -25,7 +25,6 @@ public class SpiderBoss extends MeleeBoss {
     int randomDirection = 0;
     boolean randLocationSet;
     boolean ready;
-    boolean rageMode;
     
     //collision rectangles
     Rectangle head;
@@ -42,8 +41,8 @@ public class SpiderBoss extends MeleeBoss {
         
         currentPauseTime = 3000;
         randLocationSet = false;
+        hasCollisionRects = true;
         ready = false;
-        rageMode = false;
         
         collisionRects = new ArrayList();
         head = new Rectangle(this.getTranslateX() + 56, this.getTranslateY(), 52, 56);
@@ -148,17 +147,6 @@ public class SpiderBoss extends MeleeBoss {
                     break;
             }
         }
-    }
-    
-    public boolean playerColliding(Character player) {
-        if (this.getBoundsInParent().intersects(player.getBoundsInParent())) {
-            for (Rectangle rect : collisionRects) {
-                if (rect.getBoundsInParent().intersects(player.getBoundsInParent())) {
-                    return true;
-                }
-            }
-        }
-        return false;
     }
     
     public void hitView(Enemy enemy) {

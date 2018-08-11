@@ -68,15 +68,16 @@ public class Projectile extends Pane {
     }
     
     public boolean enemyColliding(Enemy enemy) {
-        return this.getBoundsInParent().intersects(enemy.getBoundsInParent());
+        if (!enemy.hasCollisionRects()) {
+            return this.getBoundsInParent().intersects(enemy.getBoundsInParent());
+        }
         
-        /*will become new code for method once hit rectangles are added to all enemies:
         for (Rectangle rect : enemy.getCollisionRects()) {
             if (this.getBoundsInParent().intersects(rect.getBoundsInParent())) {
                 return true;
             }
         }
-        return false;*/
+        return false;
     }
     
     public boolean playerColliding(Character player) {

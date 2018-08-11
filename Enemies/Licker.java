@@ -19,13 +19,16 @@ public class Licker extends MeleeEnemy {
     private final Animation animation;
     
     public Licker(String img, int health, int coin, int width, int height) {
-            super(img, health, coin, width, height);
-            super.getChildren().remove(iv);
-            charles = new SpriteAnimation(img, count, columns, offsetX, offsetY, width, height, duration);         
-            animation = charles;
-            iv = charles.getIV();
-            iv.setViewport(new Rectangle2D(offsetX, offsetY, width, height));
-            getChildren().addAll(iv);          
+        super(img, health, coin, width, height);
+        super.getChildren().remove(iv);
+        charles = new SpriteAnimation(img, count, columns, offsetX, offsetY, width, height, duration);         
+        animation = charles;
+        iv = charles.getIV();
+        iv.setViewport(new Rectangle2D(offsetX, offsetY, width, height));
+        getChildren().addAll(iv);
+        
+        //change below to true if collision rectangles are added
+        hasCollisionRects = false;    
     }
     
     public void hitView(Enemy enemy) {
