@@ -32,9 +32,9 @@ public class Bomb extends Projectile {
         this.alive = alive;
     }
 
-    public void explode() {
+    public void move(Character player) {
         long timeNow = System.currentTimeMillis();
-        if (timeNow - timer >= timeIndex) {
+        if (timeIndex + timer <= timeNow) {
             explode = true;
             //change sprite to play explosion animation
         }
@@ -42,7 +42,7 @@ public class Bomb extends Projectile {
 
     //deactivate enemy collision for bombs
     public boolean enemyColliding(Enemy enemy) {
-        if (explode) {
+        if (explode == true) {
             if (!enemy.hasCollisionRects()) {
                 return this.getBoundsInParent().intersects(enemy.getBoundsInParent());
             }

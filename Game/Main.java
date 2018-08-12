@@ -342,8 +342,8 @@ public class Main extends Application {
     }
     
     public void createBomb(){
-        Bomb bomb = new Bomb("",player.getX() + 28,
-                player.getY() + 16, 12, 12, 1);
+        Bomb bomb = new Bomb("file:src/Sprites/Bomb.png",player.getX() + 28,
+                player.getY() + 16, 16, 21, 1);
         gameRoot.getChildren().addAll(bomb);
         bomb.toBack();
         projectiles.add(bomb);
@@ -359,6 +359,7 @@ public class Main extends Application {
                 gameRoot.getChildren().remove(enemy.getActualHealth());
                 gameRoot.getChildren().add(enemy.updateHealth());
                 proj.setAlive(false);
+                //remove bomb from root after explosion regardless of collision
             }
         }
 

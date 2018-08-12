@@ -14,8 +14,8 @@ import javafx.scene.image.Image;
 public class BombUpgrade extends Upgrades{
     
     public BombUpgrade(){
-        super("file:src/Sprites/BombUpgrade.png", 100);
-        cost = 100;
+        super("file:src/Sprites/BombUpgrade.png", 3);
+        cost = 3;
     }
         
     public void activeAbility(Game.Character player) {
