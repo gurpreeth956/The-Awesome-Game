@@ -23,9 +23,9 @@ public class Character extends Pane {
     int playerSpeed;
     int shootSpeed;
 
-    int health = 100;
+    int health = 5;
     int shieldHealth = 0;
-    final int fullHealth = 100;
+    final int fullHealth = 5;
     final int fullShieldHealth = 3;
     boolean alive = true;
     boolean shield = false;
@@ -51,8 +51,8 @@ public class Character extends Pane {
         collisionRects = new ArrayList();
         head = new Rectangle(this.getTranslateX() + 20, this.getTranslateY(), 26, 5);
         body = new Rectangle(this.getTranslateX() + 13, this.getTranslateY() + 5, 40, 27);
-        leftSide = new Rectangle(this.getTranslateX(), this.getTranslateY() + 15, 13, 17);
-        rightSide = new Rectangle(this.getTranslateX() + 53, this.getTranslateY() + 15, 13, 17);
+        leftSide = new Rectangle(this.getTranslateX() + 3, this.getTranslateY() + 18, 10, 14);
+        rightSide = new Rectangle(this.getTranslateX() + 53, this.getTranslateY() + 18, 10, 14);
         head.setFill(Color.TRANSPARENT);
         body.setFill(Color.TRANSPARENT);
         leftSide.setFill(Color.TRANSPARENT);
@@ -79,7 +79,7 @@ public class Character extends Pane {
                     
                     head.setX(this.getTranslateX() + 20 + 1);
                     body.setX(this.getTranslateX() + 13 + 1);
-                    leftSide.setX(this.getTranslateX() + 1);
+                    leftSide.setX(this.getTranslateX() + 3 + 1);
                     rightSide.setX(this.getTranslateX() + 53 + 1);
 		}
 	    } else {
@@ -91,7 +91,7 @@ public class Character extends Pane {
                     
                     head.setX(this.getTranslateX() + 20 - 1);
                     body.setX(this.getTranslateX() + 13 - 1);
-                    leftSide.setX(this.getTranslateX() - 1);
+                    leftSide.setX(this.getTranslateX() + 3 - 1);
                     rightSide.setX(this.getTranslateX() + 53 - 1);
 		}
 	    }
@@ -103,7 +103,7 @@ public class Character extends Pane {
 
                 head.setX(this.getTranslateX() + 20 - 1);
                 body.setX(this.getTranslateX() + 13 - 1);
-                leftSide.setX(this.getTranslateX() - 1);
+                leftSide.setX(this.getTranslateX() + 3 - 1);
                 rightSide.setX(this.getTranslateX() + 53 - 1);
                 
             } else if (!right && wall) {
@@ -112,7 +112,7 @@ public class Character extends Pane {
 
                 head.setX(this.getTranslateX() + 20 + 1);
                 body.setX(this.getTranslateX() + 13 + 1);
-                leftSide.setX(this.getTranslateX() + 1);
+                leftSide.setX(this.getTranslateX() + 3 + 1);
                 rightSide.setX(this.getTranslateX() + 53 + 1);
             }
 	}
@@ -130,8 +130,8 @@ public class Character extends Pane {
                     
                     head.setY(this.getTranslateY() + 1);
                     body.setY(this.getTranslateY() + 5 + 1);
-                    leftSide.setY(this.getTranslateY() + 15 + 1);
-                    rightSide.setY(this.getTranslateY() + 15 + 1);
+                    leftSide.setY(this.getTranslateY() + 18 + 1);
+                    rightSide.setY(this.getTranslateY() + 18 + 1);
 		}
 	    } else {
 		if (this.y < 0) {
@@ -142,8 +142,8 @@ public class Character extends Pane {
                     
                     head.setY(this.getTranslateY() - 1);
                     body.setY(this.getTranslateY() + 5 - 1);
-                    leftSide.setY(this.getTranslateY() + 15 - 1);
-                    rightSide.setY(this.getTranslateY() + 15 - 1);
+                    leftSide.setY(this.getTranslateY() + 18 - 1);
+                    rightSide.setY(this.getTranslateY() + 18 - 1);
 		}
 	    }
             
@@ -154,8 +154,8 @@ public class Character extends Pane {
 
                 head.setY(this.getTranslateY() - 1);
                 body.setY(this.getTranslateY() + 5 - 1);
-                leftSide.setY(this.getTranslateY() + 15 - 1);
-                rightSide.setY(this.getTranslateY() + 15 - 1);
+                leftSide.setY(this.getTranslateY() + 18 - 1);
+                rightSide.setY(this.getTranslateY() + 18 - 1);
                 
             } else if (!down && wall) {
                 this.setTranslateY(this.getTranslateY() + 1);
@@ -163,8 +163,8 @@ public class Character extends Pane {
 
                 head.setY(this.getTranslateY() + 1);
                 body.setY(this.getTranslateY() + 5 + 1);
-                leftSide.setY(this.getTranslateY() + 15 + 1);
-                rightSide.setY(this.getTranslateY() + 15 + 1);
+                leftSide.setY(this.getTranslateY() + 18 + 1);
+                rightSide.setY(this.getTranslateY() + 18 + 1);
             }
 	}
     }

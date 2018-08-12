@@ -4,10 +4,13 @@ import Game.Character;
 import Game.SpriteAnimation;
 import Projectiles.Projectile;
 
+import java.util.ArrayList;
 import java.util.List;
 import javafx.animation.Animation;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
 public class RandShotBoss extends RangedBoss {
@@ -20,6 +23,8 @@ public class RandShotBoss extends RangedBoss {
     private final Duration duration = Duration.millis(900);
     private final Animation animation;
     
+    Rectangle body;
+    
     public RandShotBoss(String img, int health, int coin, int width, int height, int shootSpeed,
             String shotImg) {
         super(img, health, coin, width, height, shootSpeed, shotImg, "MR.EVILER");
@@ -30,6 +35,12 @@ public class RandShotBoss extends RangedBoss {
         iv.setViewport(new Rectangle2D(offsetX, offsetY, width, height));
         this.getChildren().addAll(iv);
         this.setCharacterView(0, 0);
+        
+        collisionRects = new ArrayList();
+        body = new Rectangle(this.getTranslateX() + 8, this.getTranslateY() + 8, 244, 244);
+        body.setFill(Color.TRANSPARENT);
+        collisionRects.add(body);
+        hasCollisionRects = true;
     }
 
     public void move(Character player, double width, double height) {
@@ -63,6 +74,9 @@ public class RandShotBoss extends RangedBoss {
             this.moveX(1, width);
             this.moveY(1, height);
         }
+        
+        body.setX(this.getX() + 8);
+        body.setY(this.getY() + 8);
     }
     
     public void shoot(Character player, List<Projectile> projectiles, Pane gameRoot){

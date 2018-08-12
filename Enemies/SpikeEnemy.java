@@ -1,10 +1,8 @@
 package Enemies;
 import Game.Character;
 import Projectiles.Projectile;
+
 import java.util.ArrayList;
-
-//A.K.A Spikey
-
 import java.util.List;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -17,10 +15,12 @@ public class SpikeEnemy extends RangedEnemy {
     public SpikeEnemy(String img, int health, int coin, int width, int height, int shootSpeed,
             String shotImg) {
         super(img, health, coin, width, height, shootSpeed, shotImg);
+        
         collisionRects = new ArrayList();
         body = new Rectangle(this.getTranslateX() + 12, this.getTranslateY() + 11, 46, 40);
         body.setFill(Color.TRANSPARENT);
         collisionRects.add(body);
+        hasCollisionRects = true;
     }
     
     public void move(Character player, double width, double height) {
@@ -72,23 +72,13 @@ public class SpikeEnemy extends RangedEnemy {
         long time = timeNow - timeOfLastProjectile;
 
         if (time < 0 || time > this.getShootSpeed()) {
-            Spikes spike = new Spikes(this.x, this.y, gameRoot, 1);
+            Spikes spike = new Spikes(this.x + 23, this.y + 15, gameRoot, 1);
             gameRoot.getChildren().addAll(spike);
+            spike.toBack();
             timeOfLastProjectile = timeNow;
         }
     }
     
-    public boolean playerColliding(Character player) {
-        for (Rectangle playerRect : player.getCollisionRects()) {
-            for (Rectangle enemyRect : this.collisionRects) {
-                if (playerRect.getBoundsInParent().intersects(enemyRect.getBoundsInParent())) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
     public void hitView(Enemy enemy) {
         this.setCharacterView(3, 0);
     }
