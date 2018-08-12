@@ -9,9 +9,8 @@ public class HomingProjectile extends Projectile {
     double vy;
     double vx;
     double rotation;
-    int ease = 1;//change this to increase turn radius of missile
+    int ease = 20;//change this to increase turn radius of missile
     int launchPos;//angle of initial launch
-    boolean lock = false;
 
     public HomingProjectile(String img, int posX, int posY, int width, int height, int dmg, int launchPos) {
         super(img, posX, posY, width, height, dmg);

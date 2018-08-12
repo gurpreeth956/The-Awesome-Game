@@ -30,6 +30,7 @@ public class Character extends Pane {
     boolean alive = true;
     boolean shield = false;
     boolean stop;
+    boolean bomb;
     
     public List<Rectangle> collisionRects;
     Rectangle leftSide, rightSide, head, body;
@@ -281,6 +282,14 @@ public class Character extends Pane {
     
     public int getFullShieldHealth() {
         return fullShieldHealth;
+    }
+    
+    public void setBomb(boolean a){
+        bomb  = a;
+    }
+    
+    public boolean getBomb(){
+        return bomb;
     }
     
     public boolean isWall() {

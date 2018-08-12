@@ -81,7 +81,7 @@ public class Main extends Application {
     
     private TableView<ListViewObject> controlsView = new TableView();
     KeyCode moveUp, moveDown, moveRight, moveLeft, shootUp, shootDown, shootRight, shootLeft,
-            interaction;
+            interaction, dropBomb;
 
     //various elements for health score ect.
     Rectangle healthBarOutline, actualHealth, lostHealth, shieldHealth;
@@ -192,6 +192,13 @@ public class Main extends Application {
             } else {
                 player.setCharacterView(0, player.getOffsetY());
                 characterShooting();
+            }
+            
+            //Drop bomb on keypress code here
+            if(isPressed(dropBomb)){
+                if(player.getBomb()){
+                 //create bomb object
+                }
             }
             
             //Updates
@@ -662,16 +669,19 @@ public class Main extends Application {
     PlayerShieldUpgrade shieldUp;
     ShootSpeedUpgrade shotUp;
     PlayerSpeedUpgrade speedUp;
+    BombUpgrade bomb;
     
     public void addShopButtons() {
         healthUp = new HealthPackUpgrade();
         shieldUp = new PlayerShieldUpgrade();
         shotUp = new ShootSpeedUpgrade();
         speedUp = new PlayerSpeedUpgrade();
+        bomb = new BombUpgrade();
         shopUpgrades.add(healthUp);
         shopUpgrades.add(shieldUp);
         shopUpgrades.add(shotUp);
         shopUpgrades.add(speedUp);
+        shopUpgrades.add(bomb);
 
         for (Upgrades upgrade : shopUpgrades) {
             shopUpgradesView.getItems().addAll(upgrade.getListView());
@@ -696,6 +706,8 @@ public class Main extends Application {
                         iv.setImage(speedUp.getImage());
                     } else if (name.equals("Shooting Speed   -   " + shotUp.getPrice())) {
                         iv.setImage(shotUp.getImage());
+                    } else if(name.equals("Bombs   -   " + bomb.getPrice())){
+                        iv.setImage(bomb.getImage());
                     }
                     setText(name);
                     setGraphic(iv);
@@ -749,6 +761,11 @@ public class Main extends Application {
             if (level.getCoin() >= shotUp.getPrice()) {
                 shotUp.setBought(true);
                 removeUpgrade(shotUp);
+            }
+        } else if(upgradeName.equals("Bombs   ")){
+            if(level.getCoin() >= bomb.getPrice()){
+                bomb.setBought(true);
+                removeUpgrade(bomb);
             }
         }
     }
@@ -902,6 +919,7 @@ public class Main extends Application {
         shootLeft = KeyCode.LEFT;
         shootRight = KeyCode.RIGHT;
         interaction = KeyCode.E;
+        dropBomb = KeyCode.SHIFT;
         
         controlsView.getItems().clear();
         controlsView.setItems(getControlList());
@@ -937,6 +955,8 @@ public class Main extends Application {
                 case 10 : interaction = newKey; //there is a glitch if this key is made SPACE Key -
                                                 //player cannot exit shopUpgradeView (idk y)
                           break;
+                case 11: dropBomb = newKey;
+                        break;
             }
             
             controlsView.getItems().clear();
@@ -958,7 +978,8 @@ public class Main extends Application {
                 new ListViewObject("SHOOT RIGHT", "   -   ", shootRight.toString()),
                 new ListViewObject("SHOOT LEFT", "   -   ", shootLeft.toString()),
                 new ListViewObject("", "", ""),
-                new ListViewObject("INTERACTION", "   -   ", interaction.toString()));
+                new ListViewObject("INTERACTION", "   -   ", interaction.toString()),
+                new ListViewObject("BOMB", "   -   ", dropBomb.toString()));
         
         return controlList;
     }
@@ -1260,6 +1281,7 @@ public class Main extends Application {
         shootLeft = KeyCode.LEFT;
         shootRight = KeyCode.RIGHT;
         interaction = KeyCode.E;
+        dropBomb = KeyCode.SHIFT;
         //
         
         controlsView.setItems(getControlList());

@@ -20,7 +20,7 @@ public class WillyWorm extends RangedEnemy {
     private final Animation animation;
 
     int hideTime = 4000;
-    int peekTime = 1000;
+    int peekTime = 2000;
     int angularDir = 270;
     long timeIndex = 0;
     boolean shot = false;
@@ -55,9 +55,6 @@ public class WillyWorm extends RangedEnemy {
             underground = false;
             timeIndex = timeNow;
         }
-        //use timer to determine when to make worm reappear on gameRoot
-        //make worm disappear after x amount of time and projectile has been shot
-        //figure out a way to remove worms hitbox while keeping entity on screen
     }
 
     public void shoot(Game.Character player, List<Projectile> projectiles, Pane gameRoot) {

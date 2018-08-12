@@ -14,7 +14,7 @@ public class HomingBoss extends RangedBoss {
     }
 
     public void move(Character player, double width, double height) {
-        if (player.getX() > this.getX() && player.getY() == this.getY()) { //right
+       /* if (player.getX() > this.getX() && player.getY() == this.getY()) { //right
             this.setCharacterView(0, 61);
             this.moveX(1, width);
         }
@@ -50,7 +50,7 @@ public class HomingBoss extends RangedBoss {
             this.setCharacterView(0, 61);
             this.moveX(1, width);
             this.moveY(1, height);
-        }
+        }*/
     }
 
     //Keep speed params consistent for homing projectile purposes
