@@ -5,65 +5,55 @@
  */
 package Projectiles;
 
-import java.util.ArrayList;
-import java.util.List;
-import javafx.geometry.Rectangle2D;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.Pane;
+import Enemies.Enemy;
+import javafx.scene.shape.Rectangle;
 
 /**
  *
  * @author rhuan
  */
-public class Bomb extends Pane{
-    
-    public static List<Bomb> bombs = new ArrayList<>();
-    public static List<Bomb> bombsToRemove = new ArrayList<>();
-    
-    ImageView iv;
-    int offsetX = 0;
-    int offsetY = 0;
-    int width;
-    int height;
-    int x;
-    int y;
-    int damage;
-    boolean alive;
+public class Bomb extends Projectile {
+
     int timer = 2000;
     long timeIndex;
-    
+    boolean explode = false;
+
     //Create sprite for bomb
-    public Bomb(int posX, int posY, Pane gameRoot, int dmg){
-        Image bombImage = new Image("");
-        ImageView bombIV = new ImageView(bombImage);
-        this.iv = bombIV;
-        this.iv.setViewport(new Rectangle2D(offsetX, offsetY, width, height));
-        this.alive = true;
-        this.setTranslateX(posX);
-        this.setTranslateY(posY);
-        this.x = posX;
-        this.y = posY;
-        this.damage = dmg;
-        this.getChildren().add(iv);
-        bombs.add(this);
+    public Bomb(String img, int posX, int posY, int width, int height, int dmg) {
+        super(img, posX, posY, width, height, dmg);
         timeIndex = System.currentTimeMillis();
     }
-    
-    public boolean isAlive(){
+
+    public boolean isAlive() {
         return alive;
     }
-    
-    public void setAlive(boolean alive){
+
+    public void setAlive(boolean alive) {
         this.alive = alive;
     }
-    
-    public void explode(){
+
+    public void explode() {
         long timeNow = System.currentTimeMillis();
-        if(timeNow-timer >= timeIndex){
-            //add explode code here
-            //add bomb to remove arraylist
+        if (timeNow - timer >= timeIndex) {
+            explode = true;
+            //change sprite to play explosion animation
         }
-        //add code to explode on enemy collision
+    }
+
+    //deactivate enemy collision for bombs
+    public boolean enemyColliding(Enemy enemy) {
+        if (explode) {
+            if (!enemy.hasCollisionRects()) {
+                return this.getBoundsInParent().intersects(enemy.getBoundsInParent());
+            }
+
+            for (Rectangle rect : enemy.getCollisionRects()) {
+                //change bounds to support explosion rectangle 
+                if (this.getBoundsInParent().intersects(rect.getBoundsInParent())) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

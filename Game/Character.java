@@ -22,6 +22,7 @@ public class Character extends Pane {
     int y; //Character yPos
     int playerSpeed;
     int shootSpeed;
+    int bombSpeed = 1000;
 
     int health = 5;
     int shieldHealth = 0;
@@ -290,6 +291,10 @@ public class Character extends Pane {
     
     public boolean getBomb(){
         return bomb;
+    }
+    
+    public int getBombSpeed(){
+        return bombSpeed;
     }
     
     public boolean isWall() {
