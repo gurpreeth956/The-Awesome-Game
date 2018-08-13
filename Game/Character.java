@@ -1,11 +1,14 @@
 package Game;
 import Environment.Stairs;
 import Friends.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 public class Character extends Pane {
@@ -13,12 +16,13 @@ public class Character extends Pane {
     ImageView iv;
     int offsetX = 0;
     int offsetY = 0;
-    int width = 66;
+    int width = 65;
     int height = 33;
     int x; //Character xPos
     int y; //Character yPos
     int playerSpeed;
     int shootSpeed;
+    int bombSpeed = 1000;
 
     int health = 5;
     int shieldHealth = 0;
@@ -27,6 +31,10 @@ public class Character extends Pane {
     boolean alive = true;
     boolean shield = false;
     boolean stop;
+    boolean bomb;
+    
+    public List<Rectangle> collisionRects;
+    Rectangle leftSide, rightSide, head, body;
 
     public Character(int posX, int posY) {
 	Image charImage = new Image("file:src/Sprites/Greenies.png");
@@ -40,6 +48,20 @@ public class Character extends Pane {
 	this.getChildren().addAll(iv);
         this.playerSpeed = 3;
 	this.shootSpeed = 500;
+        
+        collisionRects = new ArrayList();
+        head = new Rectangle(this.getTranslateX() + 20, this.getTranslateY(), 26, 5);
+        body = new Rectangle(this.getTranslateX() + 13, this.getTranslateY() + 5, 40, 27);
+        leftSide = new Rectangle(this.getTranslateX() + 3, this.getTranslateY() + 18, 10, 14);
+        rightSide = new Rectangle(this.getTranslateX() + 53, this.getTranslateY() + 18, 10, 14);
+        head.setFill(Color.TRANSPARENT);
+        body.setFill(Color.TRANSPARENT);
+        leftSide.setFill(Color.TRANSPARENT);
+        rightSide.setFill(Color.TRANSPARENT);
+        collisionRects.add(head);
+        collisionRects.add(body);
+        collisionRects.add(leftSide);
+        collisionRects.add(rightSide);
     }
 
     public void setCharacterView(int offsetX, int offsetY) {
@@ -55,6 +77,11 @@ public class Character extends Pane {
 		} else {
 		    this.setTranslateX(this.getTranslateX() + 1);
 		    this.x++;
+                    
+                    head.setX(this.getTranslateX() + 20 + 1);
+                    body.setX(this.getTranslateX() + 13 + 1);
+                    leftSide.setX(this.getTranslateX() + 3 + 1);
+                    rightSide.setX(this.getTranslateX() + 53 + 1);
 		}
 	    } else {
 		if (this.x < 0) {
@@ -62,6 +89,11 @@ public class Character extends Pane {
 		} else {
 		    this.setTranslateX(this.getTranslateX() - 1);
 		    this.x--;
+                    
+                    head.setX(this.getTranslateX() + 20 - 1);
+                    body.setX(this.getTranslateX() + 13 - 1);
+                    leftSide.setX(this.getTranslateX() + 3 - 1);
+                    rightSide.setX(this.getTranslateX() + 53 - 1);
 		}
 	    }
             
@@ -69,9 +101,20 @@ public class Character extends Pane {
             if (right && wall) {
                 this.setTranslateX(this.getTranslateX() - 1);
                 this.x--;
+
+                head.setX(this.getTranslateX() + 20 - 1);
+                body.setX(this.getTranslateX() + 13 - 1);
+                leftSide.setX(this.getTranslateX() + 3 - 1);
+                rightSide.setX(this.getTranslateX() + 53 - 1);
+                
             } else if (!right && wall) {
                 this.setTranslateX(this.getTranslateX() + 1);
                 this.x++;
+
+                head.setX(this.getTranslateX() + 20 + 1);
+                body.setX(this.getTranslateX() + 13 + 1);
+                leftSide.setX(this.getTranslateX() + 3 + 1);
+                rightSide.setX(this.getTranslateX() + 53 + 1);
             }
 	}
     }
@@ -85,6 +128,11 @@ public class Character extends Pane {
 		} else {
 		    this.setTranslateY(this.getTranslateY() + 1);
 		    this.y++;
+                    
+                    head.setY(this.getTranslateY() + 1);
+                    body.setY(this.getTranslateY() + 5 + 1);
+                    leftSide.setY(this.getTranslateY() + 18 + 1);
+                    rightSide.setY(this.getTranslateY() + 18 + 1);
 		}
 	    } else {
 		if (this.y < 0) {
@@ -92,6 +140,11 @@ public class Character extends Pane {
 		} else {
 		    this.setTranslateY(this.getTranslateY() - 1);
 		    this.y--;
+                    
+                    head.setY(this.getTranslateY() - 1);
+                    body.setY(this.getTranslateY() + 5 - 1);
+                    leftSide.setY(this.getTranslateY() + 18 - 1);
+                    rightSide.setY(this.getTranslateY() + 18 - 1);
 		}
 	    }
             
@@ -99,9 +152,20 @@ public class Character extends Pane {
             if (down && wall) {
                 this.setTranslateY(this.getTranslateY() - 1);
                 this.y--;
+
+                head.setY(this.getTranslateY() - 1);
+                body.setY(this.getTranslateY() + 5 - 1);
+                leftSide.setY(this.getTranslateY() + 18 - 1);
+                rightSide.setY(this.getTranslateY() + 18 - 1);
+                
             } else if (!down && wall) {
                 this.setTranslateY(this.getTranslateY() + 1);
                 this.y++;
+
+                head.setY(this.getTranslateY() + 1);
+                body.setY(this.getTranslateY() + 5 + 1);
+                leftSide.setY(this.getTranslateY() + 18 + 1);
+                rightSide.setY(this.getTranslateY() + 18 + 1);
             }
 	}
     }
@@ -142,9 +206,9 @@ public class Character extends Pane {
 
     public void hit(int dmg) {
         if (shield) {
-            shieldHealth-=dmg;
+            shieldHealth -= dmg;
         } else {
-            health-=dmg;
+            health -= dmg;
         }
     }
     
@@ -166,11 +230,25 @@ public class Character extends Pane {
     }
     
     public boolean isColliding(Stairs stair) {
-	return this.getBoundsInParent().intersects(stair.getBoundsInParent());
+        for (Rectangle rect : collisionRects) {
+            if (stair.getBoundsInParent().intersects(rect.getBoundsInParent())) {
+                return true;
+            }
+        }
+        return false;
     }
     
     public boolean isColliding(Friends friend) {
-        return this.getBoundsInParent().intersects(friend.getBoundsInParent());
+        for (Rectangle rect : collisionRects) {
+            if (friend.getBoundsInParent().intersects(rect.getBoundsInParent())) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public List<Rectangle> getCollisionRects() {
+        return collisionRects;
     }
     
     public void setPlayerSpeed(int playerSpeed) {
@@ -207,11 +285,26 @@ public class Character extends Pane {
         return fullShieldHealth;
     }
     
+    public void setBomb(boolean a){
+        bomb  = a;
+    }
+    
+    public boolean getBomb(){
+        return bomb;
+    }
+    
+    public int getBombSpeed(){
+        return bombSpeed;
+    }
+    
     public boolean isWall() {
         stop = false;
         for (Rectangle rect : Main.shopRootWalls) {
-            if (this.getBoundsInParent().intersects(rect.getBoundsInParent()) && Main.level.isShopping()) {
-                stop = true;
+            for (Rectangle playerRect : collisionRects) {
+                if (playerRect.getBoundsInParent().intersects(rect.getBoundsInParent()) 
+                        && Main.level.isShopping()) {
+                    stop = true;
+                }
             }
         }
         return stop;

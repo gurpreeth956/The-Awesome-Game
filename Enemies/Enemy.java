@@ -3,8 +3,10 @@ import Environment.Portal;
 import Game.Character;
 import Projectiles.Projectile;
 
+import java.util.ArrayList;
 import java.util.List;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -19,18 +21,24 @@ public class Enemy extends Pane {
     int offsetY = 0;
     int width;
     int height;
-    int x; //Enemy xPos
-    int y; //Enemy yPos
+    public int x; //Enemy xPos
+    public int y; //Enemy yPos
     int coin;
     int score;
     int enemySpeed;
     
-    Rectangle healthBarOutline;
-    Rectangle actualHealth;
-    Rectangle lostHealth;
-    boolean alive = true;
-    int health;
-    int totalHealth;
+    public Rectangle healthBarOutline;
+    public Rectangle actualHealth;
+    public Rectangle lostHealth;
+    public boolean alive = true;
+    public int health;
+    public int totalHealth;
+    
+    public List<Rectangle> collisionRects;
+    public boolean hasCollisionRects = false;
+    
+    //currently used only for bosses
+    public Label nameLabel;
 
     public Enemy(String img, int health, int coin, int width, int height) {
 	Image enemyImage = new Image(img);
@@ -53,16 +61,18 @@ public class Enemy extends Pane {
 	actualHealth = new Rectangle(x, y - 5, width, 3);
 	actualHealth.setFill(Color.GREEN);
 	actualHealth.toFront();
+        
+        //so game does not crash
+        collisionRects = new ArrayList();
     }
     
     public void setCharacterView(int offsetX, int offsetY) {
         this.iv.setViewport(new Rectangle2D(offsetX, offsetY, width, height));
     }
     
-    public void move(Character player, double width, double height) {
+    public void move(Character player, double width, double height) { //note width and height here are screen size
 	//To be overridden by child classes
         //following code is used for when testing enemy in child class without its own design 
-        
         if (player.getX() > this.getX() && player.getY() == this.getY()) { //right
             this.setCharacterView(0, 61);
             this.moveX(1, width);
@@ -208,7 +218,22 @@ public class Enemy extends Pane {
     }
     
     public boolean playerColliding(Character player) {
-        return this.getBoundsInParent().intersects(player.getBoundsInParent());
+        if (!hasCollisionRects) {
+            for (Rectangle playerRect : player.getCollisionRects()) {
+                if (playerRect.getBoundsInParent().intersects(this.getBoundsInParent())) {
+                    return true;
+                }
+            }
+        }
+        
+        for (Rectangle playerRect : player.getCollisionRects()) {
+            for (Rectangle enemyRect : this.collisionRects) {
+                if (playerRect.getBoundsInParent().intersects(enemyRect.getBoundsInParent())) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
     
     public boolean enemyColliding(List<Enemy> enemies) {
@@ -222,11 +247,15 @@ public class Enemy extends Pane {
 	return colliding;
     }
     
+    public List<Rectangle> getCollisionRects() {
+        return collisionRects;
+    }
+    
     public void summon(Portal portal) {
-	this.setTranslateX(portal.getX());
-        this.setTranslateY(portal.getY());
-        this.x = portal.getX();
-        this.y = portal.getY();
+	this.setTranslateX((portal.getX() + 26) - (this.width / 2));
+        this.setTranslateY((portal.getY() + 55) - (this.height / 2));
+        this.x = (portal.getX() + 26) - (this.width / 2);
+        this.y = (portal.getY() + 55) - (this.height / 2);
     }
     
     public int getCoin() {
@@ -255,5 +284,22 @@ public class Enemy extends Pane {
     
     public Rectangle getLostHealth() {
         return lostHealth;
+    }
+
+    public Label getNameLabel() {
+        return nameLabel;
+    }
+    
+    public boolean hasCollisionRects() {
+        return hasCollisionRects;
+    }
+    
+    public ImageView getIV() {
+        return this.iv;
+    }
+    
+    public void setIV(ImageView iv) {
+        this.iv = iv;
+        this.iv.setViewport(new Rectangle2D(offsetX, offsetY, width, height));
     }
 }

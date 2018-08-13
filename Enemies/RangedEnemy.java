@@ -93,4 +93,5 @@ public class RangedEnemy extends Enemy {
     public long getTimeofLastProjectile() {
         return timeOfLastProjectile;
     }
+
 }
