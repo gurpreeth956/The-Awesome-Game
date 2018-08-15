@@ -28,13 +28,21 @@ public class Portal extends Pane {
 	ImageView portIV = new ImageView(portImage);
 	this.iv = portIV;
 	this.iv.setViewport(new Rectangle2D(offsetX, offsetY, width, height));
-	this.x = (int)(Math.random() * screenWidth);
-	this.y = (int)(Math.random() * screenHeight);
+        
+        do {
+            this.x = (int)(Math.random() * screenWidth);
+        } while ((this.x > 500 && this.x < 800) //mildle of screen restrictions
+                || (this.x < 100 || this.x > 1154)); //edge of screen restrictions
+        do {
+            this.y = (int)(Math.random() * screenHeight);
+        } while ((this.y > 250 && this.y < 450) //mildle of screen restrictions
+                || (this.y < 100 || this.y > 565)); //edge of screen restrictions
+        
 	this.setTranslateX(this.x);
         this.setTranslateY(this.y);
         
-        portalia = new SpriteAnimation("file:src/Sprites/Portal.png", count, columns, 
-            offsetX, offsetY, width, height, duration);
+        portalia = new SpriteAnimation("file:src/Sprites/Portal.png", count, columns,
+                offsetX, offsetY, width, height, duration);
         animation = portalia;
         iv = portalia.getIV();
         iv.setViewport(new Rectangle2D(offsetX, offsetY, width, height));

@@ -51,7 +51,7 @@ public class Main extends Application {
     Button yesReturn = new Button("Yes");
     Button noReturn = new Button("No");
 
-    Character player;
+    static Character player;
     static Level level;
     Stairs toShopStair, decUpStair, toGameStair;
     Friends shopKeeper;
@@ -86,7 +86,7 @@ public class Main extends Application {
             interaction, dropBomb;
 
     //various elements for health score ect.
-    Rectangle healthBarOutline, actualHealth, lostHealth, shieldHealth;
+    static Rectangle healthBarOutline, actualHealth, lostHealth, shieldHealth;
     Label coinLabel, scoreLabel, shopBuyingHealthLabel, shopBuyingShieldLabel, shopBuyingCoinLabel,
             shopBuyingScoreLabel;
     VBox health, coinAndScore;
@@ -439,6 +439,7 @@ public class Main extends Application {
         /*for (Rectangle rect : enemy.getCollisionRects()) {
             gameRoot.getChildren().addAll(rect);
         }*/
+        
         coinAndScore.toFront();
         coinLabel.toFront();
         scoreLabel.toFront();
@@ -506,6 +507,7 @@ public class Main extends Application {
         /*for (Rectangle rect : enemy.getCollisionRects()) {
             gameRoot.getChildren().addAll(rect);
         }*/
+        
         coinAndScore.toFront();
         coinLabel.toFront();
         scoreLabel.toFront();
@@ -546,7 +548,7 @@ public class Main extends Application {
         }
     }
 
-    public void playerReceiveHit() {
+    public static void playerReceiveHit() {
         //determines which bar takes damage
         if (player.hasShield()) {
             gameRoot.getChildren().remove(shieldHealth);
@@ -609,6 +611,8 @@ public class Main extends Application {
                 shopRoot.getChildren().clear();
                 gameRoot.getChildren().addAll(player, health, healthBarOutline, lostHealth,
                         actualHealth, coinAndScore);
+                player.setX((int) screenSize.getWidth() / 2);
+                player.setY((int) screenSize.getHeight() / 2);
 
                 //updates game root info based on changes while shopping
                 if (player.hasShield()) {
@@ -638,11 +642,10 @@ public class Main extends Application {
 
             if (player.isColliding(toShopStair)) {
                 level.setShopping(true);
-                for (Spikes spike : Spikes.spikes) {
-                    Spikes.spikeToRemove.add(spike);
-                }
                 pStage.getScene().setRoot(shopRoot);
                 currentGameRoot = shopRoot;
+                Spikes.spikes.clear();
+                enemyProj.clear();
 
                 if (couldGoToShop) {
                     gameRoot.getChildren().clear();
