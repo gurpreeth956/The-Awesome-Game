@@ -1,9 +1,21 @@
 package Projectiles;
 
 import Enemies.Enemy;
+import Game.SpriteAnimation;
+import javafx.animation.Animation;
+import javafx.geometry.Rectangle2D;
+import javafx.util.Duration;
 
 public class Bomb extends Projectile {
 
+    SpriteAnimation boo;
+    private final int count = 5;
+    private final int columns = 5;
+    private final int offsetX = 0;
+    private final int offsetY = 0;
+    private final Duration duration  = Duration.millis(2000);
+    private final Animation animation;
+    
     int timer = 2000;
     long timeIndex;
     boolean explode = false;
@@ -11,7 +23,13 @@ public class Bomb extends Projectile {
     //Create sprite for bomb
     public Bomb(String img, int posX, int posY, int width, int height, int dmg) {
         super(img, posX, posY, width, height, dmg);
+        super.getChildren().remove(iv);
         timeIndex = System.currentTimeMillis();
+        boo = new SpriteAnimation(img, count, columns, offsetX, offsetY, width, height, duration);
+        animation = boo;
+        iv = boo.getIV();
+        iv.setViewport(new Rectangle2D(offsetX, offsetY, width, height));
+        getChildren().add(iv);
     }
 
     public boolean isAlive() {
@@ -37,7 +55,9 @@ public class Bomb extends Projectile {
 
     //deactivate enemy collision for bombs
     public boolean enemyColliding(Enemy enemy) {
+        animation.play();
         long timeNow = System.currentTimeMillis();
+        boo.setOffset(0,0);
         if (timeIndex + timer <= timeNow) {
             explode = true;
         }
