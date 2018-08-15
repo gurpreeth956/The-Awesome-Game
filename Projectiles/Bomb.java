@@ -1,17 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Projectiles;
 
 import Enemies.Enemy;
-import javafx.scene.shape.Rectangle;
 
-/**
- *
- * @author rhuan
- */
 public class Bomb extends Projectile {
 
     int timer = 2000;
@@ -32,26 +22,30 @@ public class Bomb extends Projectile {
         this.alive = alive;
     }
 
+    public boolean exploding() {
+        return explode;
+    }
+
     public void move(Character player) {
+        //called in the super class for some reason
         long timeNow = System.currentTimeMillis();
         if (timeIndex + timer <= timeNow) {
             explode = true;
-            //change sprite to play explosion animation
+            this.setAlive(false);
         }
     }
 
     //deactivate enemy collision for bombs
     public boolean enemyColliding(Enemy enemy) {
-        if (explode == true) {
-            if (!enemy.hasCollisionRects()) {
-                return this.getBoundsInParent().intersects(enemy.getBoundsInParent());
-            }
-
-            for (Rectangle rect : enemy.getCollisionRects()) {
-                //change bounds to support explosion rectangle 
-                if (this.getBoundsInParent().intersects(rect.getBoundsInParent())) {
-                    return true;
-                }
+        long timeNow = System.currentTimeMillis();
+        if (timeIndex + timer <= timeNow) {
+            explode = true;
+        }
+        if (this.exploding()) {
+            this.setAlive(false);
+            if (Math.abs(enemy.getX() - this.x + 32) <= 80 && Math.abs(enemy.getY()
+                    - this.y + 16) <= 80) {
+                return true;
             }
         }
         return false;

@@ -31,7 +31,7 @@ public class Character extends Pane {
     boolean alive = true;
     boolean shield = false;
     boolean stop;
-    boolean bomb;
+    boolean bomb = false;
     
     public List<Rectangle> collisionRects;
     Rectangle leftSide, rightSide, head, body;
