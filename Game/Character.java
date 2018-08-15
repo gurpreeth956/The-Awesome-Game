@@ -192,7 +192,7 @@ public class Character extends Pane {
     }
 
     public void setY(int y) {
-        this.setTranslateX(y);
+        this.setTranslateY(y);
 	this.y = y;
     }
 
