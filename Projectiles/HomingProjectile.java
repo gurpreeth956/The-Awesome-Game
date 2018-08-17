@@ -1,6 +1,7 @@
 package Projectiles;
 import Game.Main;
 import Game.Character;
+import javafx.geometry.Rectangle2D;
 
 public class HomingProjectile extends Projectile {
     
@@ -12,6 +13,7 @@ public class HomingProjectile extends Projectile {
     int ease = 50;//change this to increase turn radius of missile
     int launchPos;//angle of initial launch
     
+    long speedTime=0;
     long timeSpawned;
     boolean spawned = false;
 
@@ -75,6 +77,13 @@ public class HomingProjectile extends Projectile {
                 Main.playerReceiveHit();
             }
             this.setAlive(false);
+        }else if(timeNow-6000>=speedTime){
+            this.setVelocityX(this.getVelocityX()+1);
+            this.setVelocityY(this.getVelocityY()+1);
+            if(speedTime != 0){
+                this.iv.setViewport(new Rectangle2D(0, 11, width, height));
+            }
+            speedTime = timeNow;
         }
     }
 }
