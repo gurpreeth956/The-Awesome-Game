@@ -71,9 +71,9 @@ public class ChargeBoss extends MeleeBoss {
             this.setRotate(angle);
             lock = true;
         }
-        if(charging) {
+        if (charging) {
             vx = speed * (90 - Math.abs(angle)) / 90;
-            if(angle < 0) {
+            if (angle < 0) {
                 vy = -speed + Math.abs(vx);
             } else {
                 vy = speed - Math.abs(vx);

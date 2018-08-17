@@ -462,7 +462,7 @@ public class Main extends Application {
             enemy.hitView(enemy);
             enemy.healthPos();
             if ((time < 0 || time > 1000)) {
-                player.hit(1);//update this line if different damage values are implemented for different enemies
+                //player.hit(1);//update this line if different damage values are implemented for different enemies
                 playerReceiveHit();
                 hitTime = timeNow;
             }
