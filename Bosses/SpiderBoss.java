@@ -41,8 +41,8 @@ public class SpiderBoss extends MeleeBoss {
         
         currentPauseTime = 3000;
         randLocationSet = false;
-        hasCollisionRects = true;
         ready = false;
+        overRun = true;
         
         collisionRects = new ArrayList();
         head = new Rectangle(this.getTranslateX() + 56, this.getTranslateY(), 52, 56);
@@ -51,6 +51,7 @@ public class SpiderBoss extends MeleeBoss {
         body.setFill(Color.TRANSPARENT);
         collisionRects.add(head);
         collisionRects.add(body);
+        hasCollisionRects = true;
     }
 
     public void move(Character player, double width, double height) {
