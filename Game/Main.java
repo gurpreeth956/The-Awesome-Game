@@ -342,8 +342,10 @@ public class Main extends Application {
     }
     
     public void createBomb(){
-        Bomb bomb = new Bomb("file:src/Sprites/Bomb.png",player.getX() + 28,
+        Projectile bomb = new Bomb("file:src/Sprites/Bomb.png",player.getX() + 28,
                 player.getY() + 16, 16, 21, 1);
+        bomb.setVelocityX(0);
+        bomb.setVelocityY(0);
         gameRoot.getChildren().addAll(bomb);
         bomb.toBack();
         projectiles.add(bomb);
@@ -370,6 +372,7 @@ public class Main extends Application {
             proj.setAlive(false);
         }
 
+        //removes projectile if dead
         if (!proj.isAlive()) {
             gameRoot.getChildren().remove(proj);
             projToRemove.add(proj);
@@ -681,19 +684,19 @@ public class Main extends Application {
     PlayerShieldUpgrade shieldUp;
     ShootSpeedUpgrade shotUp;
     PlayerSpeedUpgrade speedUp;
-    BombUpgrade bomb;
+    BombUpgrade bombUp;
 
     public void addShopButtons() {
         healthUp = new HealthPackUpgrade();
         shieldUp = new PlayerShieldUpgrade();
         shotUp = new ShootSpeedUpgrade();
         speedUp = new PlayerSpeedUpgrade();
-        bomb = new BombUpgrade();
+        bombUp = new BombUpgrade();
         shopUpgrades.add(healthUp);
         shopUpgrades.add(shieldUp);
         shopUpgrades.add(shotUp);
         shopUpgrades.add(speedUp);
-        shopUpgrades.add(bomb);
+        shopUpgrades.add(bombUp);
 
         for (Upgrades upgrade : shopUpgrades) {
             shopUpgradesView.getItems().addAll(upgrade.getListView());
@@ -718,8 +721,8 @@ public class Main extends Application {
                         iv.setImage(speedUp.getImage());
                     } else if (name.equals("Shooting Speed   -   " + shotUp.getPrice())) {
                         iv.setImage(shotUp.getImage());
-                    } else if (name.equals("Bombs   -   " + bomb.getPrice())) {
-                        iv.setImage(bomb.getImage());
+                    } else if (name.equals("Bombs   -   " + bombUp.getPrice())) {
+                        iv.setImage(bombUp.getImage());
                     }
                     setText(name);
                     setGraphic(iv);
@@ -775,9 +778,9 @@ public class Main extends Application {
                 removeUpgrade(shotUp);
             }
         } else if (upgradeName.equals("Bombs   ")) {
-            if (level.getCoin() >= bomb.getPrice()) {
-                bomb.setBought(true);
-                removeUpgrade(bomb);
+            if (level.getCoin() >= bombUp.getPrice()) {
+                bombUp.setBought(true);
+                removeUpgrade(bombUp);
             }
         }
     }

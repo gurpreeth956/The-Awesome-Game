@@ -16,8 +16,8 @@ public class HomingBoss extends RangedBoss {
         hasCollisionRects = false;
     }
 
-    //public void move(Character player, double width, double height) {
-        /* if (player.getX() > this.getX() && player.getY() == this.getY()) { //right
+    public void move(Character player, double width, double height) {
+         if (player.getX() > this.getX() && player.getY() == this.getY()) { //right
             this.setCharacterView(0, 61);
             this.moveX(1, width);
         }
@@ -53,8 +53,8 @@ public class HomingBoss extends RangedBoss {
             this.setCharacterView(0, 61);
             this.moveX(1, width);
             this.moveY(1, height);
-        }*/
-    //}
+        }
+    }
 
     //Keep speed params consistent for homing projectile purposes
     //Change homing projectile code later
@@ -66,7 +66,7 @@ public class HomingBoss extends RangedBoss {
         this.setCharacterView(128, 0);
         this.setOffsetY(0);
         if (time < 0 || time > this.getShootSpeed()) {
-            createProjectile(3, 3, projectiles, gameRoot, shotIVFile, 20, 9, player);
+            createProjectile(2, 2, projectiles, gameRoot, shotIVFile, 24, 10, player);
             timeOfLastProjectile = timeNow;
         }
     }
