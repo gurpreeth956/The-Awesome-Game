@@ -6,6 +6,7 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.scene.shape.Rectangle;
 
 public class Projectile extends Pane {
     
@@ -16,12 +17,13 @@ public class Projectile extends Pane {
     int height;
     int x; //Proj xPos
     int y; //Proj yPos
+    int damage;
     
     int velocityX = 0;
     int velocityY = 0;
     boolean alive = true;
     
-    public Projectile(String img, int posX, int posY, int width, int height) {
+    public Projectile(String img, int posX, int posY, int width, int height, int dmg) {
         Image projImage = new Image(img);
 	ImageView projIV = new ImageView(projImage);
         this.iv = projIV;
@@ -32,6 +34,7 @@ public class Projectile extends Pane {
         this.y = posY;
         this.width = width;
         this.height = height;
+        this.damage = dmg;
         this.getChildren().addAll(iv);
     }
     
@@ -65,10 +68,28 @@ public class Projectile extends Pane {
     }
     
     public boolean enemyColliding(Enemy enemy) {
-        return this.getBoundsInParent().intersects(enemy.getBoundsInParent());
+        if (!enemy.hasCollisionRects()) {
+            return this.getBoundsInParent().intersects(enemy.getBoundsInParent());
+        }
+        
+        for (Rectangle rect : enemy.getCollisionRects()) {
+            if (this.getBoundsInParent().intersects(rect.getBoundsInParent())) {
+                return true;
+            }
+        }
+        return false;
     }
     
     public boolean playerColliding(Character player) {
-        return this.getBoundsInParent().intersects(player.getBoundsInParent());
+        for (Rectangle rect : player.getCollisionRects()) {
+            if (this.getBoundsInParent().intersects(rect.getBoundsInParent())) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public int getDamage() {
+        return damage;
     }
 }

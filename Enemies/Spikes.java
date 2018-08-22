@@ -8,6 +8,7 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.scene.shape.Rectangle;
 
 public class Spikes extends Pane {
     
@@ -21,9 +22,10 @@ public class Spikes extends Pane {
     int height = 28;
     int x; //Spike xPos
     int y; //Spike yPos
+    int damage;
     boolean alive;
 
-    public Spikes(int posX, int posY, Pane gameRoot) {
+    public Spikes(int posX, int posY, Pane gameRoot, int dmg) {
         Image spikeImage = new Image("file:src/Sprites/Spikes.png");
         ImageView spikeIV = new ImageView(spikeImage);
         this.iv = spikeIV;
@@ -33,6 +35,7 @@ public class Spikes extends Pane {
 	this.setTranslateY(posY);
         this.x = posX;
         this.y = posY;
+        this.damage = dmg;
         this.getChildren().addAll(iv);
         spikes.add(this);
     }
@@ -41,8 +44,8 @@ public class Spikes extends Pane {
         return alive;
     }
     
-    public void setAlive(boolean a) {
-        alive = a;
+    public void setAlive(boolean alive) {
+        this.alive = alive;
     }
     
     public boolean playerShotColliding(List<Projectile> projs) {
@@ -59,10 +62,16 @@ public class Spikes extends Pane {
     
     public boolean playerColliding(Character player) {
         boolean colliding = false;
-        if (this.getBoundsInParent().intersects(player.getBoundsInParent())) {
-            alive = false;
-            colliding = true;
+        for (Rectangle playerRect : player.getCollisionRects()) {
+            if (this.getBoundsInParent().intersects(playerRect.getBoundsInParent())) {
+                alive = false;
+                colliding = true;
+            }
         }
         return colliding;
+    }
+    
+    public int getDamage() {
+        return damage;
     }
 }

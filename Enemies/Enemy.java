@@ -3,8 +3,10 @@ import Environment.Portal;
 import Game.Character;
 import Projectiles.Projectile;
 
+import java.util.ArrayList;
 import java.util.List;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -13,23 +15,30 @@ import javafx.scene.shape.Rectangle;
 
 public class Enemy extends Pane {
     
-    ImageView iv;
+    //Create damage variable for player hit??
+    public ImageView iv;
     int offsetX = 0;
     int offsetY = 0;
     int width;
     int height;
-    int x; //Enemy xPos
-    int y; //Enemy yPos
+    public int x; //Enemy xPos
+    public int y; //Enemy yPos
     int coin;
     int score;
     int enemySpeed;
     
-    Rectangle healthBarOutline;
-    Rectangle actualHealth;
-    Rectangle lostHealth;
-    boolean alive = true;
-    int health;
-    int totalHealth;
+    public Rectangle healthBarOutline;
+    public Rectangle actualHealth;
+    public Rectangle lostHealth;
+    public boolean alive = true;
+    public int health;
+    public int totalHealth;
+    
+    public List<Rectangle> collisionRects;
+    public boolean hasCollisionRects = false;
+    
+    //currently used only for bosses
+    public Label nameLabel;
 
     public Enemy(String img, int health, int coin, int width, int height) {
 	Image enemyImage = new Image(img);
@@ -52,69 +61,94 @@ public class Enemy extends Pane {
 	actualHealth = new Rectangle(x, y - 5, width, 3);
 	actualHealth.setFill(Color.GREEN);
 	actualHealth.toFront();
+        
+        //so game does not crash
+        collisionRects = new ArrayList();
     }
     
     public void setCharacterView(int offsetX, int offsetY) {
         this.iv.setViewport(new Rectangle2D(offsetX, offsetY, width, height));
     }
     
-    public void hitView(Enemy enemy) {
-        enemy.setCharacterView(128, 0);
-    }
-    
-    public void move(Character player, double a, double b) {
+    public void move(Character player, double width, double height) { //note width and height here are screen size
 	//To be overridden by child classes
+        //following code is used for when testing enemy in child class without its own design 
+        if (player.getX() > this.getX() && player.getY() == this.getY()) { //right
+            this.setCharacterView(0, 61);
+            this.moveX(1, width);
+        }
+        if (player.getX() < this.getX() && player.getY() == this.getY()) { //left
+            this.setCharacterView(0, 123);
+            this.moveX(-1, width);
+        }
+        if (player.getX() == this.getX() && player.getY() > this.getY()) { //down
+            this.setCharacterView(0, 0);
+            this.moveY(1, height);
+        }
+        if (player.getX() == this.getX() && player.getY() < this.getY()) { //up
+            this.setCharacterView(0, 183);
+            this.moveY(-1, height);
+        }
+
+        if (player.getX() > this.getX() && player.getY() < this.getY()) { //quadrant1
+            this.setCharacterView(0, 61);
+            this.moveX(1, width);
+            this.moveY(-1, height);
+        }
+        if (player.getX() < this.getX() && player.getY() < this.getY()) { //quadrant2
+            this.setCharacterView(0, 123);
+            this.moveX(-1, width);
+            this.moveY(-1, height);
+        }
+        if (player.getX() < this.getX() && player.getY() > this.getY()) { //quadrant3
+            this.setCharacterView(0, 123);
+            this.moveX(-1, width);
+            this.moveY(1, height);
+        }
+        if (player.getX() > this.getX() && player.getY() > this.getY()) { //quadrant4
+            this.setCharacterView(0, 61);
+            this.moveX(1, width);
+            this.moveY(1, height);
+        }
     }
     
     public void shoot(Character player, List<Projectile> list, Pane root) {
         //To be overridden by child classes
     }
     
+    public void hitView(Enemy enemy) {
+	//To be overridden by child classes
+    }
+    
     public void update(Pane root) {
         //To be overridden by child classes
     }
     
-    public void moveX(int x, double width) { //x is horizontal speed
+    public void moveX(int x, double screenWidth) { //x is horizontal speed
         boolean right = x > 0;
         for (int i = 0; i < Math.abs(x); i++) {
             if (right) {
-                if(this.x > width - this.width)
-                    this.setTranslateX(width - this.width);
-                else {
-                    this.setTranslateX(this.getTranslateX() + 1);
-                    this.x++;
-                }
+                this.setTranslateX(this.getTranslateX() + 1);
+                this.x++;
             }
             else  {
-                if(this.x < 0)
-                    this.setTranslateX(0);
-                else {
-                    this.setTranslateX(this.getTranslateX() - 1);
-                    this.x--;
-                }
+                this.setTranslateX(this.getTranslateX() - 1);
+                this.x--;
             }
 	    this.healthPos();
         }
     }
     
-    public void moveY(int y, double height) { //y is vertical speed
+    public void moveY(int y, double screenHeight) { //y is vertical speed
         boolean down = y > 0;
         for (int i = 0; i < Math.abs(y); i++) {
             if (down) {
-                if (this.y > height - this.height)
-                    this.setTranslateY(height - this.height);
-                else {
-                    this.setTranslateY(this.getTranslateY() + 1);
-                    this.y++;
-                }
+                this.setTranslateY(this.getTranslateY() + 1);
+                this.y++;
             }
             else {
-                if (this.y < 0)
-                    this.setTranslateY(0);
-                else {
-                    this.setTranslateY(this.getTranslateY() - 1);
-                    this.y--;
-                }
+                this.setTranslateY(this.getTranslateY() - 1);
+                this.y--;
             }
 	    this.healthPos();
         }
@@ -123,11 +157,13 @@ public class Enemy extends Pane {
     public void setX(int x) {
         this.setTranslateX(x);
         this.x = x;
+        this.healthPos();
     }
 
     public void setY(int y) {
         this.setTranslateY(y);
         this.y = y;
+        this.healthPos();
     }
     
     public int getX() {
@@ -154,8 +190,8 @@ public class Enemy extends Pane {
 	this.alive = alive;
     }
     
-    public void hit() {
-	health--;
+    public void hit(Projectile proj) {
+	health-= proj.getDamage();
     }
     
     public int getHealth() {
@@ -168,6 +204,10 @@ public class Enemy extends Pane {
 	return actualHealth;
     }
     
+    public int getFullHealth() {
+        return this.totalHealth;
+    }
+    
     public void healthPos() {
 	actualHealth.setX(this.x);
 	actualHealth.setY(this.y - 5);
@@ -178,7 +218,22 @@ public class Enemy extends Pane {
     }
     
     public boolean playerColliding(Character player) {
-        return this.getBoundsInParent().intersects(player.getBoundsInParent());
+        if (!hasCollisionRects) {
+            for (Rectangle playerRect : player.getCollisionRects()) {
+                if (playerRect.getBoundsInParent().intersects(this.getBoundsInParent())) {
+                    return true;
+                }
+            }
+        }
+        
+        for (Rectangle playerRect : player.getCollisionRects()) {
+            for (Rectangle enemyRect : this.collisionRects) {
+                if (playerRect.getBoundsInParent().intersects(enemyRect.getBoundsInParent())) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
     
     public boolean enemyColliding(List<Enemy> enemies) {
@@ -192,11 +247,15 @@ public class Enemy extends Pane {
 	return colliding;
     }
     
+    public List<Rectangle> getCollisionRects() {
+        return collisionRects;
+    }
+    
     public void summon(Portal portal) {
-	this.setTranslateX(portal.getX());
-        this.setTranslateY(portal.getY());
-        this.x = portal.getX();
-        this.y = portal.getY();
+	this.setTranslateX((portal.getX() + 26) - (this.width / 2));
+        this.setTranslateY((portal.getY() + 55) - (this.height / 2));
+        this.x = (portal.getX() + 26) - (this.width / 2);
+        this.y = (portal.getY() + 55) - (this.height / 2);
     }
     
     public int getCoin() {
@@ -225,5 +284,22 @@ public class Enemy extends Pane {
     
     public Rectangle getLostHealth() {
         return lostHealth;
+    }
+
+    public Label getNameLabel() {
+        return nameLabel;
+    }
+    
+    public boolean hasCollisionRects() {
+        return hasCollisionRects;
+    }
+    
+    public ImageView getIV() {
+        return this.iv;
+    }
+    
+    public void setIV(ImageView iv) {
+        this.iv = iv;
+        this.iv.setViewport(new Rectangle2D(offsetX, offsetY, width, height));
     }
 }

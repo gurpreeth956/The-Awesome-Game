@@ -9,7 +9,7 @@ import javafx.util.Duration;
 
 public class SpriteAnimation extends Transition {
     
-    private final ImageView iv;
+    private ImageView iv;
     private final int count;
     private final int columns;
     private int offsetX;
@@ -25,12 +25,12 @@ public class SpriteAnimation extends Transition {
         this.offsetX = offsetX;
         this.offsetY = offsetY;
         this.width = width;
-        this.height = width;
+        this.height = height;
         
         setCycleDuration(duration);
-        setInterpolator(Interpolator.LINEAR);
         setCycleCount(Animation.INDEFINITE);
-        iv.setViewport(new Rectangle2D(offsetX, offsetY, width, height));
+        setInterpolator(Interpolator.LINEAR);
+        this.iv.setViewport(new Rectangle2D(offsetX, offsetY, width, height));
     }
 
     @Override
@@ -42,11 +42,16 @@ public class SpriteAnimation extends Transition {
     }
     
     public void setOffset(int x, int y) {
-        offsetX = x;
-        offsetY = y;
+        this.offsetX = x;
+        this.offsetY = y;
     }
     
     public ImageView getIV() {
         return iv;
+    }
+    
+    public void setIV(String image){
+        this.iv = new ImageView(image);
+        this.iv.setViewport(new Rectangle2D(offsetX, offsetY, width, height));
     }
 }
